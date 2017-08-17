@@ -16,7 +16,14 @@ namespace TorneoPredicciones.ViewModels
 {
     public class SelectMatchViewModel:INotifyPropertyChanged
     {
-         
+        #region Singleton
+        private static SelectMatchViewModel instance;
+
+        public static SelectMatchViewModel GetInstance()
+        {
+            return instance;
+        }
+        #endregion
         #region Propidades
 
 
@@ -43,6 +50,7 @@ namespace TorneoPredicciones.ViewModels
 
         public SelectMatchViewModel(int tournamentId)
         {
+            instance = this;
             this.tournamentId = tournamentId;
 
             apiService = new ApiService();
@@ -52,7 +60,8 @@ namespace TorneoPredicciones.ViewModels
            
             Matches= new ObservableCollection<MatchItemViewModel>();
 
-            LoadMatches();
+        //    LoadMatches(); como lo llamo en el onapearing no lo necesito aca
+
         }
 
      
@@ -84,7 +93,7 @@ namespace TorneoPredicciones.ViewModels
 
         private void Refresh()
         {
-            //LoadMatch();
+            LoadMatches();
         }
 
 
@@ -156,5 +165,6 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
 
+       
     }
 }

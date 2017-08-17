@@ -22,7 +22,7 @@ namespace TorneoPredicciones.Models
                     return "avatar_tournament.png";
                 }
 
-                return string.Format("http://soccerbackend.azurewebsites.net{0}", Logo.Substring(1));
+                return string.Format("http://torneopredicciones.azurewebsites.net{0}", Logo.Substring(1));
             }
         }
     }

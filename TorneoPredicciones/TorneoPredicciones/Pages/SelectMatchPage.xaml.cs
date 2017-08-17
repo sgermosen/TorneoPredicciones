@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using TorneoPredicciones.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,6 +11,11 @@ namespace TorneoPredicciones.Pages
         public SelectMatchPage()
         {
             InitializeComponent();
+            var selectMatchViewModel = SelectMatchViewModel.GetInstance();
+            base.Appearing += (object sender, EventArgs e) =>
+            {
+                selectMatchViewModel.RefreshCommand.Execute(this);
+            };
         }
     }
 }
