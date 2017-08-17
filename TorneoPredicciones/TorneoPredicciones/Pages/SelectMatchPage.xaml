@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TorneoPredicciones.Pages.SelectMatchPage"
+             BackgroundColor="{StaticResource AccentColor1}"
+             Title="Seleccionar Competencia"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}">
+
+    <StackLayout BindingContext="{Binding SelectMatch}"
+                 Padding="8">
+        <ListView ItemsSource="{Binding Matches}"
+                  HasUnevenRows="True"
+                  IsPullToRefreshEnabled="True"
+                  RefreshCommand="{Binding RefreshCommand}"
+                  IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="8">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectMatchCommand}" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="90"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="90"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout VerticalOptions="Center"
+                                         HorizontalOptions="Start"
+                                         Grid.Column="0">
+                                <Image Source="{Binding Local.FullLogo}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       WidthRequest="50"
+                                       HeightRequest="50">
+                                </Image>
+                                <Label FontAttributes="Bold"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       TextColor="Black"
+                                       Text="{Binding Local.Initials}">
+                                </Label>
+                            </StackLayout>
+                            <StackLayout HorizontalOptions="CenterAndExpand"
+                                         VerticalOptions="Center"
+                                         Grid.Column="1">
+                                <StackLayout HorizontalOptions="CenterAndExpand"
+                                             VerticalOptions="Center"
+                                             Orientation="Horizontal">
+                                    <Label FontAttributes="Bold"
+                                           FontSize="40"
+                                           VerticalOptions="Center"
+                                           TextColor="Black"
+                                           BackgroundColor="White"
+                                           Text="{Binding LocalGoals2}">
+                                    </Label>
+                                    <Label FontAttributes="Bold"
+                                           FontSize="Medium"
+                                           VerticalOptions="Center"
+                                           TextColor="Navy"
+                                           Text="  Vs.  ">
+                                    </Label>
+                                    <Label FontAttributes="Bold"
+                                           FontSize="40"
+                                           VerticalOptions="Center"
+                                           TextColor="Black"
+                                           BackgroundColor="White"
+                                           Text="{Binding VisitorGoals2}">
+                                    </Label>
+                                </StackLayout>
+                                <Label TextColor="Black"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       Text="{Binding DateTime, StringFormat='{0:yyyy/MM/dd HH:mm}'}}">
+                                </Label>
+                            </StackLayout>
+                            <StackLayout VerticalOptions="Center"
+                                         HorizontalOptions="End"
+                                         Grid.Column="2">
+                                <Image Source="{Binding Visitor.FullLogo}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       WidthRequest="50"
+                                       HeightRequest="50">
+                                </Image>
+                                <Label FontAttributes="Bold"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="Center"
+                                       TextColor="Black"
+                                       Text="{Binding Visitor.Initials}">
+                                </Label>
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+
+
+</ContentPage>
