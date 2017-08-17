@@ -52,6 +52,8 @@
                                            VerticalOptions="Center"
                                            TextColor="Black"
                                            BackgroundColor="White"
+                                           WidthRequest="40"
+                                           HorizontalTextAlignment="Center"
                                            Text="{Binding LocalGoals2}">
                                     </Label>
                                     <Label FontAttributes="Bold"
@@ -65,6 +67,8 @@
                                            VerticalOptions="Center"
                                            TextColor="Black"
                                            BackgroundColor="White"
+                                           WidthRequest="40"
+                                           HorizontalTextAlignment="Center"
                                            Text="{Binding VisitorGoals2}">
                                     </Label>
                                 </StackLayout>

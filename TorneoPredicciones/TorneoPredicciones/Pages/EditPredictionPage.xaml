@@ -38,7 +38,7 @@
                            HorizontalOptions="FillAndExpand"
                            TextColor="Black"
                            BackgroundColor="White"
-                           Text="{Binding LocalGoals2, Mode=TwoWay}">
+                           Text="{Binding GoalsLocal, Mode=TwoWay}">
                     </Entry>
                     <Label FontAttributes="Bold"
                            FontSize="Medium"
@@ -55,7 +55,7 @@
                            HorizontalOptions="FillAndExpand"
                            TextColor="Black"
                            BackgroundColor="White"
-                           Text="{Binding VisitorGoals2, Mode=TwoWay}">
+                           Text="{Binding GoalsVisitor, Mode=TwoWay}">
                     </Entry>
                 </StackLayout>
                 <Label TextColor="Black"

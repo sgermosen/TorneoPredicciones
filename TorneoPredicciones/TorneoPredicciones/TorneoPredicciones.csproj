@@ -48,6 +48,7 @@
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\Prediction.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Models\Tournament.cs" />
     <Compile Include="Models\User.cs" />

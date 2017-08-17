@@ -79,7 +79,7 @@ namespace TorneoPredicciones.Services
 
         public async Task Back()
         {
-            await App.Navigator.PopAsync();
+            await App.Navigator.PopAsync();//desapilar (quitar la capa)
         }
 
         public async Task Clear()
