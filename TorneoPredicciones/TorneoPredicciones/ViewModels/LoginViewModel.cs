@@ -219,6 +219,109 @@ namespace TorneoPredicciones.ViewModels
             navigationService.SetMainPage("MasterPage");
         }
 
+        public ICommand RegisterCommand { get { return new RelayCommand(Register); } }
+
+        private async void Register()
+        {
+            var mainViewModel = MainViewModel.GetInstance();
+            navigationService.SetMainPage("NewUserPage");
+
+
+
+
+
+            //if (string.IsNullOrEmpty(Email))
+            //{
+            //    await dialogService.ShowMessage("Error", "You must enter the user email.");
+            //    return;
+            //}
+
+            //if (string.IsNullOrEmpty(Password))
+            //{
+            //    await dialogService.ShowMessage("Error", "You must enter a password.");
+            //    return;
+            //}
+
+            //IsRunning = true;
+            //IsEnabled = false;
+
+            //if (!CrossConnectivity.Current.IsConnected)
+            //{
+            //    IsRunning = false;
+            //    IsEnabled = true;
+            //    await dialogService.ShowMessage("Error", "Check you internet connection.");
+            //    return;
+            //}
+
+            //var isReachable = await CrossConnectivity.Current.IsRemoteReachable("praysoft.net");
+            //if (!isReachable)
+            //{
+            //    IsRunning = false;
+            //    IsEnabled = true;
+            //    await dialogService.ShowMessage("Error", "Check you internet connection.");
+            //    return;
+            //}
+
+            //var parameters = dataService.First<Parameter>(false);
+            //var token = await apiService.GetToken(parameters.URLBase, Email, Password);
+            ////   var token = await apiService.GetToken("http://torneoprediccionesapi.azurewebsites.net", Email, Password);
+
+            //if (token == null)
+            //{
+            //    IsRunning = false;
+            //    IsEnabled = true;
+            //    await dialogService.ShowMessage("Error", "The user name or password in incorrect.");
+            //    Password = null;
+            //    return;
+            //}
+
+            //if (string.IsNullOrEmpty(token.AccessToken))
+            //{
+            //    IsRunning = false;
+            //    IsEnabled = true;
+            //    await dialogService.ShowMessage("Error", token.ErrorDescription);
+            //    Password = null;
+            //    return;
+            //}
+
+            //var response = await apiService.GetUserByEmail(parameters.URLBase,
+            //    "/api", "/Users/GetUserByEmail", token.TokenType, token.AccessToken, token.UserName);
+
+            ////var response = await apiService.GetUserByEmail("http://torneoprediccionesapi.azurewebsites.net", 
+            ////    "/api", "/Users/GetUserByEmail", token.TokenType, token.AccessToken, token.UserName);
+
+            //if (!response.IsSuccess)
+            //{
+            //    IsRunning = false;
+            //    IsEnabled = true;
+            //    await dialogService.ShowMessage("Error", "Problem ocurred retrieving user information, try latter.");
+            //    return;
+            //}
+
+            //Email = null;
+            //Password = null;
+
+            //IsRunning = false;
+            //IsEnabled = true;
+            //var user = (User)response.Result;
+
+            //user.AccessToken = token.AccessToken;
+            //user.TokenType = token.TokenType;
+            //user.TokenExpires = token.Expires;
+            //user.IsRemembered = IsRemembered;
+            //user.Password = Password;
+            //dataService.DeleteAllAndInsert(user.FavoriteTeam);
+            //dataService.DeleteAllAndInsert(user.UserType);
+            //dataService.DeleteAllAndInsert(user);
+            ////dataService.DeleteAllAndInsert(user);
+            ////dataService.InsertOrUpdate(user.FavoriteTeam);
+            ////dataService.InsertOrUpdate(user.UserType);
+
+            ////  await dialogService.ShowMessage("TARAAAAAAAAN!!!!",string.Format("Welcome: {0} {1}, Alias: {2}",user.FirstName,user.LastName,user.NickName));
+            //var mainViewModel = MainViewModel.GetInstance();
+            //mainViewModel.CurrentUser = user;
+            //navigationService.SetMainPage("MasterPage");
+        }
         #endregion
 
     }

@@ -24,6 +24,7 @@ namespace TorneoPredicciones.ViewModels
         public SelectTournamentViewModel SelectTournament { get; set; }
         public SelectMatchViewModel SelectMatch { get; set; }
         public EditPredictionViewModel EditPrediction { get; set; }
+        public NewUserViewModel NewUser { get; set; }
         public ObservableCollection<MenuItemViewModel> Menu { get; set; }
         public User CurrentUser { get; set; }
 

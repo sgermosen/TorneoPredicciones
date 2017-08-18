@@ -41,11 +41,13 @@
     <Compile Include="Classes\Response.cs" />
     <Compile Include="Classes\TokenResponse.cs" />
     <Compile Include="Classes\UserRequest.cs" />
+    <Compile Include="Controls\BindablePicker.cs" />
     <Compile Include="Data\DataAccess.cs" />
     <Compile Include="Infrastructure\InstanceLocator.cs" />
     <Compile Include="Interfaces\IConfig.cs" />
     <Compile Include="Models\Date.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\League.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Parameter.cs" />
     <Compile Include="Models\Prediction.cs" />
@@ -68,6 +70,9 @@
     <Compile Include="Pages\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\NewUserPage.xaml.cs">
+      <DependentUpon>NewUserPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SelectMatchPage.xaml.cs">
       <DependentUpon>SelectMatchPage.xaml</DependentUpon>
     </Compile>
@@ -80,12 +85,15 @@
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="ViewModels\EditPredictionViewModel.cs" />
+    <Compile Include="ViewModels\LeagueItemViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MatchItemViewModel.cs" />
     <Compile Include="ViewModels\MenuItemViewModel.cs" />
+    <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\SelectMatchViewModel.cs" />
     <Compile Include="ViewModels\SelectTournamentViewModel.cs" />
+    <Compile Include="ViewModels\TeamItemViewModel.cs" />
     <Compile Include="ViewModels\TournamentItemViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +194,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\EditPredictionPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\NewUserPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>
