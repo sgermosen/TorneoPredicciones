@@ -1,5 +1,8 @@
 Saludos chicos, aquí les traigo el código Fuente de un app para realizar apuestas amistosas desarrollada con Xamarin Forms.
 
+Esta app ha sido desarrollada siguiendo los tutoriales, consejos y mentoria del señor Juan Carlos Zuluaga en su canal de YouTube: https://www.youtube.com/user/jzuluaga55
+y la publicacion del codigo fuente propietario se hace con su consentimiento mediante correo electronico
+
 La app consta de un BackEnd, donde el administrador configura las ligas, los equipos, los torneos y los partidos, luego desde el APP los usuarios realizan sus predicciones respecto a cómo va a quedar el partido, si gana el equipo que el usuario escogió se le suma 1 punto, si el partido queda exactamente como el predijo, se le suman tres puntos.
 
 Esta utiliza los conceptos de desarrollo MVVM y  Locator.
