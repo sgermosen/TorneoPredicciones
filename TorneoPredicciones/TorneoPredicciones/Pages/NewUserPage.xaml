@@ -14,7 +14,7 @@
                        FontAttributes="Bold"
                        TextColor="Black"
                        HorizontalOptions="FillAndExpand"
-                       Text="Soccer New User">
+                       Text="New User">
                 </Label>
                 <ActivityIndicator 
                     Color="Navy"
@@ -69,23 +69,37 @@
                     </Entry>
                 </Grid>
             </Grid>
-            <StackLayout Orientation="Horizontal">
-                <Image WidthRequest="50"
-                       HeightRequest="50"
-                       Grid.Column="0"
-                       VerticalOptions="Start"
-                       Source="ic_action_add_a_photo.png">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding TakePictureCommand}" />
-                    </Image.GestureRecognizers>
-                </Image>
-                <controls:CircleImage Grid.Column="1"
-                                      Source="{Binding ImageSource, Mode=TwoWay}"
-                                      Aspect="AspectFill"
-                                      WidthRequest="200"
-                                      HeightRequest="200">
-                </controls:CircleImage>
-            </StackLayout>
+             
+            <Grid>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image  
+                           WidthRequest="50"
+                           HeightRequest="50"
+                           Grid.Column="0"
+                           VerticalOptions="Start"
+                           Source="ic_action_add_a_photo.png">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding TakePictureCommand}" />
+                        </Image.GestureRecognizers>
+                    </Image>
+                    
+                    <controls:CircleImage Grid.Column="1"
+                                          Source="{Binding ImageSource, Mode=TwoWay}"
+                                          Aspect="AspectFill"
+                                          VerticalOptions="CenterAndExpand"
+                                          HorizontalOptions="CenterAndExpand"
+                                          WidthRequest="200"
+                                          HeightRequest="200">
+                    </controls:CircleImage>
+                </Grid>
+            </Grid>
+
+           
+          
             <Grid>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
