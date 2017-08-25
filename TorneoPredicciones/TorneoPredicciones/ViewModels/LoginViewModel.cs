@@ -224,6 +224,7 @@ namespace TorneoPredicciones.ViewModels
         private async void Register()
         {
             var mainViewModel = MainViewModel.GetInstance();
+            mainViewModel.NewUser = new NewUserViewModel();
             navigationService.SetMainPage("NewUserPage");
 
 

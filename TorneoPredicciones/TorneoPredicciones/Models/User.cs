@@ -51,9 +51,11 @@ namespace TorneoPredicciones.Models
                     return "avatar_user.png";
                 }
 
-                return string.Format("http://torneoprediccionesapi.azurewebsites.net{0}", Picture.Substring(1));
+                return string.Format("http://torneoprediccionesapi.azurewebsites.net/{0}", Picture.Substring(1));
             }
         }
+
+        public byte[] ImageArray { get; internal set; }
 
         public override int GetHashCode()
         {

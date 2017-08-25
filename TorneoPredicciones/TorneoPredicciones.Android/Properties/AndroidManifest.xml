@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<uses-sdk android:minSdkVersion="15" />
-	<application android:label="TorneoPredicciones.Android"></application>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.praysoft_net.TorneosPredicciones" android:versionCode="1" android:versionName="1.0.1">
+	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="21" />
+	<uses-permission android:name="android.permission.CAMERA" />
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<application android:label="Torneos y Predicciones" android:icon="@drawable/ic_launcher"></application>
 </manifest>
