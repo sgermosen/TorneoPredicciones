@@ -56,12 +56,14 @@ namespace TorneoPredicciones
         private void LoadParameters()
         {
             var urlBase = Application.Current.Resources["URLBase"].ToString();
+            var urlBase2 = Application.Current.Resources["URLBase2"].ToString();
             var parameter = dataService.First<Parameter>(false);
             if (parameter == null)
             {
                 parameter = new Parameter
                 {
                     URLBase = urlBase,
+                    URLBase2=urlBase2
                 };
 
                 dataService.Insert(parameter);
@@ -69,6 +71,7 @@ namespace TorneoPredicciones
             else
             {
                 parameter.URLBase = urlBase;
+                parameter.URLBase2 = urlBase2;
                 dataService.Update(parameter);
             }
         }

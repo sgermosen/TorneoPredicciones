@@ -1,0 +1,9 @@
+Aplicacion de "Apuestas" basada en "Predicciones" para "Torneos y Competencias", que sirve para que los usuarios ingresen sus predicciones referentes a los partidos de los diferentes torneos disponibles, ganando el valor que se haya apostado dependiendo del mayor puntaje de exactitud en la prediccion.
+
+Reta a tus amigos a una apuesta amistosa y utiliza el app para realizar tus predicciones, si eres quien acierta a la hora de cerrar el partido ganas el valor apostado.
+
+Una aplicacion desarrollada con Xamarin Forms, Usando los servicios de Microsoft Azure, Azure Mobile y base de datos SQL, a modo de prueba con la finalidad de mostrar el potencial de esta herramienta de desarrollo.
+
+
+
+Aplicacion de "Apuestas" basada en "Predicciones" para "Torneos y Competencias"

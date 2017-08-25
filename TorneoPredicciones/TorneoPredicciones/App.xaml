@@ -12,7 +12,8 @@
 
             <!-- Parameters -->
             <x:String x:Key="URLBase">http://torneoprediccionesapi.azurewebsites.net</x:String>
-            
+            <x:String x:Key="URLBase2">http://torneopredicciones.azurewebsites.net</x:String>
+	        
             <!--Colors-->
             <Color x:Key="MainColor">#C7CC1A</Color>
             <Color x:Key="FontColor">#19486D</Color>
