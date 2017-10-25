@@ -1,6 +1,8 @@
 ﻿using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
+using Newtonsoft.Json.Converters;
 using TorneoPredicciones.Services;
+using TorneoPredicciones.Models;
 
 namespace TorneoPredicciones.ViewModels
 {
@@ -36,8 +38,11 @@ namespace TorneoPredicciones.ViewModels
             else
             {
                 switch (PageName)
-                {
+                {//este señor manda a una pagina compartida, por lo que es prudente almacenar de donde fue llamado para saber a donde volver
                     case "SelectTournamentPage":
+                        var parameters = dataService.First<Parameter>(false);
+                        parameters.Option = Title;//quien diferencia las dos opciones
+                        dataService.Update(parameters);
                         mainViewModel.SelectTournament=new SelectTournamentViewModel();
                         await navigationService.Navigate(PageName);
                         break;
