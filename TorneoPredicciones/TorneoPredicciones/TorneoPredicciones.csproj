@@ -74,6 +74,9 @@
     <Compile Include="Pages\NewUserPage.xaml.cs">
       <DependentUpon>NewUserPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SelectGroupPage.xaml.cs">
+      <DependentUpon>SelectGroupPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SelectMatchPage.xaml.cs">
       <DependentUpon>SelectMatchPage.xaml</DependentUpon>
     </Compile>
@@ -86,12 +89,14 @@
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="ViewModels\EditPredictionViewModel.cs" />
+    <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\LeagueItemViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MatchItemViewModel.cs" />
     <Compile Include="ViewModels\MenuItemViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
+    <Compile Include="ViewModels\SelectGroupViewModel.cs" />
     <Compile Include="ViewModels\SelectMatchViewModel.cs" />
     <Compile Include="ViewModels\SelectTournamentViewModel.cs" />
     <Compile Include="ViewModels\TeamItemViewModel.cs" />
@@ -212,6 +217,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\NewUserPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\SelectGroupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

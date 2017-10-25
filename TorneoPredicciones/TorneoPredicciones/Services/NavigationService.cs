@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TorneoPredicciones.Models;
+﻿using System.Threading.Tasks;
 using TorneoPredicciones.Pages;
-using TorneoPredicciones.ViewModels;
 
 namespace TorneoPredicciones.Services
 {
@@ -45,6 +39,10 @@ namespace TorneoPredicciones.Services
                 case "EditPredictionPage":
                     // mainViewModel.SelectTournament = new SelectTournamentViewModel();
                     await App.Navigator.PushAsync(new EditPredictionPage());
+                    break;
+                case "SelectGroupPage":
+                    // mainViewModel.SelectTournament = new SelectTournamentViewModel();
+                    await App.Navigator.PushAsync(new SelectGroupPage());
                     break;
                 default:
                     break;

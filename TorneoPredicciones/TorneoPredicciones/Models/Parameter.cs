@@ -11,6 +11,7 @@ namespace TorneoPredicciones.Models
 
         public string URLBase2 { get; set; }
       //  public string Option { get; set; }
+      public string Option { get; set; }
 
         public override int GetHashCode()
         {
