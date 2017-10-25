@@ -26,6 +26,7 @@ namespace TorneoPredicciones.ViewModels
         public EditPredictionViewModel EditPrediction { get; set; }
         public NewUserViewModel NewUser { get; set; }
         public SelectGroupViewModel SelectGroup { get; set; }
+        public PositionsViewModel Positions { get; set; }
         public ObservableCollection<MenuItemViewModel> Menu { get; set; }
         public User CurrentUser { get; set; }
        

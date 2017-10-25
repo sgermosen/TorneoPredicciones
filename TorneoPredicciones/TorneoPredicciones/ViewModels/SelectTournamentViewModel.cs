@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using Plugin.Connectivity;
@@ -83,17 +79,24 @@ namespace TorneoPredicciones.ViewModels
             if (!CrossConnectivity.Current.IsConnected)
             {
                 await dialogService.ShowMessage("Error", "Check you internet connection.");
-                await navigationService.Clear();
+               // await navigationService.Clear();
                 return;
             }
-
+            var isReachable = await CrossConnectivity.Current.IsRemoteReachable("notasti.com");
+            if (!isReachable)
+            {
+                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                // await navigationService.Clear();
+                return;
+            }
+            isRefreshing = true;
             var parameter = dataService.First<Parameter>(false);
             var user = dataService.First<User>(false);
             var response = await apiService.Get<Tournament>(parameter.URLBase, "/api", "/Tournaments", user.TokenType, user.AccessToken);
             if (!response.IsSuccess)
             {
                 await dialogService.ShowMessage("Error", response.Message);
-                await navigationService.Clear();
+               // await navigationService.Clear();
                 return;
             }
 
@@ -122,9 +125,9 @@ namespace TorneoPredicciones.ViewModels
 
         public void Refresh()
         {
-            IsRefreshing = true;
+          //  IsRefreshing = true;
             LoadTournaments();
-            IsRefreshing = false;
+          //  IsRefreshing = false;
         }
         #endregion
     }
