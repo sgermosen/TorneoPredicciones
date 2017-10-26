@@ -41,6 +41,7 @@ namespace TorneoPredicciones.ViewModels
         public EditPredictionViewModel EditPrediction { get; set; }
         public NewUserViewModel NewUser { get; set; }
         public SelectGroupViewModel SelectGroup { get; set; }
+        public ChangePasswordViewModel ChangePassword { get; set; }
         public ConfigViewModel Config { get; set; }
         public PositionsViewModel Positions { get; set; }
         public ObservableCollection<MenuItemViewModel> Menu { get; set; }

@@ -9,6 +9,7 @@ using Plugin.Media;
 using Plugin.Media.Abstractions;
 using TorneoPredicciones.Models;
 using TorneoPredicciones.Classes;
+using TorneoPredicciones.Pages;
 using TorneoPredicciones.Services;
 using Xamarin.Forms;
 
@@ -196,6 +197,17 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Comandos
+
+        public ICommand ChangePasswordCommand { get { return new RelayCommand(ChangePassword); } }
+
+        private async void ChangePassword()
+        {
+            var mainViewModel = MainViewModel.GetInstance();
+            mainViewModel.ChangePassword= new ChangePasswordViewModel();
+            await navigationService.Navigate("ChangePasswordPage");
+        }
+
+
         public ICommand SaveCommand { get { return new RelayCommand(Save); } }
 
         private async void Save()

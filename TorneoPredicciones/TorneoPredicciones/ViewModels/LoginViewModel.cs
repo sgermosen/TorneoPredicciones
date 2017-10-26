@@ -194,8 +194,6 @@ namespace TorneoPredicciones.ViewModels
                 return;
             }
 
-            Email = null;
-            Password = null;
 
             IsRunning = false;
             IsEnabled = true;
@@ -218,6 +216,10 @@ namespace TorneoPredicciones.ViewModels
             var mainViewModel = MainViewModel.GetInstance();
             mainViewModel.CurrentUser = user;
             navigationService.SetMainPage("MasterPage");
+
+            Email = null;
+           // Password = null;
+            password = null;
         }
 
         public ICommand RegisterCommand { get { return new RelayCommand(Register); } }
