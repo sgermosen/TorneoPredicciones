@@ -199,6 +199,7 @@ namespace TorneoPredicciones.ViewModels
 
             IsRunning = false;
             IsEnabled = true;
+
             var user = (User)response.Result;
 
             user.AccessToken = token.AccessToken;

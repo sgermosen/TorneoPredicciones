@@ -48,6 +48,10 @@ namespace TorneoPredicciones.Services
                     // mainViewModel.SelectTournament = new SelectTournamentViewModel();
                     await App.Navigator.PushAsync(new PositionsPage());
                     break;
+                case "ConfigPage":
+                    // mainViewModel.SelectTournament = new SelectTournamentViewModel();
+                    await App.Navigator.PushAsync(new ConfigPage());
+                    break;
                 default:
                     break;
             }
