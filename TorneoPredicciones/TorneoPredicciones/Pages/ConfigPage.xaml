@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:control="clr-namespace:TorneoPredicciones.Controls"
+             xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             x:Class="TorneoPredicciones.Pages.ConfigPage"
+             Title="Configuracion"
+             BackgroundColor="{StaticResource MainColor}"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}">
+    <ContentPage.Content>
+        
+            <ScrollView BindingContext="{Binding Config}">
+                <StackLayout Padding="8">
+                  
+                    <Grid>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"
+                                   Text="First name"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center"
+                                   TextColor="Black">
+                            </Label>
+                            <Entry Grid.Column="1"
+                                   Text="{Binding FirstName, Mode=TwoWay}"
+                                   Placeholder="Enter the first name..."
+                                   HorizontalOptions="FillAndExpand"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="White">
+                            </Entry>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"
+                                   Text="Last name"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center"
+                                   TextColor="Black">
+                            </Label>
+                            <Entry Grid.Column="1"
+                                   Text="{Binding LastName, Mode=TwoWay}"
+                                   Placeholder="Enter the last name..."
+                                   HorizontalOptions="FillAndExpand"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="White">
+                            </Entry>
+                        </Grid>
+                    </Grid>
+
+                    <Grid>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Image WidthRequest="50"
+                                   HeightRequest="50"
+                                   Grid.Column="0"
+                                   VerticalOptions="Start"
+                                   Source="ic_action_add_a_photo.png">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding TakePictureCommand}" />
+                                </Image.GestureRecognizers>
+                            </Image>
+                            
+
+                            <controls:CircleImage Grid.Column="1"
+                                                  Source="{Binding FullPicture}"
+                                                  Aspect="AspectFill"
+                                                  WidthRequest="150"
+                                                  HeightRequest="150">
+                            </controls:CircleImage>
+                        <controls:CircleImage Grid.Column="1"
+                                              Source="{Binding ImageSource}"
+                                              Aspect="AspectFill"
+                                              WidthRequest="150"
+                                              HeightRequest="150">
+                        </controls:CircleImage>
+                    </Grid>
+                    </Grid>
+
+
+
+                    <Grid>
+                        
+                        
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"
+                                   Text="Email"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center"
+                                   TextColor="Black">
+                            </Label>
+                            <Entry Grid.Column="1"
+                                   Text="{Binding Email, Mode=TwoWay}"
+                                   Keyboard="Email"
+                                   Placeholder="Enter the Email..."
+                                   HorizontalOptions="FillAndExpand"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="White">
+                            </Entry>
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"
+                                   Text="Nick name"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center"
+                                   TextColor="Black">
+                            </Label>
+                            <Entry Grid.Column="1"
+                                   Text="{Binding NickName, Mode=TwoWay}"
+                                   Placeholder="Enter the nick name..."
+                                   HorizontalOptions="FillAndExpand"
+                                   VerticalOptions="Center"
+                                   BackgroundColor="White">
+                            </Entry>
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"
+                                   Text="Favorite league team"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center"
+                                   TextColor="Black">
+                            </Label>
+                            <control:BindablePicker Grid.Column="1"
+                                                    Title="Select a league..."
+                                                    DisplayMemberPath="Name"
+                                                    SelectedValuePath="LeagueId"
+                                                    ItemsSource="{Binding Leagues}"
+                                                    BackgroundColor="White"
+                                                    SelectedValue="{Binding Path=FavoriteLeagueId, Mode=TwoWay}"
+                                                    HorizontalOptions="FillAndExpand"
+                                                    VerticalOptions="Center">
+                            </control:BindablePicker>
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0"
+                                   Text="Favorite team"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center"
+                                   TextColor="Black">
+                            </Label>
+                            <control:BindablePicker Grid.Column="1"
+                                                    Title="Select a team..."
+                                                    DisplayMemberPath="Name"
+                                                    SelectedValuePath="TeamId"
+                                                    ItemsSource="{Binding Teams}"
+                                                    BackgroundColor="White"
+                                                    SelectedValue="{Binding Path=FavoriteTeamId, Mode=TwoWay}"
+                                                    HorizontalOptions="FillAndExpand"
+                                                    VerticalOptions="Center">
+                            </control:BindablePicker>
+                        </Grid>
+                    </Grid>
+                    <ActivityIndicator IsRunning="{Binding IsRunning}"
+                                       Color="Navy">
+                    </ActivityIndicator>
+                    <StackLayout Orientation="Horizontal">
+                    <Button Command="{Binding SaveCommand}"
+                            HeightRequest="40"
+                            BorderRadius="20"
+                            HorizontalOptions="FillAndExpand"
+                            TextColor="White"
+                            BackgroundColor="Orange"
+                            Text="Save">
+                    </Button>
+                    <Button Command="{Binding ChangePasswordCommand}"
+                            HeightRequest="40"
+                            BorderRadius="20"
+                            HorizontalOptions="FillAndExpand"
+                            TextColor="White"
+                            BackgroundColor="Purple"
+                            Text="Cambiar Contraseña">
+                    </Button>
+                </StackLayout>
+                   
+                </StackLayout>
+            </ScrollView>
+
+       
+    </ContentPage.Content>
+</ContentPage>

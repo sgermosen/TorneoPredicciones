@@ -46,6 +46,10 @@ namespace TorneoPredicciones.ViewModels
                         mainViewModel.SelectTournament=new SelectTournamentViewModel();
                         await navigationService.Navigate(PageName);
                         break;
+                    case "ConfigPage":
+                        mainViewModel.Config = new ConfigViewModel(mainViewModel.CurrentUser);
+                        await navigationService.Navigate(PageName);
+                        break;
                     default:
                       
                         break;
