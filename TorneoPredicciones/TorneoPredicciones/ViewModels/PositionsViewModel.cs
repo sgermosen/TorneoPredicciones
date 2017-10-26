@@ -53,7 +53,7 @@ namespace TorneoPredicciones.ViewModels
         #region Constructor
         public PositionsViewModel(int tournamentGroupId)
         {
-            instance = this;
+            //instance = this;
             this.tournamentGroupId = tournamentGroupId;
             apiService = new ApiService();
             dialogService = new DialogService();
