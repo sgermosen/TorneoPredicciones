@@ -94,6 +94,9 @@
     <Compile Include="Pages\SelectTournamentPage.xaml.cs">
       <DependentUpon>SelectTournamentPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SelectUserGroupPage.xaml.cs">
+      <DependentUpon>SelectUserGroupPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ApiService.cs" />
     <Compile Include="Services\DataService.cs" />
@@ -113,6 +116,7 @@
     <Compile Include="ViewModels\SelectGroupViewModel.cs" />
     <Compile Include="ViewModels\SelectMatchViewModel.cs" />
     <Compile Include="ViewModels\SelectTournamentViewModel.cs" />
+    <Compile Include="ViewModels\SelectUserGroupPageViewModel.cs" />
     <Compile Include="ViewModels\TeamItemViewModel.cs" />
     <Compile Include="ViewModels\TournamentItemViewModel.cs" />
     <Compile Include="ViewModels\TournamentTeamItemViewModel.cs" />
@@ -256,6 +260,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\ChangePasswordPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\SelectUserGroupPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

@@ -3,6 +3,7 @@ using GalaSoft.MvvmLight.Command;
 using Newtonsoft.Json.Converters;
 using TorneoPredicciones.Services;
 using TorneoPredicciones.Models;
+using TorneoPredicciones.Pages;
 
 namespace TorneoPredicciones.ViewModels
 {
@@ -50,6 +51,12 @@ namespace TorneoPredicciones.ViewModels
                         mainViewModel.Config = new ConfigViewModel(mainViewModel.CurrentUser);
                         await navigationService.Navigate(PageName);
                         break;
+                    case "SelectUserGroupPage":
+                        mainViewModel.SelectUserGroupPage = new SelectUserGroupPageViewModel();
+                        await navigationService.Navigate(PageName);
+                        break;
+
+                        
                     default:
                       
                         break;

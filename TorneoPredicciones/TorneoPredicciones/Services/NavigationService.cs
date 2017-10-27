@@ -56,6 +56,10 @@ namespace TorneoPredicciones.Services
                     // mainViewModel.SelectTournament = new SelectTournamentViewModel();
                     await App.Navigator.PushAsync(new ChangePasswordPage());
                     break;
+                case "SelectUserGroupPage":
+                    // mainViewModel.SelectTournament = new SelectTournamentViewModel();
+                    await App.Navigator.PushAsync(new SelectUserGroupPage());
+                    break;
                 default:
                     break;
             }
