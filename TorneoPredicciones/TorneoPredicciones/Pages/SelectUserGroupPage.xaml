@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TorneoPredicciones.Pages.SelectUserGroupPage"
+             BackgroundColor="{StaticResource AccentColor1}"
+             Title="Seleccion de Grupo de Usuario"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}">
+    <ContentPage.Content>
+        <StackLayout BindingContext="{Binding SelectUserGroup}"
+                     Padding="8">
+            <Label Text="Welcome to Xamarin Forms!" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

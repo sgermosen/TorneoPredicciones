@@ -44,7 +44,9 @@ namespace TorneoPredicciones.ViewModels
         public ChangePasswordViewModel ChangePassword { get; set; }
         public ConfigViewModel Config { get; set; }
         public PositionsViewModel Positions { get; set; }
+        public SelectUserGroupPageViewModel SelectUserGroupPage { get; set; }
         public ObservableCollection<MenuItemViewModel> Menu { get; set; }
+
         //public User CurrentUser { get; set; }
         public User CurrentUser
         {
@@ -89,7 +91,7 @@ namespace TorneoPredicciones.ViewModels
             Menu.Add(new MenuItemViewModel
             {
                 Icon = "groups.png",
-                PageName = "GroupsPage",
+                PageName = "SelectUserGroupPage",
                 Title = "Groups",
             });
 
