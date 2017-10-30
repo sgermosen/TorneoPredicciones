@@ -44,7 +44,7 @@ namespace TorneoPredicciones.ViewModels
         #region Constructor
         public SelectTournamentViewModel()
         {
-            instance = this;
+           // instance = this;
 
             apiService = new ApiService();
             dialogService = new DialogService();
@@ -52,6 +52,7 @@ namespace TorneoPredicciones.ViewModels
             dataService = new DataService();
 
             Tournaments = new ObservableCollection<TournamentItemViewModel>();
+            LoadTournaments();
         }
         #endregion
 

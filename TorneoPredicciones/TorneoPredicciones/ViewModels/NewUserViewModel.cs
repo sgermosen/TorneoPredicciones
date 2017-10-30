@@ -11,7 +11,6 @@ using System.Linq;
 using System.Windows.Input;
 using Xamarin.Forms;
 using TorneoPredicciones.Classes;
-using System;
 
 namespace TorneoPredicciones.ViewModels
 {

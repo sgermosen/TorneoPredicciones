@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
-using Plugin.Connectivity;
 using TorneoPredicciones.Classes;
 using TorneoPredicciones.Models;
 using TorneoPredicciones.Services;

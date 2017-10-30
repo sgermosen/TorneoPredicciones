@@ -1,4 +1,5 @@
-﻿using TorneoPredicciones.ViewModels;
+﻿using System;
+using TorneoPredicciones.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,6 +12,13 @@ namespace TorneoPredicciones.Pages
         public HomePage()
         {
             InitializeComponent();
+
+            var vm = MainViewModel.GetInstance();
+            base.Appearing += (object sender, EventArgs e) =>
+            {
+                vm.RefreshPointsCommand.Execute(this);
+            };
+        
         }
 
         protected override void OnAppearing()

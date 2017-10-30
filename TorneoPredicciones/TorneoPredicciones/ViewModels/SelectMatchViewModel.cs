@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using TorneoPredicciones.Services;
 using System.Collections.ObjectModel;
 using Plugin.Connectivity;
 using TorneoPredicciones.Models;
-using Xamarin.Forms.Xaml;
 
 namespace TorneoPredicciones.ViewModels
 {
