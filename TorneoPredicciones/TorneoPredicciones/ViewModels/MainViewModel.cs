@@ -51,7 +51,9 @@ namespace TorneoPredicciones.ViewModels
         public ChangePasswordViewModel ChangePassword { get; set; }
         public ConfigViewModel Config { get; set; }
         public PositionsViewModel Positions { get; set; }
-        public SelectUserGroupPageViewModel SelectUserGroup { get; set; }
+        
+        public UsersGroupViewModel UsersGroup { get; set; }
+        public SelectUserGroupViewModel SelectUserGroup { get; set; }
         public ObservableCollection<MenuItemViewModel> Menu { get; set; }
 
         //public User CurrentUser { get; set; }

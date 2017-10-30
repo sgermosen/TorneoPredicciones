@@ -9,7 +9,7 @@ using TorneoPredicciones.Services;
 
 namespace TorneoPredicciones.ViewModels
 {
- public   class SelectUserGroupPageViewModel:INotifyPropertyChanged
+ public   class SelectUserGroupViewModel:INotifyPropertyChanged
     {
         #region Attributes
         private ApiService apiService;
@@ -42,7 +42,7 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Constructor
-        public SelectUserGroupPageViewModel()
+        public SelectUserGroupViewModel()
         {
            // instance = this;
 
