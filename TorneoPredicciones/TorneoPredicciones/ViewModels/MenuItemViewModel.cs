@@ -50,7 +50,7 @@ namespace TorneoPredicciones.ViewModels
                         await navigationService.Navigate(PageName);
                         break;
                     case "SelectUserGroupPage":
-                        mainViewModel.SelectUserGroupPage = new SelectUserGroupPageViewModel();
+                        mainViewModel.SelectUserGroup = new SelectUserGroupViewModel();
                         await navigationService.Navigate(PageName);
                         break;
 
