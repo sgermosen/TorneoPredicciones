@@ -1,9 +1,7 @@
 ﻿using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
-using Newtonsoft.Json.Converters;
 using TorneoPredicciones.Services;
 using TorneoPredicciones.Models;
-using TorneoPredicciones.Pages;
 
 namespace TorneoPredicciones.ViewModels
 {

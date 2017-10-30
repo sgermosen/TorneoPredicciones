@@ -15,8 +15,15 @@
                VerticalOptions="Center"
                HorizontalOptions="Center">
         </Label>
-        <Label Text="{Binding CurrentUser.FullName, Mode=TwoWay}"
+        <Label Text="{Binding CurrentUser.NickName, Mode=TwoWay}"
                FontSize="Large"
+               TextColor="Navy"
+               FontAttributes="Bold"
+               VerticalOptions="Center"
+               HorizontalOptions="Center">
+        </Label>
+        <Label Text="{Binding CurrentUser.FullName, Mode=TwoWay}"
+               FontSize="Medium"
                TextColor="Black"
                FontAttributes="Bold"
                VerticalOptions="Center"
@@ -34,7 +41,7 @@
                    RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=160}">
             </Image>
         </RelativeLayout>
-        <Label Text="{Binding CurrentUser.Email, Mode=TwoWay, StringFormat='Email: {0}'}"
+        <Label Text="{Binding CurrentUser.Email, Mode=TwoWay}"
                FontSize="Medium"
                TextColor="Black"
                FontAttributes="Bold"

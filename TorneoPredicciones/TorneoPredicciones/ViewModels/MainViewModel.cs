@@ -1,6 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
+using Plugin.Connectivity;
 using TorneoPredicciones.Models;
+using TorneoPredicciones.Services;
 
 namespace TorneoPredicciones.ViewModels
 {
@@ -11,7 +16,9 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Atriutos
-
+        private ApiService apiService;
+        private DataService dataService;
+       
         private User currentUser;
         #endregion
 
@@ -44,7 +51,7 @@ namespace TorneoPredicciones.ViewModels
         public ChangePasswordViewModel ChangePassword { get; set; }
         public ConfigViewModel Config { get; set; }
         public PositionsViewModel Positions { get; set; }
-        public SelectUserGroupPageViewModel SelectUserGroupPage { get; set; }
+        public SelectUserGroupPageViewModel SelectUserGroup { get; set; }
         public ObservableCollection<MenuItemViewModel> Menu { get; set; }
 
         //public User CurrentUser { get; set; }
@@ -71,7 +78,45 @@ namespace TorneoPredicciones.ViewModels
         {
             instance = this;
             Login = new LoginViewModel();
+            apiService= new ApiService();
+            dataService= new DataService();
             LoadMenu();
+        }
+
+        #endregion
+
+        #region Comandos
+
+        public ICommand RefreshPointsCommand { get {return new RelayCommand(RefreshPoints);}  }
+
+        private async  void RefreshPoints()
+        {
+            if (!CrossConnectivity.Current.IsConnected)
+            {
+                return; 
+            }
+            var isReachable = await CrossConnectivity.Current.IsRemoteReachable("notasti.com");
+            if (!isReachable)
+            {
+                return;
+            }
+            
+            var parameter = dataService.First<Parameter>(false);
+            var user = dataService.First<User>(false);
+            var response = await apiService.GetPoints(parameter.URLBase, "/api", "/Users/GetPoints", user.TokenType, user.AccessToken,user.UserId);
+
+            if (!response.IsSuccess)
+            {
+                return;
+            }
+            var point = (Point) response.Result;
+            if (CurrentUser.Points != point.Points)
+            {
+                CurrentUser.Points = point.Points;
+                dataService.Update(CurrentUser); //actualizamos la base de datos local
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUser"));
+            }
+           
         }
 
         #endregion

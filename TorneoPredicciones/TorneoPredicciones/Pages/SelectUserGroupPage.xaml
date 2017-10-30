@@ -8,7 +8,55 @@
     <ContentPage.Content>
         <StackLayout BindingContext="{Binding SelectUserGroup}"
                      Padding="8">
-            <Label Text="Welcome to Xamarin Forms!" />
+            <ListView ItemsSource="{Binding UserGroups}"
+                      HasUnevenRows="True"
+                      IsPullToRefreshEnabled="True"
+                      RefreshCommand="{Binding RefreshCommand}"
+                      IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid Padding="8">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectGroupCommand}" />
+                                </Grid.GestureRecognizers>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding FullLogo}"
+                                       VerticalOptions="Start"
+                                       WidthRequest="100"
+                                       HeightRequest="100">
+                                </Image>
+                                <StackLayout VerticalOptions="Center"
+                                             Grid.Column="1">
+                                    <Label FontAttributes="Bold"
+                                           FontSize="Large"
+                                           VerticalOptions="Center"
+                                           TextColor="Black"
+                                           Text="{Binding Name}">
+                                    </Label>
+                                    <Label FontAttributes="Bold"
+                                           VerticalOptions="Center"
+                                           TextColor="Navy"
+                                           Text="Creado por:">
+                                    </Label>
+
+                                    <Label FontAttributes="Bold"
+                                           FontSize="Medium"
+                                           HorizontalOptions="StartAndExpand"
+                                           VerticalOptions="Center"
+                                           TextColor="Black"
+                                           Text="{Binding Owner.FullName}">
+                                    </Label>
+
+                                </StackLayout>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

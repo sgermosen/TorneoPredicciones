@@ -49,14 +49,17 @@
     <Compile Include="Interfaces\IConfig.cs" />
     <Compile Include="Models\Date.cs" />
     <Compile Include="Models\Group.cs" />
+    <Compile Include="Models\GroupUser.cs" />
     <Compile Include="Models\League.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\Point.cs" />
     <Compile Include="Models\Prediction.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Models\Tournament.cs" />
     <Compile Include="Models\TournamentTeam.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserGroup.cs" />
     <Compile Include="Models\UserType.cs" />
     <Compile Include="Pages\ChangePasswordPage.xaml.cs">
       <DependentUpon>ChangePasswordPage.xaml</DependentUpon>
@@ -120,6 +123,7 @@
     <Compile Include="ViewModels\TeamItemViewModel.cs" />
     <Compile Include="ViewModels\TournamentItemViewModel.cs" />
     <Compile Include="ViewModels\TournamentTeamItemViewModel.cs" />
+    <Compile Include="ViewModels\UserGroupItemViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="App.xaml">

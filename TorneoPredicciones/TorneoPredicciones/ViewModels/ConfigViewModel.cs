@@ -9,7 +9,6 @@ using Plugin.Media;
 using Plugin.Media.Abstractions;
 using TorneoPredicciones.Models;
 using TorneoPredicciones.Classes;
-using TorneoPredicciones.Pages;
 using TorneoPredicciones.Services;
 using Xamarin.Forms;
 
@@ -378,7 +377,7 @@ namespace TorneoPredicciones.ViewModels
             FirstName = currentUser.FirstName;
             LastName = currentUser.LastName;
             Picture = currentUser.Picture;
-            Email = currentUser.Email.Substring(7);
+            Email = currentUser.Email;// currentUser.Email.Substring(7);
             NickName = currentUser.NickName;
             
             IsEnabled = true;
