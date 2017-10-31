@@ -4,8 +4,11 @@ using System.ComponentModel;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
 using Plugin.Connectivity;
+using TorneoPredicciones.Interfaces;
 using TorneoPredicciones.Models;
 using TorneoPredicciones.Services;
+using Xamarin.Forms;
+using Point = TorneoPredicciones.Models.Point;
 
 namespace TorneoPredicciones.ViewModels
 {
@@ -124,6 +127,12 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Metodos
+        public void RegisterDevice()
+        {
+            var register = DependencyService.Get<IRegisterDevice>();
+            register.RegisterDevice();
+        }
+
         private void LoadMenu()
         {
             Menu = new ObservableCollection<MenuItemViewModel>();

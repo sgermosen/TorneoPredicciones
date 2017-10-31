@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<component format="1" id="azure-messaging" is-shell="true">
+  <name>Azure Messaging</name>
+  <publisher>Xamarin Inc.</publisher>
+  <publisher-url>http://www.windowsazure.com/en-us/develop/mobile/</publisher-url>
+  <src-url>https://github.com/xamarin/XamarinComponents/tree/master/XPlat/AzureMessaging</src-url>
+  <version>1.2.5.2</version>
+  <summary>Send Push Notifications to your iOS and Android apps</summary>
+  <packages>
+    <package id="Xamarin.Azure.NotificationHubs.Android" version="0.4.0.0" framework="android" />
+    <package id="Xamarin.Azure.NotificationHubs.iOS" version="1.2.5.2" framework="ios-unified" />
+  </packages>
+  <samples>
+    <sample id="NotificationHubsSampleAndroid">
+      <name>Android Sample</name>
+      <summary>Android Sample</summary>
+    </sample>
+    <sample id="NotificationHubsSampleiOS">
+      <name>iOS Sample</name>
+      <summary>iOS Sample</summary>
+    </sample>
+  </samples>
+</component>
