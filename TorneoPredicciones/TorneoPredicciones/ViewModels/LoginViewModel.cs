@@ -210,6 +210,7 @@ namespace TorneoPredicciones.ViewModels
             //  await dialogService.ShowMessage("TARAAAAAAAAN!!!!",string.Format("Welcome: {0} {1}, Alias: {2}",user.FirstName,user.LastName,user.NickName));
             var mainViewModel = MainViewModel.GetInstance();
             mainViewModel.CurrentUser = user;
+            mainViewModel.RegisterDevice(); //todo
             navigationService.SetMainPage("MasterPage");
 
             Email = null;

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.praysoft_net.TorneosPredicciones" android:versionCode="4" android:versionName="1.0.4">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="com.praysoft_net.TorneosPredicciones" android:versionCode="5" android:versionName="1.0.5">
 	<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="21" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

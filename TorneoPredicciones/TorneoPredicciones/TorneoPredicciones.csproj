@@ -47,6 +47,7 @@
     <Compile Include="Data\DataAccess.cs" />
     <Compile Include="Infrastructure\InstanceLocator.cs" />
     <Compile Include="Interfaces\IConfig.cs" />
+    <Compile Include="Interfaces\IRegisterDevice.cs" />
     <Compile Include="Models\Date.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\GroupUser.cs" />
