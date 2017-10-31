@@ -117,6 +117,10 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Comandos
+        public ICommand LoginFacebookCommand { get { return new RelayCommand(LoginFacebook); } }
+
+      
+
         public ICommand LoginCommand { get { return new RelayCommand(Login); } }
 
         private async void Login()
@@ -321,6 +325,11 @@ namespace TorneoPredicciones.ViewModels
             //var mainViewModel = MainViewModel.GetInstance();
             //mainViewModel.CurrentUser = user;
             //navigationService.SetMainPage("MasterPage");
+        }
+
+        private void LoginFacebook()
+        {
+            navigationService.SetMainPage("LoginFacebookPage");
         }
         #endregion
 
