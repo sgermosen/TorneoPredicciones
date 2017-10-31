@@ -41,6 +41,7 @@ namespace TorneoPredicciones
                 user.FavoriteTeam = favoriteTeam;
                 var mainViewModel = MainViewModel.GetInstance();
                 mainViewModel.CurrentUser = user;
+                mainViewModel.RegisterDevice();//todo
                 MainPage = new MasterPage();
             }
             else
