@@ -1,0 +1,74 @@
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TorneoPredicciones.Pages.ProfilePage"
+             BackgroundColor="{StaticResource AccentColor1}"
+             Title="Welcome"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}">
+    <ContentPage.Content>
+        <StackLayout Padding="8"
+                     BindingContext="{Binding Profile}">
+            <Image HorizontalOptions="Start"
+                   VerticalOptions="Center"
+                   Source="{Binding Cover, Mode=TwoWay}">
+            </Image>
+            <StackLayout Orientation="Horizontal">
+                <Image HeightRequest="100"
+                       WidthRequest="100"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"
+                       Source="{Binding Picture, Mode=TwoWay}">
+                </Image>
+                <Label Text="{Binding UserName, Mode=TwoWay}"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center">
+                </Label>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Género: "
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start">
+                </Label>
+                <Label Text="{Binding Gender, Mode=TwoWay}"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start">
+                </Label>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Rango edad: "
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start">
+                </Label>
+                <Label Text="{Binding AgeRange, Mode=TwoWay}"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start">
+                </Label>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Localización: "
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start">
+                </Label>
+                <Label Text="{Binding Locale, Mode=TwoWay}"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start">
+                </Label>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Link: "
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start">
+                </Label>
+                <Label Text="{Binding Link, Mode=TwoWay}"
+                       FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Start">
+                </Label>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

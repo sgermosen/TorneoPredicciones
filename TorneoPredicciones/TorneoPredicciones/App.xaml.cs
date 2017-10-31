@@ -1,4 +1,5 @@
 ﻿using System;
+using TorneoPredicciones.Classes;
 using TorneoPredicciones.Models;
 using TorneoPredicciones.Pages;
 using TorneoPredicciones.Services;
@@ -54,6 +55,25 @@ namespace TorneoPredicciones
         }
 
         #region Methods
+        public static Action HideLoginView
+        {
+            get {
+                return new Action(() => App.Current.MainPage = new LoginPage());
+            }
+        }
+
+        public static void NavigateToProfile(FacebookResponse profile)
+        {
+            //var profileViewModel = new ProfileViewModel(profile);
+            //var mainViewModel = MainViewModel.GetInstance();
+            //mainViewModel.Profile = profileViewModel;
+            //App.Current.MainPage = new ProfilePage();
+            
+            var mainViewModel = MainViewModel.GetInstance();
+            mainViewModel.Profile = new ProfileViewModel(profile);
+            App.Current.MainPage = new ProfilePage();
+        }
+
         private void LoadParameters()
         {
             var urlBase = Application.Current.Resources["URLBase"].ToString();

@@ -45,6 +45,7 @@ namespace TorneoPredicciones.ViewModels
         //pues es en el menuitemviewmodel donde se instancian los viewmodel (new) usando este patron
         //de igual forma en el navigationservice se debe crear en la funcion navigate hacia donde va pinchada la accion
         #region Properties
+        public ProfileViewModel Profile { get; set; }
         public LoginViewModel Login { get; set; }
         public SelectTournamentViewModel SelectTournament { get; set; }
         public SelectMatchViewModel SelectMatch { get; set; }
