@@ -84,6 +84,10 @@ namespace TorneoPredicciones.Services
                     // Logout();
                     App.Current.MainPage = new NewUserPage();
                     break;
+                case "LoginFacebookPage":
+                    // Logout();
+                    App.Current.MainPage = new LoginFacebookPage();
+                    break;
                 default:
                     break;
             }
