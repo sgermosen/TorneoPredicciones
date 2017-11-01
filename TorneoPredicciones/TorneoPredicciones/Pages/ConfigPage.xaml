@@ -28,6 +28,7 @@
                         <Entry Grid.Column="1"
                                Text="{Binding FirstName, Mode=TwoWay}"
                                Placeholder="Enter the first name..."
+                               IsEnabled="{Binding AllowToModify, Mode=TwoWay}"
                                HorizontalOptions="FillAndExpand"
                                VerticalOptions="Center"
                                BackgroundColor="White">
@@ -49,6 +50,7 @@
                                Text="{Binding LastName, Mode=TwoWay}"
                                Placeholder="Enter the last name..."
                                HorizontalOptions="FillAndExpand"
+                               IsEnabled="{Binding AllowToModify, Mode=TwoWay}"
                                VerticalOptions="Center"
                                BackgroundColor="White">
                         </Entry>
@@ -105,6 +107,7 @@
                         <Entry Grid.Column="1"
                                Text="{Binding Email, Mode=TwoWay}"
                                Keyboard="Email"
+                               IsEnabled="{Binding AllowToModify, Mode=TwoWay}"
                                Placeholder="Enter the Email..."
                                HorizontalOptions="FillAndExpand"
                                VerticalOptions="Center"
@@ -192,6 +195,7 @@
                             Text="Save">
                     </Button>
                     <Button Command="{Binding ChangePasswordCommand}"
+                            IsEnabled="{Binding AllowToModify, Mode=TwoWay}"
                             HeightRequest="40"
                             BorderRadius="20"
                             HorizontalOptions="FillAndExpand"

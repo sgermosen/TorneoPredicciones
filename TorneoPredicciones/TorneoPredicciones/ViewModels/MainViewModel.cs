@@ -107,9 +107,9 @@ namespace TorneoPredicciones.ViewModels
                 return;
             }
             
-            var parameter = dataService.First<Parameter>(false);
+            var parameters = dataService.First<Parameter>(false);
             var user = dataService.First<User>(false);
-            var response = await apiService.GetPoints(parameter.URLBase, "/api", "/Users/GetPoints", user.TokenType, user.AccessToken,user.UserId);
+            var response = await apiService.GetPoints(parameters.URLBase, "/api", "/Users/GetPoints", user.TokenType, user.AccessToken,user.UserId);
 
             if (!response.IsSuccess)
             {

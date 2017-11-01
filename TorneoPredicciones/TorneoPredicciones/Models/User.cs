@@ -25,10 +25,10 @@ namespace TorneoPredicciones.Models
 
         public int Points { get; set; }
 
-         [ManyToOne]
+        [ManyToOne]
         public UserType UserType { get; set; }
 
-         [ManyToOne]
+        [ManyToOne]
         public Team FavoriteTeam { get; set; }
 
         public string AccessToken { get; set; }
@@ -50,8 +50,12 @@ namespace TorneoPredicciones.Models
                 {
                     return "avatar_user.png";
                 }
+                if (UserTypeId == 1)
+                {
+                    return string.Format("http://torneoprediccionesapi.azurewebsites.net/{0}", Picture.Substring(1));
+                }
 
-                return string.Format("http://torneoprediccionesapi.azurewebsites.net/{0}", Picture.Substring(1));
+                return Picture;
             }
         }
 

@@ -16,7 +16,7 @@ namespace TorneoPredicciones.ViewModels
 {
     public class ConfigViewModel : User, INotifyPropertyChanged
     {
-      
+
         #region Evento
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
@@ -34,10 +34,11 @@ namespace TorneoPredicciones.ViewModels
         private ImageSource imageSource;
         private MediaFile file;
         private User currentUser;
+        private bool allowToModify;
         #endregion
 
         #region Properties
-       
+
         public ObservableCollection<LeagueItemViewModel> Leagues { get; set; }
 
         public ObservableCollection<TeamItemViewModel> Teams { get; set; }
@@ -76,11 +77,25 @@ namespace TorneoPredicciones.ViewModels
                 if (favoriteTeamId != value)
                 {
                     favoriteTeamId = value;
-                   PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FavoriteTeamId"));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FavoriteTeamId"));
                 }
             }
             get {
                 return favoriteTeamId;
+            }
+        }
+
+        public bool AllowToModify
+        {
+            set {
+                if (allowToModify != value)
+                {
+                    allowToModify = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AllowToModify"));
+                }
+            }
+            get {
+                return allowToModify;
             }
         }
 
@@ -111,9 +126,9 @@ namespace TorneoPredicciones.ViewModels
                 return isEnabled;
             }
         }
-        
+
         #endregion
-        
+
         #region Metodos
         private void RealoadTeams(int favoriteLeagueId)
         {
@@ -202,7 +217,7 @@ namespace TorneoPredicciones.ViewModels
         private async void ChangePassword()
         {
             var mainViewModel = MainViewModel.GetInstance();
-            mainViewModel.ChangePassword= new ChangePasswordViewModel();
+            mainViewModel.ChangePassword = new ChangePasswordViewModel();
             await navigationService.Navigate("ChangePasswordPage");
         }
 
@@ -263,7 +278,7 @@ namespace TorneoPredicciones.ViewModels
                 imageArray = FilesHelper.ReadFully(file.GetStream());
                 file.Dispose();
             }
-              
+
 
             var user = new User
             {
@@ -275,22 +290,22 @@ namespace TorneoPredicciones.ViewModels
                 NickName = NickName,
                 Password = Password,
                 UserTypeId = 1,
-                UserId=currentUser.UserId
+                UserId = currentUser.UserId
             };
 
             var parameters = dataService.First<Parameter>(false);
-            var response = await apiService.Put(parameters.URLBase, "/api", "/Users", 
-                currentUser.TokenType,currentUser.AccessToken, user);
+            var response = await apiService.Put(parameters.URLBase, "/api", "/Users",
+                currentUser.TokenType, currentUser.AccessToken, user);
 
-           
+
             if (!response.IsSuccess)
             {
                 await dialogService.ShowMessage("Error", response.Message);
                 return;
             }
 
-             response = await apiService.GetUserByEmail(parameters.URLBase,
-                "/api", "/Users/GetUserByEmail", currentUser.TokenType, currentUser.AccessToken, Email);
+            response = await apiService.GetUserByEmail(parameters.URLBase,
+               "/api", "/Users/GetUserByEmail", currentUser.TokenType, currentUser.AccessToken, Email);
 
             var newUser = (User)response.Result;
 
@@ -314,8 +329,8 @@ namespace TorneoPredicciones.ViewModels
             //currentUser.LastName = LastName;
             //currentUser.NickName = NickName;
             //currentUser.Password = Password;
-            mainViewModel.CurrentUser =newUser;
-          await  navigationService.Back();
+            mainViewModel.CurrentUser = newUser;
+            await navigationService.Back();
 
         }
 
@@ -330,6 +345,10 @@ namespace TorneoPredicciones.ViewModels
 
         private async void TakePicture()
         {
+            if (!allowToModify)
+            {
+                return;
+            }
             await CrossMedia.Current.Initialize();
 
             if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
@@ -379,15 +398,17 @@ namespace TorneoPredicciones.ViewModels
             Picture = currentUser.Picture;
             Email = currentUser.Email;// currentUser.Email.Substring(7);
             NickName = currentUser.NickName;
-            
+
             IsEnabled = true;
 
+            allowToModify = currentUser.UserTypeId == 1;
+
             LoadLeagues();
-          
+
         }
-       
+
 
         #endregion
-        
+
     }
 }
