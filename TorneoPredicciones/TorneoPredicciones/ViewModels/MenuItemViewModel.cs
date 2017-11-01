@@ -60,7 +60,7 @@ namespace TorneoPredicciones.ViewModels
                         break;
                         
                 }
-                //var parameter = dataService.First<Parameter>(false);
+                //var parameters = dataService.First<Parameter>(false);
                 //parameter.Option = Title;
                 //dataService.Update(parameter);
                

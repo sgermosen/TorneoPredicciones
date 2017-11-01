@@ -80,9 +80,10 @@ namespace TorneoPredicciones.ViewModels
             }
             isRefreshing = true;
 
-            var parameter = dataService.First<Parameter>(false);
+            var parameters = dataService.First<Parameter>(false);
             var user = dataService.First<User>(false);
-            var response = await apiService.Get<TournamentTeam>(parameter.URLBase, "/api", "/TournamentTeams", user.TokenType, user.AccessToken,tournamentGroupId);
+            var response = await apiService.Get<TournamentTeam>(parameters.URLBase, "/api", "/TournamentTeams",
+                user.TokenType, user.AccessToken,tournamentGroupId);
             if (!response.IsSuccess)
             {
                 await dialogService.ShowMessage("Error", response.Message);
