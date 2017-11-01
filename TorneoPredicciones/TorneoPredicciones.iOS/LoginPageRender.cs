@@ -24,7 +24,7 @@ namespace TorneoPredicciones.iOS
             }
 
             var auth = new OAuth2Authenticator(
-                clientId: "xxxxxxxxxxxxx",
+                clientId: "898584026960286",
                 scope: "",
                 authorizeUrl: new Uri("https://www.facebook.com/v2.8/dialog/oauth"),
                 redirectUrl: new Uri("http://www.facebook.com/connect/login_success.html"));

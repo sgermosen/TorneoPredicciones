@@ -91,9 +91,9 @@ namespace TorneoPredicciones.ViewModels
                 return;
             }
             isRefreshing = true;
-            var parameter = dataService.First<Parameter>(false);
+            var parameters = dataService.First<Parameter>(false);
             var user = dataService.First<User>(false);
-            var response = await apiService.Get<Tournament>(parameter.URLBase, "/api", "/Tournaments", user.TokenType, user.AccessToken);
+            var response = await apiService.Get<Tournament>(parameters.URLBase, "/api", "/Tournaments", user.TokenType, user.AccessToken);
             if (!response.IsSuccess)
             {
                 await dialogService.ShowMessage("Error", response.Message);

@@ -12,6 +12,40 @@ namespace TorneoPredicciones.Services
 {
     public class ApiService
     {
+        public async Task<TokenResponse> LoginFacebook(string urlBase, string servicePrefix, string controller,FacebookResponse profile)
+        {
+            try
+            {
+                var request = JsonConvert.SerializeObject(profile);
+                var content = new StringContent(request, Encoding.UTF8, "application/json");
+                var client = new HttpClient();
+                //  client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(tokenType, accessToken);
+                client.BaseAddress = new Uri(urlBase);
+                var url = string.Format("{0}{1}", servicePrefix, controller);
+                var response = await client.PostAsync(url, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null;
+                    //return new Response
+                    //{
+                    //    IsSuccess = false,
+                    //    Message = response.StatusCode.ToString(),
+                    //};
+                }
+
+                //var result = await response.Content.ReadAsStringAsync();
+                //var newRecord = JsonConvert.DeserializeObject<T>(result);
+                var tokenResponse = await  GetToken(urlBase, profile.Id, profile.Id);
+                
+                return tokenResponse;
+            }
+            catch 
+            {
+                return null;
+            }
+        }
+
         public async Task<TokenResponse> GetToken(string urlBase, string username, string password)
         {
             try
