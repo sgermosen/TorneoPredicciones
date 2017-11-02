@@ -5,24 +5,23 @@
              BackgroundColor="{StaticResource AccentColor1}"
              Title="Seleccionar Grupo"
              BindingContext="{Binding Main, Source={StaticResource Locator}}">
-   <StackLayout Padding="8"
-                BindingContext="{Binding SelectGroup}">
-        <ListView ItemsSource="{Binding Groups}"
-                 HasUnevenRows="True">
+    <StackLayout Padding="8"
+                 BindingContext="{Binding SelectGroup}">
+        <!--<ListView ItemsSource="{Binding Groups}"
+                 HasUnevenRows="True"
+                 IsPullToRefreshEnabled="True"
+                 RefreshCommand="{Binding RefreshCommand}"
+                 IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}">
            <ListView.ItemTemplate>
                <DataTemplate>
                    <ViewCell>
                        <Grid Padding="8">
-                           <Grid.GestureRecognizers>
-                               <TapGestureRecognizer Command="{Binding SelectGroupCommand}" />
-                           </Grid.GestureRecognizers>
                            <Grid.ColumnDefinitions>
+                               <ColumnDefinition Width="Auto"></ColumnDefinition>
                                <ColumnDefinition Width="*"></ColumnDefinition>
                            </Grid.ColumnDefinitions>
-                           <StackLayout VerticalOptions="Center"
-                                        Grid.Column="0">
+                           <StackLayout VerticalOptions="Center">
                                <Label FontAttributes="Bold"
-                                      FontSize="Large"
                                       VerticalOptions="Center"
                                       TextColor="Black"
                                       Text="{Binding Name}">
@@ -32,8 +31,35 @@
                    </ViewCell>
                </DataTemplate>
            </ListView.ItemTemplate>
-       </ListView>
-       
-   </StackLayout>
-    
+       </ListView>-->
+
+        <ListView ItemsSource="{Binding Groups}"
+                  HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid Padding="8">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectGroupCommand}" />
+                            </Grid.GestureRecognizers>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <StackLayout VerticalOptions="Center"
+                                         Grid.Column="0">
+                                <Label FontAttributes="Bold"
+                                       FontSize="Large"
+                                       VerticalOptions="Center"
+                                       TextColor="Black"
+                                       Text="{Binding Name}">
+                                </Label>
+                            </StackLayout>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+    </StackLayout>
+
 </ContentPage>

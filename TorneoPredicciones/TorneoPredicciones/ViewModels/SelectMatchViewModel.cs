@@ -12,13 +12,14 @@ namespace TorneoPredicciones.ViewModels
     public class SelectMatchViewModel:INotifyPropertyChanged
     {
         #region Singleton
-        private static SelectMatchViewModel instance;
+        private static SelectMatchViewModel _instance;
 
         public static SelectMatchViewModel GetInstance()
         {
-            return instance;
+            return _instance;
         }
         #endregion
+
         #region Propidades
 
 
@@ -28,14 +29,12 @@ namespace TorneoPredicciones.ViewModels
         public bool IsRefreshing
         {
             set {
-                if (isRefreshing != value)
-                {
-                    isRefreshing = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRefreshing"));
-                }
+                if (_isRefreshing == value) return;
+                _isRefreshing = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRefreshing"));
             }
             get {
-                return isRefreshing;
+                return _isRefreshing;
             }
         }
 
@@ -45,13 +44,14 @@ namespace TorneoPredicciones.ViewModels
 
         public SelectMatchViewModel(int tournamentId)
         {
-            instance = this;
-            this.tournamentId = tournamentId;
+            
+            this._tournamentId = tournamentId;
+            _instance = this;
 
-            apiService = new ApiService();
-            dialogService = new DialogService();
-            navigationService = new NavigationService();
-            dataService = new DataService();
+            _apiService = new ApiService();
+            _dialogService = new DialogService();
+            _navigationService = new NavigationService();
+            _dataService = new DataService();
            
             Matches= new ObservableCollection<MatchItemViewModel>();
 
@@ -64,15 +64,15 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Atributos
-        private int tournamentId;
 
-        private ApiService apiService;
-        private DialogService dialogService;
-        private NavigationService navigationService;
-        private DataService dataService;
+        private readonly int _tournamentId;
+        private readonly ApiService _apiService;
+        private readonly DialogService _dialogService;
+        private NavigationService _navigationService;
+        private readonly DataService _dataService;
         //private string email;
         //private string password;
-        private bool isRefreshing;
+        private bool _isRefreshing;
         //private bool isEnabled;
         //private bool isRemembered;
 
@@ -89,6 +89,10 @@ namespace TorneoPredicciones.ViewModels
         private void Refresh()
         {
             LoadMatches();
+            //IsRefreshing = true;
+            //LoadTournaments();
+            //IsRefreshing = false;
+
         }
 
 
@@ -101,7 +105,7 @@ namespace TorneoPredicciones.ViewModels
             {
                 // IsRunning = false;
                 // IsEnabled = true;
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
 
@@ -110,15 +114,15 @@ namespace TorneoPredicciones.ViewModels
             {
                 // IsRunning = false;
                 // IsEnabled = true;
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
             IsRefreshing = true;
-            var parameters = dataService.First<Parameter>(false);
-            var user = dataService.First<User>(false);
-            var controller = string.Format("/Tournaments/GetMatchesToPredict/{0}/{1}",tournamentId,user.UserId);
+            var parameters = _dataService.First<Parameter>(false);
+            var user = _dataService.First<User>(false);
+            var controller = string.Format("/Tournaments/GetMatchesToPredict/{0}/{1}",_tournamentId,user.UserId);
 
-            var response = await apiService.Get<Match>(parameters.URLBase, "/api", controller,
+            var response = await _apiService.Get<Match>(parameters.UrlBase, "/api", controller,
                 user.TokenType,
                 user.AccessToken);
             IsRefreshing = false;
@@ -126,12 +130,28 @@ namespace TorneoPredicciones.ViewModels
             {
                 // IsRunning = false;
                 // IsEnabled = true;
-                await dialogService.ShowMessage("Error", response.Message);
+                await _dialogService.ShowMessage("Error", response.Message);
                 return;
             }
 
             ReloadMatches((List<Match>)response.Result);
         }
+
+        //private void ReloadTournaments(List<Tournament> tournaments)
+        //{
+        //    Tournaments.Clear();
+        //    foreach (var tournament in tournaments)
+        //    {
+        //        Tournaments.Add(new TournamentItemViewModel
+        //        {
+        //            Dates = tournament.Dates,
+        //            Groups = tournament.Groups,
+        //            Logo = tournament.Logo,
+        //            Name = tournament.Name,
+        //            TournamentId = tournament.TournamentId,
+        //        });
+        //    }
+        //}
 
         private void ReloadMatches(List<Match> matches)
         {
@@ -158,8 +178,6 @@ namespace TorneoPredicciones.ViewModels
         }
 
         #endregion
-
-
        
     }
 }

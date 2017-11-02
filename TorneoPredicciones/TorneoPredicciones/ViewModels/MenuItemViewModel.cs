@@ -9,8 +9,8 @@ namespace TorneoPredicciones.ViewModels
     {
         #region Atributos
 
-        private NavigationService navigationService;
-        private DataService dataService;
+        private readonly NavigationService _navigationService;
+        private readonly DataService _dataService;
 
         #endregion
 
@@ -31,27 +31,27 @@ namespace TorneoPredicciones.ViewModels
             {
                 
                 mainViewModel.CurrentUser.IsRemembered = false;
-                dataService.Update(mainViewModel.CurrentUser);
-                navigationService.SetMainPage("LoginPage");
+                _dataService.Update(mainViewModel.CurrentUser);
+                _navigationService.SetMainPage("LoginPage");
             }
             else
             {
                 switch (PageName)
                 {//este señor manda a una pagina compartida, por lo que es prudente almacenar de donde fue llamado para saber a donde volver
                     case "SelectTournamentPage":
-                        var parameters = dataService.First<Parameter>(false);
+                        var parameters = _dataService.First<Parameter>(false);
                         parameters.Option = Title;//quien diferencia las dos opciones
-                        dataService.Update(parameters);
+                        _dataService.Update(parameters);
                         mainViewModel.SelectTournament=new SelectTournamentViewModel();
-                        await navigationService.Navigate(PageName);
+                        await _navigationService.Navigate(PageName);
                         break;
                     case "ConfigPage":
                         mainViewModel.Config = new ConfigViewModel(mainViewModel.CurrentUser);
-                        await navigationService.Navigate(PageName);
+                        await _navigationService.Navigate(PageName);
                         break;
                     case "SelectUserGroupPage":
                         mainViewModel.SelectUserGroup = new SelectUserGroupViewModel();
-                        await navigationService.Navigate(PageName);
+                        await _navigationService.Navigate(PageName);
                         break;
 
                         
@@ -73,8 +73,8 @@ namespace TorneoPredicciones.ViewModels
 
         public MenuItemViewModel()
         {
-            navigationService = new NavigationService();
-            dataService= new DataService();
+            _navigationService = new NavigationService();
+            _dataService= new DataService();
         }
 
         #endregion
