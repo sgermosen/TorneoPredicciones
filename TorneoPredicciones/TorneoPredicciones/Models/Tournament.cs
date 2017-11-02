@@ -14,17 +14,7 @@ namespace TorneoPredicciones.Models
 
         public List<Date> Dates { get; set; }
 
-        public string FullLogo
-        {
-            get {
-                if (string.IsNullOrEmpty(Logo))
-                {
-                    return "avatar_tournament.png";
-                }
-
-                return string.Format("http://torneopredicciones.azurewebsites.net/{0}", Logo.Substring(1));
-            }
-        }
+        public string FullLogo => string.IsNullOrEmpty(Logo) ? "avatar_tournament.png" : string.Format("http://torneopredicciones.azurewebsites.net/{0}", Logo.Substring(1));
     }
 
 }

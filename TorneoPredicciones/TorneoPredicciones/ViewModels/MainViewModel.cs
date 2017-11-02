@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
@@ -19,23 +18,18 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Atriutos
-        private ApiService apiService;
-        private DataService dataService;
+        private readonly ApiService _apiService;
+        private readonly DataService _dataService;
        
-        private User currentUser;
+        private User _currentUser;
         #endregion
 
         #region Singleton
-        private static MainViewModel instance;
+        private static MainViewModel _instance;
 
         public static MainViewModel GetInstance()
         {
-            if (instance == null)
-            {
-                instance = new MainViewModel();
-            }
-
-            return instance;
+            return _instance ?? (_instance = new MainViewModel());
         }
         #endregion
         //notas, siempre se crea una pagina, luego una viewmodel y despues se instancia en la MainViewModel (osea yo) para asi asociar 
@@ -53,6 +47,9 @@ namespace TorneoPredicciones.ViewModels
         public NewUserViewModel NewUser { get; set; }
         public SelectGroupViewModel SelectGroup { get; set; }
         public ChangePasswordViewModel ChangePassword { get; set; }
+        public ForgotPasswordViewModel ForgotPassword { get; set; }
+        public MyResultsViewModel MyResults { get; set; }
+
         public ConfigViewModel Config { get; set; }
         public PositionsViewModel Positions { get; set; }
         
@@ -64,14 +61,12 @@ namespace TorneoPredicciones.ViewModels
         public User CurrentUser
         {
             set {
-                if (currentUser != value)
-                {
-                    currentUser = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUser"));
-                }
+                if (_currentUser == value) return;
+                _currentUser = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUser"));
             }
             get {
-                return currentUser;
+                return _currentUser;
             }
         }
 
@@ -82,10 +77,10 @@ namespace TorneoPredicciones.ViewModels
 
         public MainViewModel()
         {
-            instance = this;
+            _instance = this;
             Login = new LoginViewModel();
-            apiService= new ApiService();
-            dataService= new DataService();
+            _apiService= new ApiService();
+            _dataService= new DataService();
             LoadMenu();
         }
 
@@ -107,9 +102,9 @@ namespace TorneoPredicciones.ViewModels
                 return;
             }
             
-            var parameters = dataService.First<Parameter>(false);
-            var user = dataService.First<User>(false);
-            var response = await apiService.GetPoints(parameters.URLBase, "/api", "/Users/GetPoints", user.TokenType, user.AccessToken,user.UserId);
+            var parameters = _dataService.First<Parameter>(false);
+            var user = _dataService.First<User>(false);
+            var response = await _apiService.GetPoints(parameters.UrlBase, "/api", "/Users/GetPoints", user.TokenType, user.AccessToken,user.UserId);
 
             if (!response.IsSuccess)
             {
@@ -119,7 +114,7 @@ namespace TorneoPredicciones.ViewModels
             if (CurrentUser.Points != point.Points)
             {
                 CurrentUser.Points = point.Points;
-                dataService.Update(CurrentUser); //actualizamos la base de datos local
+                _dataService.Update(CurrentUser); //actualizamos la base de datos local
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUser"));
             }
            
@@ -155,14 +150,14 @@ namespace TorneoPredicciones.ViewModels
             Menu.Add(new MenuItemViewModel
             {
                 Icon = "tournaments.png",
-                PageName = "TournamentsPage",
+                PageName = "SelectTournamentPage",
                 Title = "Tournaments",
             });
 
             Menu.Add(new MenuItemViewModel
             {
                 Icon = "myresults.png",
-                PageName = "ResultsPage",
+                PageName = "SelectTournamentPage",
                 Title = "My Results",
             });
 
@@ -181,9 +176,12 @@ namespace TorneoPredicciones.ViewModels
             });
         }
 
+        public void SetCurrentUser(User user)
+        {
+            CurrentUser = user;
+        }
 
-
-        #endregion
+#endregion
 
     }
 }

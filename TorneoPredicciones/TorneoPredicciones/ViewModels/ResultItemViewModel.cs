@@ -2,7 +2,7 @@
 
 namespace TorneoPredicciones.ViewModels
 {
-   public class GroupUserItemViewModel: GroupUser
+   public  class ResultItemViewModel:Result
     {
     }
 }

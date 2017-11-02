@@ -4,9 +4,9 @@ using Xamarin.Forms.Xaml;
 namespace TorneoPredicciones.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginFacebookPage : ContentPage
+    public partial class MyResultsPage : ContentPage
     {
-        public LoginFacebookPage()
+        public MyResultsPage()
         {
             InitializeComponent();
         }

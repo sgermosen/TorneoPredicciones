@@ -11,74 +11,74 @@ namespace TorneoPredicciones.Data
 {
     public class DataAccess : IDisposable
     {
-        private SQLiteConnection connection;
+        private readonly SQLiteConnection _connection;
 
         public DataAccess() //equiva;lente al datacontext
         {
             var config = DependencyService.Get<IConfig>();
-            connection = new SQLiteConnection(config.Platform,
-                System.IO.Path.Combine(config.DirectoryDB, "TorneoPredicciones.db3"));
+            _connection = new SQLiteConnection(config.Platform,
+                System.IO.Path.Combine(config.DirectoryDb, "TorneoPredicciones.db3"));
             //equivalente al dataset
-            connection.CreateTable<Parameter>();
-            connection.CreateTable<Team>();
-            connection.CreateTable<User>();
-            connection.CreateTable<UserType>();
+            _connection.CreateTable<Parameter>();
+            _connection.CreateTable<Team>();
+            _connection.CreateTable<User>();
+            _connection.CreateTable<UserType>();
         }
 
         public void Insert<T>(T model)
         {
-            connection.Insert(model);
+            _connection.Insert(model);
         }
 
         public void Update<T>(T model)
         {
-            connection.Update(model);
+            _connection.Update(model);
         }
 
         public void Delete<T>(T model)
         {
-            connection.Delete(model);
+            _connection.Delete(model);
         }
 
-        public T First<T>(bool WithChildren) where T : class
+        public T First<T>(bool withChildren) where T : class
         {
-            if (WithChildren)
+            if (withChildren)
             {
-                return connection.GetAllWithChildren<T>().FirstOrDefault();
+                return _connection.GetAllWithChildren<T>().FirstOrDefault();
             }
             else
             {
-                return connection.Table<T>().FirstOrDefault();
+                return _connection.Table<T>().FirstOrDefault();
             }
         }
 
-        public List<T> GetList<T>(bool WithChildren) where T : class
+        public List<T> GetList<T>(bool withChildren) where T : class
         {
-            if (WithChildren)
+            if (withChildren)
             {
-                return connection.GetAllWithChildren<T>().ToList();
+                return _connection.GetAllWithChildren<T>().ToList();
             }
             else
             {
-                return connection.Table<T>().ToList();
+                return _connection.Table<T>().ToList();
             }
         }
 
-        public T Find<T>(int pk, bool WithChildren) where T : class
+        public T Find<T>(int pk, bool withChildren) where T : class
         {
-            if (WithChildren)
+            if (withChildren)
             {
-                return connection.GetAllWithChildren<T>().FirstOrDefault(m => m.GetHashCode() == pk);
+                return _connection.GetAllWithChildren<T>().FirstOrDefault(m => m.GetHashCode() == pk);
             }
             else
             {
-                return connection.Table<T>().FirstOrDefault(m => m.GetHashCode() == pk);
+                return _connection.Table<T>().FirstOrDefault(m => m.GetHashCode() == pk);
             }
         }
 
         public void Dispose()
         {
-            connection.Dispose();
+            _connection.Dispose();
         }
     }
 

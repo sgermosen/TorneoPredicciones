@@ -26,29 +26,9 @@
 
         public Team Visitor { get; set; }
 
-        public int? LocalGoals2
-        {
-            get {
-                if (WasPredicted)
-                {
-                    return LocalGoals;
-                }
+        public int? LocalGoals2 => WasPredicted ? LocalGoals : null;
 
-                return null;
-            }
-        }
-
-        public int? VisitorGoals2
-        {
-            get {
-                if (WasPredicted)
-                {
-                    return VisitorGoals;
-                }
-
-                return null;
-            }
-        }
+        public int? VisitorGoals2 => WasPredicted ? VisitorGoals : null;
     }
 
 }

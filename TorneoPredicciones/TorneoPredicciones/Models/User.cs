@@ -41,7 +41,7 @@ namespace TorneoPredicciones.Models
 
         public bool IsRemembered { get; set; }
 
-        public string FullName { get { return string.Format("{0} {1}", FirstName, LastName); } }
+        public string FullName => string.Format("{0} {1}", FirstName, LastName);
 
         public string FullPicture
         {
@@ -50,12 +50,7 @@ namespace TorneoPredicciones.Models
                 {
                     return "avatar_user.png";
                 }
-                if (UserTypeId == 1)
-                {
-                    return string.Format("http://torneoprediccionesapi.azurewebsites.net/{0}", Picture.Substring(1));
-                }
-
-                return Picture;
+                return UserTypeId == 1 ? string.Format("http://torneoprediccionesapi.azurewebsites.net/{0}", Picture.Substring(1)) : Picture;
             }
         }
 

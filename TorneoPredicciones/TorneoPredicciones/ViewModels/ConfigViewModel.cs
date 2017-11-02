@@ -22,19 +22,19 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Attributes
-        private ApiService apiService;
-        private DialogService dialogService;
-        private NavigationService navigationService;
-        private DataService dataService;
-        private bool isRunning;
-        private bool isEnabled;
-        private int favoriteLeagueId;
-        private int favoriteTeamId;
-        private List<League> leagues;
-        private ImageSource imageSource;
-        private MediaFile file;
-        private User currentUser;
-        private bool allowToModify;
+        private readonly ApiService _apiService;
+        private readonly DialogService _dialogService;
+        private readonly NavigationService _navigationService;
+        private readonly DataService _dataService;
+        private bool _isRunning;
+        private bool _isEnabled;
+        private int _favoriteLeagueId;
+        private int _favoriteTeamId;
+        private List<League> _leagues;
+        private ImageSource _imageSource;
+        private MediaFile _file;
+        private readonly User _currentUser;
+        private bool _allowToModify;
         #endregion
 
         #region Properties
@@ -46,84 +46,84 @@ namespace TorneoPredicciones.ViewModels
         public ImageSource ImageSource
         {
             set {
-                if (imageSource != value)
+                if (_imageSource != value)
                 {
-                    imageSource = value;
+                    _imageSource = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ImageSource"));
                 }
             }
             get {
-                return imageSource;
+                return _imageSource;
             }
         }
 
         public int FavoriteLeagueId
         {
             set {
-                if (favoriteLeagueId != value)
+                if (_favoriteLeagueId != value)
                 {
-                    favoriteLeagueId = value;
-                    RealoadTeams(favoriteLeagueId);
+                    _favoriteLeagueId = value;
+                    RealoadTeams(_favoriteLeagueId);
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FavoriteLeagueId"));
                 }
             }
             get {
-                return favoriteLeagueId;
+                return _favoriteLeagueId;
             }
         }
         public new int FavoriteTeamId
         {
             set {
-                if (favoriteTeamId != value)
+                if (_favoriteTeamId != value)
                 {
-                    favoriteTeamId = value;
+                    _favoriteTeamId = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FavoriteTeamId"));
                 }
             }
             get {
-                return favoriteTeamId;
+                return _favoriteTeamId;
             }
         }
 
         public bool AllowToModify
         {
             set {
-                if (allowToModify != value)
+                if (_allowToModify != value)
                 {
-                    allowToModify = value;
+                    _allowToModify = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AllowToModify"));
                 }
             }
             get {
-                return allowToModify;
+                return _allowToModify;
             }
         }
 
         public bool IsRunning
         {
             set {
-                if (isRunning != value)
+                if (_isRunning != value)
                 {
-                    isRunning = value;
+                    _isRunning = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRunning"));
                 }
             }
             get {
-                return isRunning;
+                return _isRunning;
             }
         }
 
         public bool IsEnabled
         {
             set {
-                if (isEnabled != value)
+                if (_isEnabled != value)
                 {
-                    isEnabled = value;
+                    _isEnabled = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsEnabled"));
                 }
             }
             get {
-                return isEnabled;
+                return _isEnabled;
             }
         }
 
@@ -132,7 +132,7 @@ namespace TorneoPredicciones.ViewModels
         #region Metodos
         private void RealoadTeams(int favoriteLeagueId)
         {
-            var teams = leagues.Where(l => l.LeagueId == favoriteLeagueId).FirstOrDefault().Teams;
+            var teams = _leagues.Where(l => l.LeagueId == favoriteLeagueId).FirstOrDefault().Teams;
             Teams.Clear();
             foreach (var team in teams.OrderBy(t => t.Name))
             {
@@ -154,7 +154,7 @@ namespace TorneoPredicciones.ViewModels
             {
                 // IsRunning = false;
                 // IsEnabled = true;
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
 
@@ -163,15 +163,15 @@ namespace TorneoPredicciones.ViewModels
             {
                 // IsRunning = false;
                 // IsEnabled = true;
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
             IsRunning = true;
             IsEnabled = false;
 
-            var parameters = dataService.First<Parameter>(false);
+            var parameters = _dataService.First<Parameter>(false);
             // var user = dataService.First<User>(false);
-            var response = await apiService.Get<League>(parameters.URLBase, "/api", "/Leagues");
+            var response = await _apiService.Get<League>(parameters.UrlBase, "/api", "/Leagues");
 
             IsRunning = false;
             IsEnabled = true;
@@ -180,15 +180,15 @@ namespace TorneoPredicciones.ViewModels
             {
                 // IsRunning = false;
                 // IsEnabled = true;
-                await dialogService.ShowMessage("Error", response.Message);
+                await _dialogService.ShowMessage("Error", response.Message);
                 return;
             }
 
-            leagues = (List<League>)response.Result;
-            ReloadLeagues(leagues);
-            RealoadTeams(currentUser.FavoriteTeam.LeagueId);
-            favoriteLeagueId = currentUser.FavoriteTeam.LeagueId;
-            FavoriteTeamId = currentUser.FavoriteTeamId;
+            _leagues = (List<League>)response.Result;
+            ReloadLeagues(_leagues);
+            RealoadTeams(_currentUser.FavoriteTeam.LeagueId);
+            _favoriteLeagueId = _currentUser.FavoriteTeam.LeagueId;
+            FavoriteTeamId = _currentUser.FavoriteTeamId;
         }
 
         private void ReloadLeagues(List<League> leagues)
@@ -218,7 +218,7 @@ namespace TorneoPredicciones.ViewModels
         {
             var mainViewModel = MainViewModel.GetInstance();
             mainViewModel.ChangePassword = new ChangePasswordViewModel();
-            await navigationService.Navigate("ChangePasswordPage");
+            await _navigationService.Navigate("ChangePasswordPage");
         }
 
 
@@ -228,44 +228,44 @@ namespace TorneoPredicciones.ViewModels
         {
             if (string.IsNullOrEmpty(FirstName))
             {
-                await dialogService.ShowMessage("Error", "You must enter a first name.");
+                await _dialogService.ShowMessage("Error", "You must enter a first name.");
                 return;
             }
 
             if (string.IsNullOrEmpty(LastName))
             {
-                await dialogService.ShowMessage("Error", "You must enter a last name.");
+                await _dialogService.ShowMessage("Error", "You must enter a last name.");
                 return;
             }
 
             if (string.IsNullOrEmpty(Email))
             {
-                await dialogService.ShowMessage("Error", "You must enter a email.");
+                await _dialogService.ShowMessage("Error", "You must enter a email.");
                 return;
             }
 
             if (string.IsNullOrEmpty(NickName))
             {
-                await dialogService.ShowMessage("Error", "You must enter a nick name.");
+                await _dialogService.ShowMessage("Error", "You must enter a nick name.");
                 return;
             }
 
             if (FavoriteTeamId == 0)
             {
-                await dialogService.ShowMessage("Error", "You must select a favorite team.");
+                await _dialogService.ShowMessage("Error", "You must select a favorite team.");
                 return;
             }
 
             if (!CrossConnectivity.Current.IsConnected)
             {
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
 
             var isReachable = await CrossConnectivity.Current.IsRemoteReachable("notasti.com");
             if (!isReachable)
             {
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
 
@@ -273,10 +273,10 @@ namespace TorneoPredicciones.ViewModels
             IsEnabled = false;
 
             byte[] imageArray = null;
-            if (file != null)
+            if (_file != null)
             {
-                imageArray = FilesHelper.ReadFully(file.GetStream());
-                file.Dispose();
+                imageArray = FilesHelper.ReadFully(_file.GetStream());
+                _file.Dispose();
             }
 
 
@@ -290,33 +290,33 @@ namespace TorneoPredicciones.ViewModels
                 NickName = NickName,
                 Password = Password,
                 UserTypeId = 1,
-                UserId = currentUser.UserId
+                UserId = _currentUser.UserId
             };
 
-            var parameters = dataService.First<Parameter>(false);
-            var response = await apiService.Put(parameters.URLBase, "/api", "/Users",
-                currentUser.TokenType, currentUser.AccessToken, user);
+            var parameters = _dataService.First<Parameter>(false);
+            var response = await _apiService.Put(parameters.UrlBase, "/api", "/Users",
+                _currentUser.TokenType, _currentUser.AccessToken, user);
 
 
             if (!response.IsSuccess)
             {
-                await dialogService.ShowMessage("Error", response.Message);
+                await _dialogService.ShowMessage("Error", response.Message);
                 return;
             }
 
-            response = await apiService.GetUserByEmail(parameters.URLBase,
-               "/api", "/Users/GetUserByEmail", currentUser.TokenType, currentUser.AccessToken, Email);
+            response = await _apiService.GetUserByEmail(parameters.UrlBase,
+               "/api", "/Users/GetUserByEmail", _currentUser.TokenType, _currentUser.AccessToken, Email);
 
             var newUser = (User)response.Result;
 
-            newUser.AccessToken = currentUser.AccessToken;
-            newUser.TokenType = currentUser.TokenType;
-            newUser.TokenExpires = currentUser.TokenExpires;
-            newUser.IsRemembered = currentUser.IsRemembered;
-            newUser.Password = currentUser.Password;
-            dataService.DeleteAllAndInsert(newUser.FavoriteTeam);
-            dataService.DeleteAllAndInsert(newUser.UserType);
-            dataService.DeleteAllAndInsert(newUser);
+            newUser.AccessToken = _currentUser.AccessToken;
+            newUser.TokenType = _currentUser.TokenType;
+            newUser.TokenExpires = _currentUser.TokenExpires;
+            newUser.IsRemembered = _currentUser.IsRemembered;
+            newUser.Password = _currentUser.Password;
+            _dataService.DeleteAllAndInsert(newUser.FavoriteTeam);
+            _dataService.DeleteAllAndInsert(newUser.UserType);
+            _dataService.DeleteAllAndInsert(newUser);
 
             IsRunning = false;
             IsEnabled = true;
@@ -330,7 +330,7 @@ namespace TorneoPredicciones.ViewModels
             //currentUser.NickName = NickName;
             //currentUser.Password = Password;
             mainViewModel.CurrentUser = newUser;
-            await navigationService.Back();
+            await _navigationService.Back();
 
         }
 
@@ -338,14 +338,14 @@ namespace TorneoPredicciones.ViewModels
 
         private void Cancel()
         {
-            navigationService.SetMainPage("LoginPage");
+            _navigationService.SetMainPage("LoginPage");
         }
 
         public ICommand TakePictureCommand { get { return new RelayCommand(TakePicture); } }
 
         private async void TakePicture()
         {
-            if (!allowToModify)
+            if (!_allowToModify)
             {
                 return;
             }
@@ -353,24 +353,24 @@ namespace TorneoPredicciones.ViewModels
 
             if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
             {
-                await dialogService.ShowMessage("No Camera", ":( No camera available.");
+                await _dialogService.ShowMessage("No Camera", ":( No camera available.");
                 return;
             }
 
             IsRunning = true;
 
-            file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+            _file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
             {
                 Directory = "Sample",
                 Name = "test.jpg",
                 PhotoSize = PhotoSize.Small,
             });
 
-            if (file != null)
+            if (_file != null)
             {
                 ImageSource = ImageSource.FromStream(() =>
                 {
-                    var stream = file.GetStream();
+                    var stream = _file.GetStream();
                     return stream;
                 });
             }
@@ -383,12 +383,12 @@ namespace TorneoPredicciones.ViewModels
         #region Constructor
         public ConfigViewModel(User currentUser)
         {
-            this.currentUser = currentUser;
+            this._currentUser = currentUser;
 
-            apiService = new ApiService();
-            dialogService = new DialogService();
-            navigationService = new NavigationService();
-            dataService = new DataService();
+            _apiService = new ApiService();
+            _dialogService = new DialogService();
+            _navigationService = new NavigationService();
+            _dataService = new DataService();
 
             Leagues = new ObservableCollection<LeagueItemViewModel>();
             Teams = new ObservableCollection<TeamItemViewModel>();
@@ -401,7 +401,7 @@ namespace TorneoPredicciones.ViewModels
 
             IsEnabled = true;
 
-            allowToModify = currentUser.UserTypeId == 1;
+            _allowToModify = currentUser.UserTypeId == 1;
 
             LoadLeagues();
 

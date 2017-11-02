@@ -57,6 +57,7 @@
     <Compile Include="Models\Parameter.cs" />
     <Compile Include="Models\Point.cs" />
     <Compile Include="Models\Prediction.cs" />
+    <Compile Include="Models\Result.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Models\Tournament.cs" />
     <Compile Include="Models\TournamentTeam.cs" />
@@ -72,6 +73,9 @@
     <Compile Include="Pages\EditPredictionPage.xaml.cs">
       <DependentUpon>EditPredictionPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ForgotPasswordPage.xaml.cs">
+      <DependentUpon>ForgotPasswordPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
@@ -86,6 +90,9 @@
     </Compile>
     <Compile Include="Pages\MenuPage.xaml.cs">
       <DependentUpon>MenuPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MyResultsPage.xaml.cs">
+      <DependentUpon>MyResultsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\NewUserPage.xaml.cs">
       <DependentUpon>NewUserPage.xaml</DependentUpon>
@@ -119,6 +126,7 @@
     <Compile Include="ViewModels\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
     <Compile Include="ViewModels\EditPredictionViewModel.cs" />
+    <Compile Include="ViewModels\ForgotPasswordViewModel.cs" />
     <Compile Include="ViewModels\GroupItemViewModel.cs" />
     <Compile Include="ViewModels\GroupUserItemViewModel.cs" />
     <Compile Include="ViewModels\LeagueItemViewModel.cs" />
@@ -126,9 +134,11 @@
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\MatchItemViewModel.cs" />
     <Compile Include="ViewModels\MenuItemViewModel.cs" />
+    <Compile Include="ViewModels\MyResultsViewModel.cs" />
     <Compile Include="ViewModels\NewUserViewModel.cs" />
     <Compile Include="ViewModels\PositionsViewModel.cs" />
     <Compile Include="ViewModels\ProfileViewModel.cs" />
+    <Compile Include="ViewModels\ResultItemViewModel.cs" />
     <Compile Include="ViewModels\SelectGroupViewModel.cs" />
     <Compile Include="ViewModels\SelectMatchViewModel.cs" />
     <Compile Include="ViewModels\SelectTournamentViewModel.cs" />
@@ -302,6 +312,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\ProfilePage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\ForgotPasswordPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Pages\MyResultsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

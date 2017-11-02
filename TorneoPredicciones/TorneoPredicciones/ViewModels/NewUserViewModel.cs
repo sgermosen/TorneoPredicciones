@@ -35,16 +35,16 @@ namespace TorneoPredicciones.ViewModels
         //private int favoriteLeagueId;
         //private ImageSource imageSource;
         //private MediaFile file;
-        private ApiService apiService;
-        private DialogService dialogService;
-        private NavigationService navigationService;
-        private DataService dataService;
-        private bool isRunning;
-        private bool isEnabled;
-        private int favoriteLeagueId;
-        private List<League> leagues;
-        private ImageSource imageSource;
-        private MediaFile file;
+        private readonly ApiService _apiService;
+        private readonly DialogService _dialogService;
+        private readonly NavigationService _navigationService;
+        private readonly DataService _dataService;
+        private bool _isRunning;
+        private bool _isEnabled;
+        private int _favoriteLeagueId;
+        private List<League> _leagues;
+        private ImageSource _imageSource;
+        private MediaFile _file;
         //private string PasswordConfirm;
 
 
@@ -59,29 +59,29 @@ namespace TorneoPredicciones.ViewModels
         public ImageSource ImageSource
         {
             set {
-                if (imageSource != value)
+                if (_imageSource != value)
                 {
-                    imageSource = value;
+                    _imageSource = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ImageSource"));
                 }
             }
             get {
-                return imageSource;
+                return _imageSource;
             }
         }
         
         public int FavoriteLeagueId
         {
             set {
-                if (favoriteLeagueId != value)
+                if (_favoriteLeagueId != value)
                 {
-                    favoriteLeagueId = value;
-                    RealoadTeams(favoriteLeagueId);
+                    _favoriteLeagueId = value;
+                    RealoadTeams(_favoriteLeagueId);
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FavoriteLeagueId"));
                 }
             }
             get {
-                return favoriteLeagueId;
+                return _favoriteLeagueId;
             }
         }
 
@@ -90,28 +90,28 @@ namespace TorneoPredicciones.ViewModels
         public bool IsRunning
         {
             set {
-                if (isRunning != value)
+                if (_isRunning != value)
                 {
-                    isRunning = value;
+                    _isRunning = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRunning"));
                 }
             }
             get {
-                return isRunning;
+                return _isRunning;
             }
         }
 
         public bool IsEnabled
         {
             set {
-                if (isEnabled != value)
+                if (_isEnabled != value)
                 {
-                    isEnabled = value;
+                    _isEnabled = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsEnabled"));
                 }
             }
             get {
-                return isEnabled;
+                return _isEnabled;
             }
         }
 
@@ -121,13 +121,16 @@ namespace TorneoPredicciones.ViewModels
         #region Constructores
         public NewUserViewModel()
         {
-            apiService = new ApiService();
-            dialogService = new DialogService();
-            navigationService = new NavigationService();
-            dataService = new DataService();
+            _apiService = new ApiService();
+            _dialogService = new DialogService();
+            _navigationService = new NavigationService();
+            _dataService = new DataService();
+
             Leagues = new ObservableCollection<LeagueItemViewModel>();
             Teams = new ObservableCollection<TeamItemViewModel>();
             // IsRunning = false;
+
+            Picture = "avatar_user.png";
             IsEnabled = true;
 
             LoadLeagues();
@@ -141,7 +144,7 @@ namespace TorneoPredicciones.ViewModels
         #region Metodos
         private void RealoadTeams(int favoriteLeagueId)
         {
-            var teams = leagues.Where(l => l.LeagueId == favoriteLeagueId).FirstOrDefault().Teams;
+            var teams = _leagues.Where(l => l.LeagueId == favoriteLeagueId).FirstOrDefault().Teams;
             Teams.Clear();
             foreach (var team in teams.OrderBy(t=>t.Name))
             {
@@ -162,7 +165,7 @@ namespace TorneoPredicciones.ViewModels
             {
                 // IsRunning = false;
                 // IsEnabled = true;
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
 
@@ -171,16 +174,17 @@ namespace TorneoPredicciones.ViewModels
             {
                 // IsRunning = false;
                 // IsEnabled = true;
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
+
             IsRunning = true;
             IsEnabled = false;
 
-            var parameters = dataService.First<Parameter>(false);
+            var parameters = _dataService.First<Parameter>(false);
             // var user = dataService.First<User>(false);
+            var response = await _apiService.Get<League>(parameters.UrlBase, "/api", "/Leagues");
 
-            var response = await apiService.Get<League>(parameters.URLBase, "/api", "/Leagues");
 
             IsRunning = false;
             IsEnabled = true;
@@ -189,12 +193,12 @@ namespace TorneoPredicciones.ViewModels
             {
                 // IsRunning = false;
                 // IsEnabled = true;
-                await dialogService.ShowMessage("Error", response.Message);
+                await _dialogService.ShowMessage("Error", response.Message);
                 return;
             }
 
-            leagues = (List<League>)response.Result;
-            ReloadLeagues(leagues);
+            _leagues = (List<League>)response.Result;
+            ReloadLeagues(_leagues);
         }
 
         private void ReloadLeagues(List<League> leagues)
@@ -208,9 +212,7 @@ namespace TorneoPredicciones.ViewModels
                     Logo = league.Logo,
                     Name = league.Name,
                     Teams = league.Teams,
-
                 });
-
             }
         }
 
@@ -223,76 +225,76 @@ namespace TorneoPredicciones.ViewModels
         {
             if (string.IsNullOrEmpty(FirstName))
             {
-                await dialogService.ShowMessage("Error", "You must enter a first name.");
+                await _dialogService.ShowMessage("Error", "You must enter a first name.");
                 return;
             }
 
             if (string.IsNullOrEmpty(LastName))
             {
-                await dialogService.ShowMessage("Error", "You must enter a last name.");
+                await _dialogService.ShowMessage("Error", "You must enter a last name.");
                 return;
             }
 
             if (string.IsNullOrEmpty(Password))
             {
-                await dialogService.ShowMessage("Error", "You must enter a password.");
+                await _dialogService.ShowMessage("Error", "You must enter a password.");
                 return;
             }
 
             if (Password.Length < 6)
             {
-                await dialogService.ShowMessage("Error", "The password must have at least 6 characters.");
+                await _dialogService.ShowMessage("Error", "The password must have at least 6 characters.");
                 return;
             }
 
             if (string.IsNullOrEmpty(PasswordConfirm))
             {
-                await dialogService.ShowMessage("Error", "You must enter a password confirm.");
+                await _dialogService.ShowMessage("Error", "You must enter a password confirm.");
                 return;
             }
 
             if (Password != PasswordConfirm)
             {
-                await dialogService.ShowMessage("Error", "The password and confirm does not match.");
+                await _dialogService.ShowMessage("Error", "The password and confirm does not match.");
                 return;
             }
 
             if (string.IsNullOrEmpty(Email))
             {
-                await dialogService.ShowMessage("Error", "You must enter a email.");
+                await _dialogService.ShowMessage("Error", "You must enter a email.");
                 return;
             }
 
             if (string.IsNullOrEmpty(NickName))
             {
-                await dialogService.ShowMessage("Error", "You must enter a nick name.");
+                await _dialogService.ShowMessage("Error", "You must enter a nick name.");
                 return;
             }
 
             if (FavoriteTeamId == 0)
             {
-                await dialogService.ShowMessage("Error", "You must select a favorite team.");
+                await _dialogService.ShowMessage("Error", "You must select a favorite team.");
                 return;
             }
 
             if (!CrossConnectivity.Current.IsConnected)
             {
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
 
             var isReachable = await CrossConnectivity.Current.IsRemoteReachable("praysoft.net");
             if (!isReachable)
             {
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
 
             IsRunning = true;
             IsEnabled = false;
 
-            var imageArray = FilesHelper.ReadFully(file.GetStream());
-            file.Dispose();
+            var imageArray = FilesHelper.ReadFully(_file.GetStream());
+            _file.Dispose();
 
             var user = new User
             {
@@ -306,20 +308,21 @@ namespace TorneoPredicciones.ViewModels
                 UserTypeId = 1,
             };
 
-            var parameters = dataService.First<Parameter>(false);
-            var response = await apiService.Post(parameters.URLBase, "/api", "/Users", user);
+            var parameters = _dataService.First<Parameter>(false);
+          //  var response = await _apiService.Post(parameters.UrlBase, "/api", "/Users", user);
+            var response = await _apiService.Post(parameters.UrlBase2, "/api", "/Users", user);
 
             IsRunning = false;
             IsEnabled = true;
 
             if (!response.IsSuccess)
             {
-                await dialogService.ShowMessage("Error", response.Message);
+                await _dialogService.ShowMessage("Error", response.Message);
                 return;
             }
 
-            await dialogService.ShowMessage("Confirmation", "The user was created, please login.");
-              navigationService.SetMainPage("LoginPage");
+            await _dialogService.ShowMessage("Confirmation", "The user was created, please login.");
+              _navigationService.SetMainPage("LoginPage");
 
         }
 
@@ -327,7 +330,7 @@ namespace TorneoPredicciones.ViewModels
 
         private void Cancel()
         {
-          navigationService.SetMainPage("LoginPage");
+          _navigationService.SetMainPage("LoginPage");
         }
 
         public ICommand TakePictureCommand { get { return new RelayCommand(TakePicture); } }
@@ -338,24 +341,24 @@ namespace TorneoPredicciones.ViewModels
 
             if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
             {
-                await dialogService.ShowMessage("No Camera", ":( No camera available.");
+                await _dialogService.ShowMessage("No Camera", ":( No camera available.");
                 return;
             }
 
             IsRunning = true;
 
-            file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+            _file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
             {
                 Directory = "Sample",
                 Name = "test.jpg",
                 PhotoSize = PhotoSize.Small,
             });
 
-            if (file != null)
+            if (_file != null)
             {
                 ImageSource = ImageSource.FromStream(() =>
                 {
-                    var stream = file.GetStream();
+                    var stream = _file.GetStream();
                     return stream;
                 });
             }

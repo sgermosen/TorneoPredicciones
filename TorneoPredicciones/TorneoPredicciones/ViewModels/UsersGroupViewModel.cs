@@ -7,7 +7,7 @@ namespace TorneoPredicciones.ViewModels
     public class UsersGroupViewModel : UserGroup
     {
         #region Atributos
-        private UserGroup userGroup;
+        private UserGroup _userGroup;
         #endregion
 
         #region Propiedades
@@ -17,7 +17,7 @@ namespace TorneoPredicciones.ViewModels
         #region Contructor  
         public UsersGroupViewModel(UserGroup userGroup)
         {
-            this.userGroup = userGroup;
+            this._userGroup = userGroup;
 
             GroupId = userGroup.GroupId;
             Name = userGroup.Name;
