@@ -8,7 +8,7 @@ namespace TorneoPredicciones.ViewModels
   public  class MatchItemViewModel:Match
   {
         #region Atributos
-      private NavigationService navigationService;
+      private readonly NavigationService _navigationService;
 
 
         #endregion
@@ -17,7 +17,7 @@ namespace TorneoPredicciones.ViewModels
 
       public MatchItemViewModel()
       {
-          navigationService = new NavigationService();
+          _navigationService = new NavigationService();
       }
 
         #endregion
@@ -38,7 +38,7 @@ namespace TorneoPredicciones.ViewModels
       {
           var mainViewModel = MainViewModel.GetInstance();
           mainViewModel.EditPrediction = new EditPredictionViewModel(this);
-          await navigationService.Navigate("EditPredictionPage");
+          await _navigationService.Navigate("EditPredictionPage");
       }
 
 

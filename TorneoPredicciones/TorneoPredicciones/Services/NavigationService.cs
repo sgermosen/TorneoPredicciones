@@ -64,6 +64,10 @@ namespace TorneoPredicciones.Services
                     // mainViewModel.SelectTournament = new SelectTournamentViewModel();
                     await App.Navigator.PushAsync(new UsersGroupPage());
                     break;
+                case "MyResultsPage":
+                    // mainViewModel.SelectTournament = new SelectTournamentViewModel();
+                    await App.Navigator.PushAsync(new MyResultsPage());
+                    break;
                 default:
                     break;
             }
@@ -87,6 +91,10 @@ namespace TorneoPredicciones.Services
                 case "LoginFacebookPage":
                     // Logout();
                     App.Current.MainPage = new LoginFacebookPage();
+                    break;
+                case "ForgotPasswordPage":
+                    // Logout();
+                    App.Current.MainPage = new ForgotPasswordPage();
                     break;
                 default:
                     break;

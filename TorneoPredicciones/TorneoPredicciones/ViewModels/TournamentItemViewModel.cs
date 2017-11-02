@@ -7,13 +7,13 @@ namespace TorneoPredicciones.ViewModels
 {
   public  class TournamentItemViewModel:Tournament
     {//todos los comandos que estan metidos dentro de una grilla deben ir en los itemsviewmodel
-        private NavigationService navigationService;
-        private DataService dataService;
+        private readonly NavigationService _navigationService;
+        private readonly DataService _dataService;
 
         public TournamentItemViewModel()
         {
-            navigationService= new NavigationService();
-            dataService = new DataService();
+            _navigationService= new NavigationService();
+            _dataService = new DataService();
         }
 
         public ICommand SelectTournamentCommand { get { return new RelayCommand(SelectTournament);} }
@@ -21,16 +21,21 @@ namespace TorneoPredicciones.ViewModels
         private async void SelectTournament()
         {
             var mainViewModel = MainViewModel.GetInstance();
-            var parameters = dataService.First<Parameter>(false);
+            var parameters = _dataService.First<Parameter>(false);
             if (parameters.Option == "Predictions")
             {
                 mainViewModel.SelectMatch = new SelectMatchViewModel(TournamentId);
-                await navigationService.Navigate("SelectMatchPage");
+                await _navigationService.Navigate("SelectMatchPage");
+            }
+            else if (parameters.Option == "Predictions")
+            {
+                mainViewModel.SelectMatch = new SelectMatchViewModel(TournamentId);
+                await _navigationService.Navigate("SelectMatchPage");
             }
             else
             {
                mainViewModel.SelectGroup = new SelectGroupViewModel(Groups);
-                await navigationService.Navigate("SelectGroupPage");
+                await _navigationService.Navigate("SelectGroupPage");
             }
           
         }

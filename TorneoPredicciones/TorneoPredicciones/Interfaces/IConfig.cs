@@ -5,7 +5,7 @@ namespace TorneoPredicciones.Interfaces
 
     public interface IConfig
     {
-        string DirectoryDB { get; }
+        string DirectoryDb { get; }
 
         ISQLitePlatform Platform { get; }
     }

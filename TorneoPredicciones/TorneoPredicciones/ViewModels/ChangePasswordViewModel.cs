@@ -155,7 +155,7 @@ namespace TorneoPredicciones.ViewModels
 
             };
 
-            var response = await apiService.ChangePassword(parameters.URLBase, "/api", "/Users/ChangePassword",
+            var response = await apiService.ChangePassword(parameters.UrlBase, "/api", "/Users/ChangePassword",
                 user.TokenType, user.AccessToken, request);
 
             IsRunning = false;

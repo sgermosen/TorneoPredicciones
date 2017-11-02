@@ -1,30 +1,39 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
-using TorneoPredicciones.Services;
-using System.Collections.ObjectModel;
 using Plugin.Connectivity;
 using TorneoPredicciones.Models;
+using TorneoPredicciones.Services;
 
 namespace TorneoPredicciones.ViewModels
 {
-    public class SelectMatchViewModel:INotifyPropertyChanged
+    public class MyResultsViewModel : INotifyPropertyChanged
     {
-        #region Singleton
-        private static SelectMatchViewModel _instance;
+      
 
-        public static SelectMatchViewModel GetInstance()
+        public MyResultsViewModel(int tournamentGroupId)
         {
-            return _instance;
+            this._tournamentGroupId = tournamentGroupId;
+
+            _apiService = new ApiService();
+            _dialogService = new DialogService();
+            _navigationService = new NavigationService();
+            _dataService = new DataService();
+
+            Results = new ObservableCollection<ResultItemViewModel>();
+
+               LoadResults(); //como lo llamo en el onapearing no lo necesito aca
         }
-        #endregion
+
+       
 
         #region Propidades
 
-
         //origen de datos del listview
-        public ObservableCollection<MatchItemViewModel> Matches { get; set; }
+        public ObservableCollection<ResultItemViewModel> Results { get; set; }
 
         public bool IsRefreshing
         {
@@ -38,44 +47,42 @@ namespace TorneoPredicciones.ViewModels
             }
         }
 
+        public string Filter
+        {
+            set {
+                if (_filter == value) return;
+                _filter = value;
+                if (string.IsNullOrEmpty(_filter))
+                {
+                    ReloadResults(_results);
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Filter"));
+            }
+            get {
+                return _filter;
+            }
+        }
         #endregion
 
         #region Contructores
 
-        public SelectMatchViewModel(int tournamentId)
-        {
-            
-            this._tournamentId = tournamentId;
-            _instance = this;
 
-            _apiService = new ApiService();
-            _dialogService = new DialogService();
-            _navigationService = new NavigationService();
-            _dataService = new DataService();
-           
-            Matches= new ObservableCollection<MatchItemViewModel>();
 
-        //    LoadMatches(); como lo llamo en el onapearing no lo necesito aca
 
-        }
-
-     
 
         #endregion
 
         #region Atributos
 
-        private readonly int _tournamentId;
+        //private readonly int _tournamentId;
+        private readonly int _tournamentGroupId;
         private readonly ApiService _apiService;
         private readonly DialogService _dialogService;
         private NavigationService _navigationService;
         private readonly DataService _dataService;
-        //private string email;
-        //private string password;
         private bool _isRefreshing;
-        //private bool isEnabled;
-        //private bool isRemembered;
-
+        private string _filter;
+        private List<Result> _results;
 
         #endregion
 
@@ -84,11 +91,24 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Comandos
+        public ICommand SearchResultCommand { get { return new RelayCommand(SearchResult); } }
+
+        private void SearchResult()
+        {
+            //var list = results.Where(r => r.Match.Local.Initials == filter);
+            var list = _results
+                .Where(r => r.Match.Local.Initials.ToUpper().Contains(_filter.ToUpper()) ||
+                            r.Match.Visitor.Initials.ToUpper().Contains(_filter.ToUpper())
+                ).ToList();
+            ReloadResults(list);
+        }
+
+
         public ICommand RefreshCommand { get { return new RelayCommand(Refresh); } }
 
         private void Refresh()
         {
-            LoadMatches();
+            LoadResults();
             //IsRefreshing = true;
             //LoadTournaments();
             //IsRefreshing = false;
@@ -99,7 +119,9 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
         #region Metodos
-        private async void LoadMatches()
+
+        
+        private async void LoadResults()
         {
             if (!CrossConnectivity.Current.IsConnected)
             {
@@ -120,9 +142,9 @@ namespace TorneoPredicciones.ViewModels
             IsRefreshing = true;
             var parameters = _dataService.First<Parameter>(false);
             var user = _dataService.First<User>(false);
-            var controller = string.Format("/Tournaments/GetMatchesToPredict/{0}/{1}",_tournamentId,user.UserId);
+            var controller = string.Format("/Tournaments/GetResults/{0}/{1}", _tournamentGroupId, user.UserId);
 
-            var response = await _apiService.Get<Match>(parameters.UrlBase, "/api", controller,
+            var response = await _apiService.Get<Result>(parameters.UrlBase, "/api", controller,
                 user.TokenType,
                 user.AccessToken);
             IsRefreshing = false;
@@ -134,7 +156,8 @@ namespace TorneoPredicciones.ViewModels
                 return;
             }
 
-            ReloadMatches((List<Match>)response.Result);
+            _results = (List<Result>) response.Result;
+            ReloadResults(_results);
         }
 
         //private void ReloadTournaments(List<Tournament> tournaments)
@@ -153,31 +176,24 @@ namespace TorneoPredicciones.ViewModels
         //    }
         //}
 
-        private void ReloadMatches(List<Match> matches)
+        private void ReloadResults(List<Result> results)
         {
-           Matches.Clear();
-            foreach (var match in matches)
+            Results.Clear();
+            foreach (var result in results)
             {
-                Matches.Add(new MatchItemViewModel
+                Results.Add(new ResultItemViewModel()
                 {
-                    DateId= match.DateId,
-                    DateTime = match.DateTime,
-                    Local = match.Local,
-                    LocalGoals= match.LocalGoals,
-                    LocalId= match.LocalId,
-                    MatchId= match.MatchId,
-                    StatusId= match.StatusId,
-                    TournamentGroupId= match.TournamentGroupId,
-                    Visitor= match.Visitor,
-                    VisitorGoals= match.VisitorGoals,
-                    VisitorId= match.VisitorId,
-                    WasPredicted= match.WasPredicted
-
+                    LocalGoals = result.LocalGoals,
+                    Match = result.Match,
+                    MatchId = result.MatchId,
+                    Points = result.Points,
+                    PredictionId = result.PredictionId,
+                    UserId = result.UserId,
+                    VisitorGoals = result.VisitorGoals,
                 });
             }
         }
 
         #endregion
-       
     }
 }

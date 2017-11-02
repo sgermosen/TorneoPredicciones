@@ -17,30 +17,31 @@ namespace TorneoPredicciones.ViewModels
 
         public LoginViewModel()
         {
-            apiService = new ApiService();
-            dialogService = new DialogService();
-            navigationService = new NavigationService();
-            dataService= new DataService();
+            _apiService = new ApiService();
+            _dialogService = new DialogService();
+            _navigationService = new NavigationService();
+            _dataService= new DataService();
 
             //isRunning = false;
             IsEnabled = true;
             IsRemembered = true;
-
+            Email = null;
+            Password = null;
         }
 
 
         #endregion
 
         #region Attributes
-        private ApiService apiService;
-        private DialogService dialogService;
-        private DataService dataService;
-         private NavigationService navigationService;
-        private string email;
-        private string password;
-        private bool isRunning;
-        private bool isEnabled;
-        private bool isRemembered;
+        private readonly ApiService _apiService;
+        private readonly DialogService _dialogService;
+        private readonly DataService _dataService;
+        private readonly NavigationService _navigationService;
+        private string _email;
+        private string _password;
+        private bool _isRunning;
+        private bool _isEnabled;
+        private bool _isRemembered;
         #endregion
 
         //despues de cada propiedad debe haber un espacio en blanco
@@ -48,92 +49,99 @@ namespace TorneoPredicciones.ViewModels
         public string Email
         {
             set {
-                if (email != value)
+                if (_email != value)
                 {
-                    email = value;
+                    _email = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Email"));
                 }
             }
             get {
-                return email;
+                return _email;
             }
         }
 
         public string Password
         {
             set {
-                if (password != value)
+                if (_password != value)
                 {
-                    password = value;
+                    _password = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Password"));
                 }
             }
             get {
-                return password;
+                return _password;
             }
         }
 
         public bool IsRunning
         {
             set {
-                if (isRunning != value)
+                if (_isRunning != value)
                 {
-                    isRunning = value;
+                    _isRunning = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRunning"));
                 }
             }
             get {
-                return isRunning;
+                return _isRunning;
             }
         }
 
         public bool IsEnabled
         {
             set {
-                if (isEnabled != value)
+                if (_isEnabled != value)
                 {
-                    isEnabled = value;
+                    _isEnabled = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsEnabled"));
                 }
             }
             get {
-                return isEnabled;
+                return _isEnabled;
             }
         }
 
         public bool IsRemembered
         {
             set {
-                if (isRemembered != value)
+                if (_isRemembered != value)
                 {
-                    isRemembered = value;
+                    _isRemembered = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRemembered"));
                 }
             }
             get {
-                return isRemembered;
+                return _isRemembered;
             }
         }
         #endregion
 
         #region Comandos
+        public ICommand ForgotPasswordCommand { get { return new RelayCommand(ForgotPassword); } }
+
+        private void ForgotPassword()
+        {
+            var mainViewModel = MainViewModel.GetInstance();
+            mainViewModel.ForgotPassword = new ForgotPasswordViewModel();
+            _navigationService.SetMainPage("ForgotPasswordPage");
+        }
+
         public ICommand LoginFacebookCommand { get { return new RelayCommand(LoginFacebook); } }
-
-      
-
+        
         public ICommand LoginCommand { get { return new RelayCommand(Login); } }
 
         private async void Login()
         {
             if (string.IsNullOrEmpty(Email))
             {
-                await dialogService.ShowMessage("Error", "You must enter the user email.");
+                await _dialogService.ShowMessage("Error", "You must enter the user email.");
                 return;
             }
 
             if (string.IsNullOrEmpty(Password))
             {
-                await dialogService.ShowMessage("Error", "You must enter a password.");
+                await _dialogService.ShowMessage("Error", "You must enter a password.");
                 return;
             }
 
@@ -144,7 +152,7 @@ namespace TorneoPredicciones.ViewModels
             {
                 IsRunning = false;
                 IsEnabled = true;
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
 
@@ -153,19 +161,19 @@ namespace TorneoPredicciones.ViewModels
             {
                 IsRunning = false;
                 IsEnabled = true;
-                await dialogService.ShowMessage("Error", "Check you internet connection.");
+                await _dialogService.ShowMessage("Error", "Check you internet connection.");
                 return;
             }
 
-            var parameters = dataService.First<Parameter>(false);
-         var token = await apiService.GetToken(parameters.URLBase, Email, Password);
+            var parameters = _dataService.First<Parameter>(false);
+         var token = await _apiService.GetToken(parameters.UrlBase, Email, Password);
          //   var token = await apiService.GetToken("http://torneoprediccionesapi.azurewebsites.net", Email, Password);
 
             if (token == null)
             {
                 IsRunning = false;
                 IsEnabled = true;
-                await dialogService.ShowMessage("Error", "The user name or password in incorrect.");
+                await _dialogService.ShowMessage("Error", "The user name or password in incorrect.");
                 Password = null;
                 return;
             }
@@ -174,12 +182,12 @@ namespace TorneoPredicciones.ViewModels
             {
                 IsRunning = false;
                 IsEnabled = true;
-                await dialogService.ShowMessage("Error", token.ErrorDescription);
+                await _dialogService.ShowMessage("Error", token.ErrorDescription);
                 Password = null;
                 return;
             }
 
-           var response = await apiService.GetUserByEmail(parameters.URLBase,
+           var response = await _apiService.GetUserByEmail(parameters.UrlBase,
                "/api", "/Users/GetUserByEmail", token.TokenType, token.AccessToken, token.UserName);
 
             //var response = await apiService.GetUserByEmail("http://torneoprediccionesapi.azurewebsites.net", 
@@ -189,13 +197,13 @@ namespace TorneoPredicciones.ViewModels
             {
                 IsRunning = false;
                 IsEnabled = true;
-                await dialogService.ShowMessage("Error", "Problem ocurred retrieving user information, try latter.");
+                await _dialogService.ShowMessage("Error", "Problem ocurred retrieving user information, try latter.");
                 return;
             }
 
 
-            IsRunning = false;
-            IsEnabled = true;
+            //IsRunning = false;
+            //IsEnabled = true;
 
             var user = (User)response.Result;
 
@@ -204,9 +212,9 @@ namespace TorneoPredicciones.ViewModels
             user.TokenExpires = token.Expires;
             user.IsRemembered = IsRemembered;
             user.Password = Password;
-            dataService.DeleteAllAndInsert(user.FavoriteTeam);
-            dataService.DeleteAllAndInsert(user.UserType);
-            dataService.DeleteAllAndInsert(user);
+            _dataService.DeleteAllAndInsert(user.FavoriteTeam);
+            _dataService.DeleteAllAndInsert(user.UserType);
+            _dataService.DeleteAllAndInsert(user);
             //dataService.DeleteAllAndInsert(user);
             //dataService.InsertOrUpdate(user.FavoriteTeam);
             //dataService.InsertOrUpdate(user.UserType);
@@ -214,12 +222,18 @@ namespace TorneoPredicciones.ViewModels
             //  await dialogService.ShowMessage("TARAAAAAAAAN!!!!",string.Format("Welcome: {0} {1}, Alias: {2}",user.FirstName,user.LastName,user.NickName));
             var mainViewModel = MainViewModel.GetInstance();
             mainViewModel.CurrentUser = user;
-            mainViewModel.RegisterDevice(); //todo
-            navigationService.SetMainPage("MasterPage");
-
+            mainViewModel.SetCurrentUser(user);
             Email = null;
-           // Password = null;
-            password = null;
+            // Password = null;
+            Password = null;
+
+            IsRunning = false;
+            IsEnabled = true;
+            mainViewModel.RegisterDevice(); //todo
+            _navigationService.SetMainPage("MasterPage");
+
+          
+
         }
 
         public ICommand RegisterCommand { get { return new RelayCommand(Register); } }
@@ -228,7 +242,7 @@ namespace TorneoPredicciones.ViewModels
         {
             var mainViewModel = MainViewModel.GetInstance();
             mainViewModel.NewUser = new NewUserViewModel();
-            navigationService.SetMainPage("NewUserPage");
+            _navigationService.SetMainPage("NewUserPage");
 
 
 
@@ -329,7 +343,7 @@ namespace TorneoPredicciones.ViewModels
 
         private void LoginFacebook()
         {
-            navigationService.SetMainPage("LoginFacebookPage");
+            _navigationService.SetMainPage("LoginFacebookPage");
         }
         #endregion
 

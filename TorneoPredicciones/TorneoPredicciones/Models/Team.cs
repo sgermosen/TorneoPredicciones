@@ -20,17 +20,7 @@ namespace TorneoPredicciones.Models
         [OneToMany(CascadeOperations = CascadeOperation.CascadeRead)]
         public List<User> Fans { get; set; }
 
-        public string FullLogo
-        {
-            get {
-                if (string.IsNullOrEmpty(Logo))
-                {
-                    return "avatar_shield.png";
-                }
-
-                return string.Format("http://torneopredicciones.azurewebsites.net/{0}", Logo.Substring(1));
-            }
-        }
+        public string FullLogo => string.IsNullOrEmpty(Logo) ? "avatar_shield.png" : string.Format("http://torneopredicciones.azurewebsites.net/{0}", Logo.Substring(1));
 
         public override int GetHashCode()
         {

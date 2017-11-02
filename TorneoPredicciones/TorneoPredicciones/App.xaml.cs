@@ -12,7 +12,7 @@ namespace TorneoPredicciones
     {
         #region Atributos
 
-        private   DataService dataService;
+        private readonly DataService _dataService;
        
 
         #endregion
@@ -30,18 +30,18 @@ namespace TorneoPredicciones
         {
             InitializeComponent();
 
-            dataService = new DataService();
+            _dataService = new DataService();
             //apiService= new ApiService();
             //dialogService= new DialogService();
             //navigationService = new NavigationService();
 
             LoadParameters();
 
-            var user = dataService.First<User>(false);
+            var user = _dataService.First<User>(false);
 
             if (user != null && user.IsRemembered && user.TokenExpires > DateTime.Now)
             {
-                var favoriteTeam = dataService.Find<Team>(user.FavoriteTeamId, false);
+                var favoriteTeam = _dataService.Find<Team>(user.FavoriteTeamId, false);
                 user.FavoriteTeam = favoriteTeam;
                 var mainViewModel = MainViewModel.GetInstance();
                 mainViewModel.CurrentUser = user;
@@ -85,7 +85,7 @@ namespace TorneoPredicciones
             var navigationService = new NavigationService();
             var  dataService = new DataService();
         var parameters =   dataService.First<Parameter>(false);
-            var token = await apiService.LoginFacebook(parameters.URLBase, "/api", "/Users/LoginFacebook", profile);
+            var token = await apiService.LoginFacebook(parameters.UrlBase, "/api", "/Users/LoginFacebook", profile);
 
             if (token == null)
             {
@@ -93,7 +93,7 @@ namespace TorneoPredicciones
                 return;
             }
 
-            var response = await apiService.GetUserByEmail(parameters.URLBase,
+            var response = await apiService.GetUserByEmail(parameters.UrlBase,
                 "/api", "/Users/GetUserByEmail", token.TokenType, token.AccessToken, token.UserName);
 
             if (!response.IsSuccess)
@@ -130,22 +130,22 @@ namespace TorneoPredicciones
         {
             var urlBase = Application.Current.Resources["URLBase"].ToString();
             var urlBase2 = Application.Current.Resources["URLBase2"].ToString();
-            var parameters = dataService.First<Parameter>(false);
+            var parameters = _dataService.First<Parameter>(false);
             if (parameters == null)
             {
                 parameters = new Parameter
                 {
-                    URLBase = urlBase,
-                    URLBase2=urlBase2
+                    UrlBase = urlBase,
+                    UrlBase2=urlBase2
                 };
 
-                dataService.Insert(parameters);
+                _dataService.Insert(parameters);
             }
             else
             {
-                parameters.URLBase = urlBase;
-                parameters.URLBase2 = urlBase2;
-                dataService.Update(parameters);
+                parameters.UrlBase = urlBase;
+                parameters.UrlBase2 = urlBase2;
+                _dataService.Update(parameters);
             }
         }
 

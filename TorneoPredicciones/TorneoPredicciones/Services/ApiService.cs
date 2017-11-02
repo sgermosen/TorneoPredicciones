@@ -12,6 +12,45 @@ namespace TorneoPredicciones.Services
 {
     public class ApiService
     {
+
+        public async Task<Response> PasswordRecovery(string urlBase, string servicePrefix,
+            string controller, string email)
+        {
+            try
+            {
+                var userRequest = new UserRequest { Email = email, };
+                var request = JsonConvert.SerializeObject(userRequest);
+                var content = new StringContent(request, Encoding.UTF8, "application/json");
+                var client = new HttpClient();
+                client.BaseAddress = new Uri(urlBase);
+                var url = string.Format("{0}{1}", servicePrefix, controller);
+                var response = await client.PostAsync(url, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new Response
+                    {
+                        IsSuccess = false,
+                        Message = response.StatusCode.ToString(),
+                    };
+                }
+
+                return new Response
+                {
+                    IsSuccess = true,
+                    Message = "OK",
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response
+                {
+                    IsSuccess = false,
+                    Message = ex.Message,
+                };
+            }
+        }
+
         public async Task<TokenResponse> LoginFacebook(string urlBase, string servicePrefix, string controller,FacebookResponse profile)
         {
             try
@@ -56,8 +95,8 @@ namespace TorneoPredicciones.Services
                     new StringContent(string.Format("grant_type=password&username={0}&password={1}", 
                     username, password),
                         Encoding.UTF8, "application/x-www-form-urlencoded"));
-                var resultJSON = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<TokenResponse>(resultJSON);
+                var resultJson = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<TokenResponse>(resultJson);
                 return result;
             }
             catch
