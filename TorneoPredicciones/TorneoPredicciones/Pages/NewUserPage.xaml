@@ -16,9 +16,8 @@
                        HorizontalOptions="FillAndExpand"
                        Text="New User">
                 </Label>
-                <ActivityIndicator 
-                    Color="Navy"
-                    IsRunning="{Binding IsRunning}">
+                <ActivityIndicator Color="Navy"
+                                   IsRunning="{Binding IsRunning}">
                 </ActivityIndicator>
                 <Button Command="{Binding CancelCommand}"
                         IsEnabled="{Binding IsEnabled}"
@@ -27,6 +26,7 @@
                         Text="Cancel">
                 </Button>
             </StackLayout>
+
             <Grid>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -69,15 +69,14 @@
                     </Entry>
                 </Grid>
             </Grid>
-             
+
             <Grid>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Image  
-                           WidthRequest="50"
+                    <Image WidthRequest="50"
                            HeightRequest="50"
                            Grid.Column="0"
                            VerticalOptions="Start"
@@ -86,7 +85,7 @@
                             <TapGestureRecognizer Command="{Binding TakePictureCommand}" />
                         </Image.GestureRecognizers>
                     </Image>
-                    
+
                     <controls:CircleImage Grid.Column="1"
                                           Source="{Binding ImageSource, Mode=TwoWay}"
                                           Aspect="AspectFill"
@@ -98,8 +97,6 @@
                 </Grid>
             </Grid>
 
-           
-          
             <Grid>
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
@@ -231,9 +228,11 @@
                     </control:BindablePicker>
                 </Grid>
             </Grid>
+
             <ActivityIndicator IsRunning="{Binding IsRunning}"
                                Color="Navy">
             </ActivityIndicator>
+
             <Button Command="{Binding SaveCommand}"
                     HeightRequest="40"
                     BorderRadius="20"
@@ -242,6 +241,7 @@
                     BackgroundColor="Orange"
                     Text="Save">
             </Button>
+
         </StackLayout>
     </ScrollView>
 

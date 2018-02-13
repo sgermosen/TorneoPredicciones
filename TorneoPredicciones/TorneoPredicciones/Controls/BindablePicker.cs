@@ -10,11 +10,11 @@ namespace TorneoPredicciones.Controls
     {
         bool _disableNestedCalls;
 
-        public static readonly BindableProperty ItemsSourceProperty =
+        public new static readonly BindableProperty ItemsSourceProperty =
             BindableProperty.Create("ItemsSource", typeof(IEnumerable), typeof(BindablePicker),
                 null, propertyChanged: OnItemsSourceChanged);
 
-        public static readonly BindableProperty SelectedItemProperty =
+        public new static readonly BindableProperty SelectedItemProperty =
             BindableProperty.Create("SelectedItem", typeof(object), typeof(BindablePicker),
                 null, BindingMode.TwoWay, propertyChanged: OnSelectedItemChanged);
 
@@ -24,13 +24,13 @@ namespace TorneoPredicciones.Controls
 
         public string DisplayMemberPath { get; set; }
 
-        public IEnumerable ItemsSource
+        public new IEnumerable ItemsSource
         {
             get { return (IEnumerable)GetValue(ItemsSourceProperty); }
             set { SetValue(ItemsSourceProperty, value); }
         }
 
-        public object SelectedItem
+        public new object SelectedItem
         {
             get { return GetValue(SelectedItemProperty); }
             set {
