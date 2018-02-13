@@ -309,8 +309,8 @@ namespace TorneoPredicciones.ViewModels
             };
 
             var parameters = _dataService.First<Parameter>(false);
-          //  var response = await _apiService.Post(parameters.UrlBase, "/api", "/Users", user);
-            var response = await _apiService.Post(parameters.UrlBase2, "/api", "/Users", user);
+          //  var response = await _apiService.Post(parameters.UrlBase2, "/api", "/Users", user);
+            var response = await _apiService.Post(parameters.UrlBase, "/api", "/Users", user);
 
             IsRunning = false;
             IsEnabled = true;
@@ -402,4 +402,5 @@ namespace TorneoPredicciones.ViewModels
         #endregion
 
     }
+
 }
