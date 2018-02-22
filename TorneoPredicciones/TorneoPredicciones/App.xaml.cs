@@ -28,7 +28,7 @@ namespace TorneoPredicciones
         #region Constructores
         public App()
         {
-            InitializeComponent();
+           // InitializeComponent();
 
             _dataService = new DataService();
             //apiService= new ApiService();
