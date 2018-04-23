@@ -17,7 +17,7 @@ namespace TorneoPredicciones.Data
         {
             var config = DependencyService.Get<IConfig>();
             _connection = new SQLiteConnection(config.Platform,
-                System.IO.Path.Combine(config.DirectoryDb, "TorneoPredicciones.db3"));
+                System.IO.Path.Combine(config.DirectoryDb, "TPC.db3"));
             //equivalente al dataset
             _connection.CreateTable<Parameter>();
             _connection.CreateTable<Team>();
