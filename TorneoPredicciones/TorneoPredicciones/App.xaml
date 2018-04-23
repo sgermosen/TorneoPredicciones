@@ -11,8 +11,8 @@
 	        <infra:InstanceLocator x:Key="Locator"></infra:InstanceLocator>
 
             <!-- Parameters -->
-            <x:String x:Key="URLBase">http://torneoprediccionesapi.azurewebsites.net</x:String>
-            <x:String x:Key="URLBase2">http://torneopredicciones.azurewebsites.net</x:String>
+            <x:String x:Key="URLBase">https://torneoprediccionesapi.azurewebsites.net</x:String>
+            <x:String x:Key="URLBase2">https://torneopredicciones.azurewebsites.net</x:String>
 	        
             <!--Colors-->
             <Color x:Key="MainColor">#C7CC1A</Color>
