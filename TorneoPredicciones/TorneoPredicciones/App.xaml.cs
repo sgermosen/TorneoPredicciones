@@ -28,7 +28,7 @@ namespace TorneoPredicciones
         #region Constructores
         public App()
         {
-           // InitializeComponent();
+            InitializeComponent();
 
             _dataService = new DataService();
             //apiService= new ApiService();
@@ -128,8 +128,8 @@ namespace TorneoPredicciones
 
         private void LoadParameters()
         {
-            var urlBase = Current.Resources["URLBase"].ToString();
-            var urlBase2 = Current.Resources["URLBase2"].ToString();
+            var urlBase = "https://torneoprediccionesapi.azurewebsites.net";// Current.Resources["URLBase"].ToString();
+            var urlBase2 = "https://torneopredicciones.azurewebsites.net";// Current.Resources["URLBase2"].ToString();
             var parameters = _dataService.First<Parameter>(false);
             if (parameters == null)
             {
