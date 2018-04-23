@@ -128,8 +128,8 @@ namespace TorneoPredicciones
 
         private void LoadParameters()
         {
-            var urlBase = Application.Current.Resources["URLBase"].ToString();
-            var urlBase2 = Application.Current.Resources["URLBase2"].ToString();
+            var urlBase = Current.Resources["URLBase"].ToString();
+            var urlBase2 = Current.Resources["URLBase2"].ToString();
             var parameters = _dataService.First<Parameter>(false);
             if (parameters == null)
             {
