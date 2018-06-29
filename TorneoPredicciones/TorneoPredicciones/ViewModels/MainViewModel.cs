@@ -20,7 +20,7 @@ namespace TorneoPredicciones.ViewModels
         #region Atriutos
         private readonly ApiService _apiService;
         private readonly DataService _dataService;
-       
+
         private User _currentUser;
         #endregion
 
@@ -52,7 +52,7 @@ namespace TorneoPredicciones.ViewModels
 
         public ConfigViewModel Config { get; set; }
         public PositionsViewModel Positions { get; set; }
-        
+
         public UsersGroupViewModel UsersGroup { get; set; }
         public SelectUserGroupViewModel SelectUserGroup { get; set; }
         public ObservableCollection<MenuItemViewModel> Menu { get; set; }
@@ -79,8 +79,8 @@ namespace TorneoPredicciones.ViewModels
         {
             _instance = this;
             Login = new LoginViewModel();
-            _apiService= new ApiService();
-            _dataService= new DataService();
+            _apiService = new ApiService();
+            _dataService = new DataService();
             LoadMenu();
         }
 
@@ -88,36 +88,36 @@ namespace TorneoPredicciones.ViewModels
 
         #region Comandos
 
-        public ICommand RefreshPointsCommand { get {return new RelayCommand(RefreshPoints);}  }
+        public ICommand RefreshPointsCommand { get { return new RelayCommand(RefreshPoints); } }
 
-        private async  void RefreshPoints()
+        private async void RefreshPoints()
         {
             if (!CrossConnectivity.Current.IsConnected)
             {
-                return; 
+                return;
             }
             var isReachable = await CrossConnectivity.Current.IsRemoteReachable("notasti.com");
             if (!isReachable)
             {
                 return;
             }
-            
+
             var parameters = _dataService.First<Parameter>(false);
             var user = _dataService.First<User>(false);
-            var response = await _apiService.GetPoints(parameters.UrlBase, "/api", "/Users/GetPoints", user.TokenType, user.AccessToken,user.UserId);
+            var response = await _apiService.GetPoints(parameters.UrlBase, "/api", "/Users/GetPoints", user.TokenType, user.AccessToken, user.UserId);
 
             if (!response.IsSuccess)
             {
                 return;
             }
-            var point = (Point) response.Result;
+            var point = (Point)response.Result;
             if (CurrentUser.Points != point.Points)
             {
                 CurrentUser.Points = point.Points;
                 _dataService.Update(CurrentUser); //actualizamos la base de datos local
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUser"));
             }
-           
+
         }
 
         #endregion
@@ -144,7 +144,7 @@ namespace TorneoPredicciones.ViewModels
             {
                 Icon = "groups.png",
                 PageName = "SelectUserGroupPage",
-                Title = "Groups",
+                Title = "My Groups",
             });
 
             Menu.Add(new MenuItemViewModel
@@ -174,6 +174,13 @@ namespace TorneoPredicciones.ViewModels
                 PageName = "LoginPage",
                 Title = "Logut",
             });
+
+            //Menu.Add(new MenuItemViewModel
+            //{
+            //    Icon = "groups.png",
+            //    PageName = "SelectGroupPage",
+            //    Title = "All Groups",
+            //});
         }
 
         public void SetCurrentUser(User user)
@@ -181,7 +188,7 @@ namespace TorneoPredicciones.ViewModels
             CurrentUser = user;
         }
 
-#endregion
+        #endregion
 
     }
 }

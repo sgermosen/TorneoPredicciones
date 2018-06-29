@@ -1,0 +1,105 @@
+﻿@model Domain.Match
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>Tournament: @Model.Date.Tournament.Name</h2>
+        <h3>Date: @Model.Date.Name</h3>
+    </div>
+    <div class="col-md-6">
+        <br />
+        <table>
+            <tr>
+                <td width="200px" align="center">
+                    @if (!string.IsNullOrEmpty(Model.Local.Logo))
+                    {
+                        <img src="@Url.Content(Model.Local.Logo)" alt="Image" style="width:120px;height:120px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td width="50px" align="center">
+                    <h2>Vs.</h2>
+                </td>
+                <td width="200px" align="center">
+                    @if (!string.IsNullOrEmpty(Model.Visitor.Logo))
+                    {
+                        <img src="@Url.Content(Model.Visitor.Logo)" alt="Image" style="width:120px;height:120px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <h3>@Model.Local.Name</h3>
+                </td>
+                <td width="50px" align="center"></td>
+                <td align="center">
+                    <h3>@Model.Visitor.Name</h3>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("New Prediction", "CreatePrediction", new { id = Model.MatchId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to Date", "DetailsDate", new { id = Model.DateId }, new { @class = "btn btn-success" })
+</p>
+@if (Model.Predictions.Count == 0)
+{
+    <h4>No predictions added yet</h4>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Predictions.FirstOrDefault().User.Picture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Predictions.FirstOrDefault().User.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Predictions.FirstOrDefault().LocalGoals)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Predictions.FirstOrDefault().VisitorGoals)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Predictions.FirstOrDefault().Points)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Predictions.OrderByDescending(p => p.Points)
+            .ThenBy(p => p.User.FirstName)
+            .ThenBy(p => p.User.LastName))
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.User.Picture))
+                    {
+                        <img src="@item.User.PictureFullPath" alt="Image" style="width:80px;height:80px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalGoals)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VisitorGoals)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Points)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditPrediction", new { id = item.PredictionId }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Delete", "DeletePrediction", new { id = item.PredictionId }, new { @class = "btn btn-danger", onclick = "return confirm('Areyou sure to delete this record?');" })
+                </td>
+            </tr>
+        }
+    </table>
+}

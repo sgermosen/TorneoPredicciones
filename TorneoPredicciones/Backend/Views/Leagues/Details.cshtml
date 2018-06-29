@@ -1,0 +1,175 @@
+﻿
+@model Domain.League
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>League</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Logo)
+        </dt>
+
+        <dd>
+            @if (!string.IsNullOrEmpty(Model.Logo))
+            {
+                <img src="@Url.Content(Model.Logo)" alt="Image" style="width:150px;height:150px;max-width: 100%; height: auto;" />
+            }
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit League", "Edit", new { id = Model.LeagueId }, new { @class = "btn btn-warning" })
+    @Html.ActionLink("Create Team", "CreateTeam", new { id = Model.LeagueId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", new { }, new { @class="btn btn-success" })
+</p>
+<h4>Teams</h4>
+@if (Model.Teams.Count == 0)
+{
+    <h5>No teams registered yet</h5>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().Logo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().Initials)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Teams.OrderBy(t => t.Name))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Logo))
+                    {
+                        <img src="@Url.Content(item.Logo)" alt="Image" style="width:80px;height:80px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Initials)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditTeam", new { id = item.TeamId }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Delete", "DeleteTeam", new { id = item.TeamId }, new { @class = "btn btn-danger", onclick = "return confirm('Areyou sure to delete this record?');" })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+
+@*@model Domain.League
+
+@{
+    ViewBag.Title = "Liga";
+}
+
+<div>
+    <h4>Liga/Federacion</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <div class="control-label col-md-2"> Liga</div>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <br />
+        <dt>
+            <div class="control-label col-md-2"> Logoxx</div>
+        </dt>
+
+        <dd>
+             
+            @if (!string.IsNullOrEmpty(Model.Logoxx))
+            {
+                <img src="@Url.Content(Model.Logoxx)" alt="Image" class="LogoMedio" />
+            }
+             
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <a class="btn btn-success" href="/Leagues/Index"> <span class="glyphicon glyphicon-circle-arrow-left"></span> Retornar a las Ligas    </a>
+   
+    <a class="btn btn-primary" href="/Leagues/CreateTeam/@Model.LeagueId"> <span class="glyphicon glyphicon-plus"></span> Crear Equipo   </a>
+
+</p><center><h4>Equipos/Clubes</h4></center>
+
+
+@if (Model.Teams.Count == 0)
+{
+    <h5>No hay equipos o clubes registrados aun!!!!! :'(</h5>
+}
+else
+{
+  <table class="table">
+    <tr>
+         
+        <th>
+          Equipo/Club
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Teams.FirstOrDefault().Logoxx)
+        </th>
+        <th>
+           Iniciales
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.Teams.OrderBy(t=>t.Name)) {
+    <tr>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @if (!string.IsNullOrEmpty(item.Logoxx))
+            {
+                <img src="@Url.Content(item.Logoxx)"  class="LogoMedioBajo" />
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Initials)
+        </td>
+        <td>
+            <a class="btn btn-warning" href="/Leagues/EditTeam/@item.TeamId"> <span class="glyphicon glyphicon-edit"></span> Editar  </a>
+              <a class="btn btn-danger" href="/Leagues/DeleteTeam/@item.TeamId" onclick = "return confirm('Esta seguro que desea eliminar este registro?')"> <span class="glyphicon glyphicon-trash"></span> Eliminar  </a>
+  
+       
+        </td>
+    </tr>
+}
+
+</table>
+}*@
+
