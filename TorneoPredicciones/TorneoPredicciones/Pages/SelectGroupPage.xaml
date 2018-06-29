@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="TorneoPredicciones.Pages.SelectGroupPage"
              BackgroundColor="{StaticResource AccentColor1}"
-             Title="Seleccionar Grupo"
+             Title="Seleccionar Fase"
              BindingContext="{Binding Main, Source={StaticResource Locator}}">
     <StackLayout Padding="8"
                  BindingContext="{Binding SelectGroup}">
