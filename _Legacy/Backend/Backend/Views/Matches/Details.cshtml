@@ -1,0 +1,82 @@
+﻿@model Domain.Match
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Match</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Date.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Local.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Local.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TournamentGroup.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TournamentGroup.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Visitor.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Visitor.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LocalGoals)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LocalGoals)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VisitorGoals)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VisitorGoals)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.MatchId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
