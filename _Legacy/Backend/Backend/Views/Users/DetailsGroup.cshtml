@@ -1,0 +1,77 @@
+﻿@model Domain.Group
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <h2>User: @Model.Owner.FullName</h2>
+        <h3>Group: @Model.Name</h3>
+    </div>
+    <div class="col-md-6">
+        <br />
+        @if (!string.IsNullOrEmpty(Model.Logo))
+        {
+            <img src="@Url.Content(Model.Logo)" alt="Image" style="width:200px;height:200px;max-width: 100%; height: auto;" />
+        }
+    </div>
+</div>
+
+<p>
+    @Html.ActionLink("Add User", "AddUser", new { id = Model.GroupId }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to User", "Details", new { id = Model.Owner.UserId }, new { @class = "btn btn-success" })
+</p>
+@if (Model.GroupUsers.Count == 0)
+{
+    <h4>No users added yet</h4>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().User.Picture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().User.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().IsAccepted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().IsBlocked)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroupUsers.FirstOrDefault().Points)
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model.GroupUsers.OrderByDescending(gu => gu.Points))
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.User.Picture))
+                    {
+                        <img src="@item.User.PictureFullPath" alt="Image" style="width:80px;height:80px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAccepted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsBlocked)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Points)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "EditUser", new { id = item.GroupUserId }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Delete", "DeleteUser", new { id = item.GroupUserId }, new { @class = "btn btn-danger", onclick = "return confirm('Areyou sure to delete this record?');" })
+                </td>
+            </tr>
+        }
+    </table>
+}

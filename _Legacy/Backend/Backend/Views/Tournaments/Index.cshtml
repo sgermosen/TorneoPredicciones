@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Domain.Tournament>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Tournaments</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new { }, new { @class = "btn btn-primary" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Logo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Order)
+        </th>
+        <th>
+            # Groups
+        </th>
+        <th>
+            # Dates
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.Logo))
+                {
+                    <img src="@Url.Content(item.Logo)" alt="Image" style="width:100px;height:100px;max-width: 100%; height: auto;" />
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Order)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Groups.Count)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dates.Count)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.TournamentId }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Details", "Details", new { id=item.TournamentId }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Delete", "Delete", new { id=item.TournamentId }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+
+</table>
