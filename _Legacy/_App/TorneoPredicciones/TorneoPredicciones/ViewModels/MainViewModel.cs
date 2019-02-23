@@ -58,18 +58,7 @@ namespace TorneoPredicciones.ViewModels
         public ObservableCollection<MenuItemViewModel> Menu { get; set; }
 
         //public User CurrentUser { get; set; }
-        public User CurrentUser
-        {
-            set {
-                if (_currentUser == value) return;
-                _currentUser = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUser"));
-            }
-            get {
-                return _currentUser;
-            }
-        }
-
+       
 
         #endregion
 
@@ -90,36 +79,7 @@ namespace TorneoPredicciones.ViewModels
 
         public ICommand RefreshPointsCommand { get { return new RelayCommand(RefreshPoints); } }
 
-        private async void RefreshPoints()
-        {
-            if (!CrossConnectivity.Current.IsConnected)
-            {
-                return;
-            }
-            var isReachable = await CrossConnectivity.Current.IsRemoteReachable("notasti.com");
-            if (!isReachable)
-            {
-                return;
-            }
-
-            var parameters = _dataService.First<Parameter>(false);
-            var user = _dataService.First<User>(false);
-            var response = await _apiService.GetPoints(parameters.UrlBase, "/api", "/Users/GetPoints", user.TokenType, user.AccessToken, user.UserId);
-
-            if (!response.IsSuccess)
-            {
-                return;
-            }
-            var point = (Point)response.Result;
-            if (CurrentUser.Points != point.Points)
-            {
-                CurrentUser.Points = point.Points;
-                _dataService.Update(CurrentUser); //actualizamos la base de datos local
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CurrentUser"));
-            }
-
-        }
-
+   
         #endregion
 
         #region Metodos
