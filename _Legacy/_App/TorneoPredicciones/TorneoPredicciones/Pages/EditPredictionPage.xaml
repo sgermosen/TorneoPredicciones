@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TorneoPredicciones.Pages.EditPredictionPage"
+             BackgroundColor="{StaticResource AccentColor1}"
+             Title="Editar Prediccion"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}">
+
+    <StackLayout BindingContext="{Binding EditPrediction}"
+                 Padding="8">
+        <StackLayout Orientation="Horizontal">
+            <StackLayout VerticalOptions="Center"
+                         HorizontalOptions="Start">
+                <Image Source="{Binding Local.FullLogo}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       WidthRequest="50"
+                       HeightRequest="50">
+                </Image>
+                <Label FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       TextColor="Black"
+                       Text="{Binding Local.Initials}">
+                </Label>
+            </StackLayout>
+            <StackLayout HorizontalOptions="CenterAndExpand"
+                         VerticalOptions="Center">
+                <StackLayout HorizontalOptions="CenterAndExpand"
+                             VerticalOptions="Center"
+                             Orientation="Horizontal">
+                    <Entry FontAttributes="Bold"
+                           Keyboard="Numeric"
+                           FontSize="40"
+                           WidthRequest="50"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Center"
+                           HorizontalOptions="FillAndExpand"
+                           TextColor="Black"
+                           BackgroundColor="White"
+                           Text="{Binding GoalsLocal, Mode=TwoWay}">
+                    </Entry>
+                    <Label FontAttributes="Bold"
+                           FontSize="Medium"
+                           VerticalOptions="Center"
+                           TextColor="Navy"
+                           Text="  Vs.  ">
+                    </Label>
+                    <Entry FontAttributes="Bold"
+                           Keyboard="Numeric"
+                           FontSize="40"
+                           WidthRequest="50"
+                           HorizontalTextAlignment="Center"
+                           VerticalOptions="Center"
+                           HorizontalOptions="FillAndExpand"
+                           TextColor="Black"
+                           BackgroundColor="White"
+                           Text="{Binding GoalsVisitor, Mode=TwoWay}">
+                    </Entry>
+                </StackLayout>
+                <Label TextColor="Black"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Text="{Binding DateTime, StringFormat='{0:yyyy/MM/dd HH:mm}'}}">
+                </Label>
+            </StackLayout>
+            <StackLayout VerticalOptions="Center"
+                         HorizontalOptions="End">
+                <Image Source="{Binding Visitor.FullLogo}"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       WidthRequest="50"
+                       HeightRequest="50">
+                </Image>
+                <Label FontAttributes="Bold"
+                       VerticalOptions="Center"
+                       HorizontalOptions="Center"
+                       TextColor="Black"
+                       Text="{Binding Visitor.Initials}">
+                </Label>
+            </StackLayout>
+        </StackLayout>
+        <ActivityIndicator IsRunning="{Binding IsRunning}">
+        </ActivityIndicator>
+        <Button Command="{Binding SaveCommand}"
+                IsEnabled="{Binding IsEnabled}"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="Center"
+                BackgroundColor="Orange"
+                TextColor="White"
+                HeightRequest="50"
+                BorderRadius="25"
+                Text="Save">
+        </Button>
+    </StackLayout>
+
+
+</ContentPage>
