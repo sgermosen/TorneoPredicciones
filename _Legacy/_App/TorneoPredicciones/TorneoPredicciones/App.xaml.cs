@@ -83,7 +83,8 @@ namespace TorneoPredicciones
             var apiService = new  ApiService();
             var  dialogService = new DialogService();
             var navigationService = new NavigationService();
-         
+            var  dataService = new DataService();
+        var parameters =   dataService.First<Parameter>(false);
             var token = await apiService.LoginFacebook(parameters.UrlBase, "/api", "/Users/LoginFacebook", profile);
 
             if (token == null)
