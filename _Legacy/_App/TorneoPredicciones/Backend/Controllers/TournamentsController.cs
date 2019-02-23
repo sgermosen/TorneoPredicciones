@@ -28,7 +28,7 @@
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> CloseMatch(Match match)
         {
-            using (var transacction = _db.Database.BeginTransaction())
+            using (var transacction = await _db.Database.BeginTransaction())
             {
                 try
                 {
@@ -153,7 +153,7 @@
                     }
 
                     await _db.SaveChangesAsync();
-                    transacction.Commit();
+                  await  transacction.Commit();
 
                     if (noPoints.Count > 0)
                     {
