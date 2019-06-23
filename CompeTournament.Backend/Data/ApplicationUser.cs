@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using CompeTournament.Backend.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace CompeTournament.Backend.Data
@@ -14,7 +15,8 @@ namespace CompeTournament.Backend.Data
         public string Lastname { get; set; }
            
         public string FullName => $"{Name} {Lastname}";
-         
-         
+
+        public UserType UserType { get; set; }
+        
     }
 }
