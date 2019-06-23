@@ -1,8 +1,10 @@
 ﻿namespace CompeTournament.Backend.Data
 {
+    using CompeTournament.Backend.Data.Entities;
     using Helpers;
     using Microsoft.AspNetCore.Identity;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class SeedDb
@@ -20,18 +22,20 @@
 
         public async Task SeedAsync()
         {
-          //  await _context.Database.EnsureCreatedAsync();
+               await _context.Database.EnsureCreatedAsync();
 
-            //if (!_context.Countries.Any())
-            //{
-            //    AddCountry("Republica Dominicana", "_Dominican@");
-            //    AddCountry("Venezuela", "Venezolan@");
-            //    AddCountry("China", "Chino@");
-            //    AddCountry("Colombia", "Colombian@");
-            //    AddCountry("Haiti", "Haitian@");
-            //    AddCountry("Usa", "American@");
-            //    AddCountry("Otro", "Otro");
-            //}
+            if (!_context.UserTypes.Any())
+            {
+                AddUserType("Local");
+                AddUserType("GitHub");
+                AddUserType("Facebook");
+                AddUserType("Twitter");
+                AddUserType("Instagram");
+                AddUserType("Microsoft");
+                AddUserType("Google");
+                AddUserType("Other");
+                await _context.SaveChangesAsync();
+            }
             await CheckRolesAsync();
             await CheckUser("elis@gmail.com", "Elis", "Pascual", "User");
             await CheckUser("starling@gmail.com", "Starling", "Germosen", "User");
@@ -40,6 +44,14 @@
 
             await _context.SaveChangesAsync();
 
+        }
+
+        private void AddUserType(string v)
+        {
+            _context.UserTypes.Add(new UserType
+            {
+                Name = v
+            });
         }
 
         //private void AddPaymentType(string v1, string v2)
@@ -90,6 +102,7 @@
                 Email = userName,
                 UserName = userName,
                 PhoneNumber = "849 207 7714",
+                UserType= _context.UserTypes.FirstOrDefault() 
                 //CityId = context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                 //City = context.Countries.FirstOrDefault().Cities.FirstOrDefault()
             };
@@ -99,6 +112,7 @@
             {
                 throw new InvalidOperationException("Could not create the user in seeder");
             }
+          // _userHelper.AddClaim(user, new Claim("OwnerId", owner.Id.ToString()));
 
             await _userHelper.AddUserToRoleAsync(user, role);
             var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
