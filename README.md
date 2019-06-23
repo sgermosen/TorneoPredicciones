@@ -1,4 +1,4 @@
-# TorneoPredicciones
+# Competitions And Tournaments
 
 Saludos chicos, aquí les traigo el código Fuente de un app para realizar apuestas amistosas desarrollada con Xamarin Forms. Se les agradecería bastante que se unan al repo y realicen sus aportes, para de esa forma hacer crecer la comunidad en el país.
 
@@ -48,7 +48,7 @@ En el código fuente podremos encontrar buenas prácticas para lo siguiente:
  - DialogService
  - NavigationService
 
-Esta app, ha sido realizada siguiendo los Tutoriales y mentoria del señor Juan Carlos Zuluaga en su canal de youtube https://www.youtube.com/user/jzuluaga55
+Esta app, ha sido realizada inspirada en los Tutoriales y mentoria del señor Juan Carlos Zuluaga en su canal de youtube https://www.youtube.com/user/jzuluaga55
 
 Si deseas ser miembro de nuestra comunidad de desarrollo visita nuestra página de Facebook www.fb.com/xamarindo
 
