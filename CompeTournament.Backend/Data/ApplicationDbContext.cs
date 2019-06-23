@@ -1,4 +1,5 @@
 ﻿using CompeTournament.Backend.Data.Configurations;
+using CompeTournament.Backend.Data.Entities;
 using CompeTournament.Backend.Extensions;
 using CompeTournament.Backend.Helpers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -20,7 +21,6 @@ namespace CompeTournament.Backend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // ...
 
             var cascadeFKs = modelBuilder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetForeignKeys())
@@ -38,18 +38,22 @@ namespace CompeTournament.Backend.Data
             // new OwnerConfig(modelBuilder.Entity<Owner>());
             //new ShopConfig(modelBuilder.Entity<Shop>());
 
-            ////if I want to remove the AspNet prefix from the identity tables
-            //foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            //{
-            //    var table = entityType.Relational().TableName;
-            //    if (table.StartsWith("AspNet"))
-            //    {
-            //        entityType.Relational().TableName = table.Substring(6);
-            //    }
-            //};
+            //if I want to remove the AspNet prefix from the identity tables
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var table = entityType.Relational().TableName;
+                if (table.StartsWith("AspNet"))
+                {
+                    entityType.Relational().TableName = table.Substring(6);
+                }
+            };
 
 
         }
+
+        #region Tables
+        public DbSet<UserType> UserTypes { get; set; }
+        #endregion
 
         public override int SaveChanges()
         {

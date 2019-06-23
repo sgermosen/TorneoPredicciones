@@ -65,6 +65,8 @@ namespace CompeTournament.Backend.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
+                    b.Property<int?>("UserTypeId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -75,7 +77,22 @@ namespace CompeTournament.Backend.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers");
+                    b.HasIndex("UserTypeId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CompeTournament.Backend.Data.Entities.UserType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserTypes");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -99,7 +116,7 @@ namespace CompeTournament.Backend.Migrations
                         .HasName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -119,7 +136,7 @@ namespace CompeTournament.Backend.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("RoleClaims");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -139,7 +156,7 @@ namespace CompeTournament.Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("UserClaims");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -157,7 +174,7 @@ namespace CompeTournament.Backend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("UserLogins");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -170,7 +187,7 @@ namespace CompeTournament.Backend.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -185,7 +202,14 @@ namespace CompeTournament.Backend.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("UserTokens");
+                });
+
+            modelBuilder.Entity("CompeTournament.Backend.Data.ApplicationUser", b =>
+                {
+                    b.HasOne("CompeTournament.Backend.Data.Entities.UserType", "UserType")
+                        .WithMany()
+                        .HasForeignKey("UserTypeId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
