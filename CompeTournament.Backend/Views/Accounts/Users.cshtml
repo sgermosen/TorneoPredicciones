@@ -1,0 +1,52 @@
+﻿@model IEnumerable<CompeTournament.Backend.Data.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<h1>Usuarios</h1>
+
+<p>
+    
+    <a class="btn btn-primary" asp-action="Create">Registrar Nuevo Usuario</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Nombre
+            </th>
+            <th>
+                Correo
+            </th>
+
+
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    <a class="btn btn-warning"
+                       asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                    <a class="btn btn-info"
+                       asp-action="Details" asp-route-id="@item.Id">Informacion Completa</a>
+                    <a class="btn btn-danger"
+                       asp-action="Delete" asp-route-id="@item.Id">Resetear Contraseña</a>
+                    <a class="btn btn-danger"
+                       asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

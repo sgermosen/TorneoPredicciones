@@ -1,0 +1,104 @@
+﻿@model  RegisterNewUserViewModel
+@{
+    ViewData["Title"] = "Registro";
+}
+
+<h2>Registro</h2>
+
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <div class="form-group">
+                <label asp-for="FirstName">Nombres</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-warning"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="LastName">Apellidos</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-warning"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Username">Email</label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-warning"></span>
+            </div>
+
+            @*<div class="form-group">
+                <label asp-for="CountryId" class="control-label"></label>
+                <select asp-for="CountryId" asp-items="Model.Countries" class="form-control"></select>
+                <span asp-validation-for="CountryId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CityId" class="control-label"></label>
+                <select asp-for="CityId" asp-items="Model.Cities" class="form-control"></select>
+                <span asp-validation-for="CityId" class="text-danger"></span>
+            </div>*@
+ 
+
+            <div class="form-group">
+                <label asp-for="PhoneNumber">Telefono</label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-warning"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password">Contraseña</label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-warning"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Confirm">Confirmacion de Contraseña</label>
+                <input asp-for="Confirm" type="password" class="form-control" />
+                <span asp-validation-for="Confirm" class="text-warning"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Registrarme" class="btn btn-primary" />
+                <a asp-action="Login" class="btn btn-success">Iniciar Session</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="text-success">
+    <p>
+        @ViewBag.Message
+    </p>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#CountryId").change(function () {
+                $("#CityId").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCitiesAsync")',
+                    dataType: 'json',
+                    data: { countryId: $("#CountryId").val() },
+                    success: function (cities) {
+                        debugger;
+                        $("#CityId").append('<option value="0">(Select a city...)</option>');
+                        $.each(cities,
+                            function (i, city) {
+                                $("#CityId").append('<option value="' + city.id + '">' + city.name + '</option>');
+                            });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve cities.' + ex);
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}
