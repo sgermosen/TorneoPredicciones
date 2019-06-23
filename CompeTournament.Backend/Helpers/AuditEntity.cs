@@ -15,13 +15,13 @@
         public ApplicationUser CreatedUser { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
-        public string UpdatedBy { get; set; }
-        [ForeignKey("UpdatedBy")]
-        public ApplicationUser UpdatedUser { get; set; }
+        //public string UpdatedBy { get; set; }
+        //[ForeignKey("UpdatedBy")]
+        //public ApplicationUser UpdatedUser { get; set; }
 
         public DateTime? DeletedAt { get; set; }
-        public string DeletedBy { get; set; }
-        [ForeignKey("DeletedBy")]
-        public ApplicationUser DeletedUser { get; set; }
+        //public string DeletedBy { get; set; }
+        //[ForeignKey("DeletedBy")]
+        //public ApplicationUser DeletedUser { get; set; }
     }
 }
