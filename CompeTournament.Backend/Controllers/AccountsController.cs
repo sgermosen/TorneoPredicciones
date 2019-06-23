@@ -1,6 +1,7 @@
 ﻿namespace CompeTournament.Backend.Controllers
 {
     using CompeTournament.Backend.Data;
+    using CompeTournament.Backend.Data.Entities;
     using CompeTournament.Backend.Helpers;
     using CompeTournament.Backend.Models;
     using Microsoft.AspNetCore.Identity;
@@ -88,15 +89,16 @@
                 var user = await this._userHelper.GetUserByEmailAsync(model.Username);
                 if (user == null)
                 {
-                    //  var city = await this.countryRepository.GetCityAsync(model.CityId);
-
+                    // var userType = await this.countryRepository.GetCityAsync(model.CityId);
+                    var userType = new UserType { Id = 1, Name = "Local" };
                     user = new ApplicationUser
                     {
                         Name = model.FirstName,
                         Lastname = model.LastName,
                         Email = model.Username,
-                        UserName = model.Username, 
+                        UserName = model.Username,
                         PhoneNumber = model.PhoneNumber,
+                        UserType = userType
                         //CityId = model.CityId,
                         //City = city
                     };
@@ -136,7 +138,7 @@
             if (user != null)
             {
                 model.FirstName = user.Name;
-                model.LastName = user.Lastname; 
+                model.LastName = user.Lastname;
                 model.PhoneNumber = user.PhoneNumber;
 
                 //var city = await this.countryRepository.GetCityAsync(user.CityId);
@@ -169,7 +171,7 @@
                     //  var city = await this.countryRepository.GetCityAsync(model.CityId);
 
                     user.Name = model.FirstName;
-                    user.Lastname = model.LastName; 
+                    user.Lastname = model.LastName;
                     user.PhoneNumber = model.PhoneNumber;
                     //user.CityId = model.CityId;
                     //user.City = city;
