@@ -4,7 +4,6 @@ using CompeTournament.Backend.Helpers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +35,7 @@ namespace CompeTournament.Backend.Data
             modelBuilder.ApplyConfiguration(new ApplicationUserConfig());
             //registering the configurations for all the classes
             //  new ApplicationUserConfig(modelBuilder.Entity<ApplicationUser>());
-           // new OwnerConfig(modelBuilder.Entity<Owner>());
+            // new OwnerConfig(modelBuilder.Entity<Owner>());
             //new ShopConfig(modelBuilder.Entity<Shop>());
 
             ////if I want to remove the AspNet prefix from the identity tables
@@ -104,14 +103,14 @@ namespace CompeTournament.Backend.Data
                     else if (entity is ISoftDeleted && ((ISoftDeleted)entity).Deleted)
                     {
                         entity.DeletedAt = date;
-                        entity.DeletedBy = userId;
+                        //  entity.DeletedBy = userId;
                     }
 
                     Entry(entity).Property(x => x.CreatedAt).IsModified = false;
                     Entry(entity).Property(x => x.CreatedBy).IsModified = false;
 
                     entity.UpdatedAt = date;
-                    entity.UpdatedBy = userId;
+                    // entity.UpdatedBy = userId;
                 }
             }
         }
