@@ -1,5 +1,3 @@
-using System;
-
 namespace CompeTournament.Backend.Models
 {
     public class ErrorViewModel
