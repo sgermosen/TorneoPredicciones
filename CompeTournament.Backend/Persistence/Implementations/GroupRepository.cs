@@ -1,17 +1,14 @@
-﻿using CompeTournament.Backend.Data;
+﻿using System.Linq;
+using CompeTournament.Backend.Data;
 using CompeTournament.Backend.Data.Entities;
-using CompeTournament.Backend.Helpers;
 using CompeTournament.Backend.Persistence.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CompeTournament.Backend.Persistence.Implementations
 {
     public class GroupRepository : Repository<Group>, IGroupRepository
     {
-        //private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         //private readonly IUserHelper _userHelper;
 
         //public GroupRepository(ApplicationDbContext context, IUserHelper userHelper) : base(context)
@@ -21,6 +18,14 @@ namespace CompeTournament.Backend.Persistence.Implementations
         //}
         public GroupRepository(ApplicationDbContext context) : base(context)
         {
+            _context = context;
+        }
+
+        public IQueryable<Group> GetWithType()
+        {
+            return _context.Groups
+                .Include(p=>p.TournamentType)
+                .AsNoTracking();
         }
     }
 }

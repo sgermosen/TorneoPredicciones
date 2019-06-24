@@ -1,11 +1,9 @@
 ﻿using CompeTournament.Backend.Data.Entities;
-using System.Linq;
 
 namespace CompeTournament.Backend.Persistence.Contracts
 {
-    public interface IGroupRepository : IRepository<Group>
+    public interface ITournamentTypeRepository : IRepository<TournamentType>
     {
-        IQueryable<Group> GetWithType();
 
     }
 }

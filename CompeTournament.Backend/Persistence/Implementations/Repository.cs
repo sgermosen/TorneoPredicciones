@@ -46,9 +46,7 @@
             await Context.SaveChangesAsync();
             return entity;
         }
-
-
-
+               
         public async Task<bool> DeleteAsync(TEntity entity)
         {
             Context.Set<TEntity>().Remove(entity);
