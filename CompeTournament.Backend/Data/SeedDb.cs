@@ -24,6 +24,14 @@
         {
                await _context.Database.EnsureCreatedAsync();
 
+            if (!_context.TournamentTypes.Any())
+            {
+                AddTounamentType("Point Match (ej:Soccer, BaseBall, BasketBall)");
+                AddTounamentType("Only One Winner (ej:Box, Parchis, Votation)");
+                AddTounamentType("Position Match (ej:Bike, Swimming, Lotery)");
+                await _context.SaveChangesAsync();
+            }
+
             if (!_context.UserTypes.Any())
             {
                 AddUserType("Local");
@@ -36,6 +44,7 @@
                 AddUserType("Other");
                 await _context.SaveChangesAsync();
             }
+
             await CheckRolesAsync();
             await CheckUser("elis@gmail.com", "Elis", "Pascual", "User");
             await CheckUser("starling@gmail.com", "Starling", "Germosen", "User");
@@ -44,6 +53,14 @@
 
             await _context.SaveChangesAsync();
 
+        }
+
+        private void AddTounamentType(string v)
+        {
+            _context.TournamentTypes.Add(new TournamentType
+            {
+                Name = v
+            });
         }
 
         private void AddUserType(string v)
