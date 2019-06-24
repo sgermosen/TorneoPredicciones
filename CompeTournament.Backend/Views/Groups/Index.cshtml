@@ -1,0 +1,82 @@
+﻿@model IEnumerable<CompeTournament.Backend.Data.Entities.Group>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Mis Grupos</h1>
+<br />
+<p>
+    <a class="btn btn-primary" asp-action="Create">
+        <span class="fa fa-plus"></span>
+        Nuevo Grupo
+    </a>
+</p>
+@if (@Model.Count() > 0)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Nombre del Grupo
+                </th>
+                <th>
+                    Requisitos
+                </th>
+                <th>
+                    Miembros
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Requirements)
+                    </td>
+                    <td>
+                     1
+                    </td>
+                    <td>
+                        @* This need appear only if im not member*@
+                        <a class="btn btn-success" asp-controller="Apply" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Solicitar Membrecia
+                        </a>
+                        @* This need appear only im member*@
+                        <a class="btn btn-success" asp-controller="Leave" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Abandonar Grupo (Perderas todos tus puntos)
+                        </a>
+
+                        <a class="btn btn-info" asp-controller="Details" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Entrar al grupo
+                        </a>
+                        <a class="btn btn-warning" asp-controller="Edit" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Nuevo Grupo
+                        </a>
+                        <a class="btn btn-danger" asp-controller="Delete" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Nuevo Grupo
+                        </a>
+                    </td>
+                </tr>
+
+            }
+
+        </tbody>
+    </table>
+}
+else
+{
+    <div>No tienes grupos creados aun :'(, porfavor puncha el boton para crear algunos :D</div>
+}
+
