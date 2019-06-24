@@ -1,13 +1,10 @@
 ﻿using CompeTournament.Backend.Helpers;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CompeTournament.Backend.Data.Entities
 {
-    public class TeamOrParticipant : AuditEntity
+    //Team or participant
+    public class Team : AuditEntity
     {
         public string Initials { get; set; }
         [DataType(DataType.ImageUrl)]

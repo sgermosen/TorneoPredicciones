@@ -37,6 +37,10 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="Index">Groups</a>
+                            </li>
+
                             <li class="nav-item dropdown">
 
                                 <a class="nav-link dropdown-toggle"
@@ -62,7 +66,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" 
+                                <a class="nav-link text-dark" asp-area=""
                                    asp-controller="Accounts"
                                    asp-action="Login">Login</a>
                             </li>

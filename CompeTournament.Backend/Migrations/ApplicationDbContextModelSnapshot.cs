@@ -82,6 +82,108 @@ namespace CompeTournament.Backend.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("CompeTournament.Backend.Data.Entities.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<DateTime?>("CreatedAt");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<DateTime?>("DeletedAt");
+
+                    b.Property<string>("Logo");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Requirements");
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.ToTable("Group");
+                });
+
+            modelBuilder.Entity("CompeTournament.Backend.Data.Entities.Status", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Statuses");
+                });
+
+            modelBuilder.Entity("CompeTournament.Backend.Data.Entities.Tournament", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<DateTime?>("CreatedAt");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<DateTime?>("DeletedAt");
+
+                    b.Property<int?>("GroupId");
+
+                    b.Property<bool>("IsPublic");
+
+                    b.Property<string>("Name");
+
+                    b.Property<short>("Order");
+
+                    b.Property<string>("PictureUrl");
+
+                    b.Property<int?>("TournamentTypeId");
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("TournamentTypeId");
+
+                    b.ToTable("Tournaments");
+                });
+
+            modelBuilder.Entity("CompeTournament.Backend.Data.Entities.TournamentType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TournamentTypes");
+                });
+
             modelBuilder.Entity("CompeTournament.Backend.Data.Entities.UserType", b =>
                 {
                     b.Property<int>("Id")
@@ -210,6 +312,28 @@ namespace CompeTournament.Backend.Migrations
                     b.HasOne("CompeTournament.Backend.Data.Entities.UserType", "UserType")
                         .WithMany()
                         .HasForeignKey("UserTypeId");
+                });
+
+            modelBuilder.Entity("CompeTournament.Backend.Data.Entities.Group", b =>
+                {
+                    b.HasOne("CompeTournament.Backend.Data.ApplicationUser", "CreatedUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy");
+                });
+
+            modelBuilder.Entity("CompeTournament.Backend.Data.Entities.Tournament", b =>
+                {
+                    b.HasOne("CompeTournament.Backend.Data.ApplicationUser", "CreatedUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy");
+
+                    b.HasOne("CompeTournament.Backend.Data.Entities.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId");
+
+                    b.HasOne("CompeTournament.Backend.Data.Entities.TournamentType", "TournamentType")
+                        .WithMany()
+                        .HasForeignKey("TournamentTypeId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
