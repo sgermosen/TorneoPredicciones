@@ -71,6 +71,7 @@
             #region RepositoryScopes
 
            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<ITournamentTypeRepository, TournamentTypeRepository>();
 
             #endregion
 
