@@ -2,7 +2,7 @@
 
 namespace CompeTournament.Backend.Data.Entities
 {
-    public class Group : AuditEntity
+    public class Group : AuditEntity,  IBaseEntity
     {
         public string Requirements { get; set; }
 

@@ -3,6 +3,8 @@
     using CompeTournament.Backend.Data;
     using CompeTournament.Backend.Extensions;
     using CompeTournament.Backend.Helpers;
+    using CompeTournament.Backend.Persistence.Contracts;
+    using CompeTournament.Backend.Persistence.Implementations;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -68,7 +70,7 @@
 
             #region RepositoryScopes
 
-            // services.AddScoped<IOwnerRepository, OwnerRepository>();
+           services.AddScoped<IGroupRepository, GroupRepository>();
 
             #endregion
 
