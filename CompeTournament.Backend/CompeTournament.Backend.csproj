@@ -9,6 +9,9 @@
     <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
     <AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Data\Entities\Tournament.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Remove="Views\Accounts\Users.cshtml" />
