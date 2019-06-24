@@ -1,16 +1,16 @@
-﻿using CompeTournament.Backend.Data.Configurations;
-using CompeTournament.Backend.Data.Entities;
-using CompeTournament.Backend.Extensions;
-using CompeTournament.Backend.Helpers;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace CompeTournament.Backend.Data
+﻿namespace CompeTournament.Backend.Data
 {
+    using CompeTournament.Backend.Data.Configurations;
+    using CompeTournament.Backend.Data.Entities;
+    using CompeTournament.Backend.Extensions;
+    using CompeTournament.Backend.Helpers;
+    using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore;
+    using System;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         private readonly ICurrentUserFactory _currentUser;
@@ -53,6 +53,9 @@ namespace CompeTournament.Backend.Data
 
         #region Tables
         public DbSet<UserType> UserTypes { get; set; }
+        public DbSet<Status> Statuses { get; set; }
+        public DbSet<TournamentType> TournamentTypes { get; set; }
+        public DbSet<Tournament> Tournaments { get; set; }
         #endregion
 
         public override int SaveChanges()
