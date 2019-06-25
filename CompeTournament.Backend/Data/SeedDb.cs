@@ -24,6 +24,15 @@
         {
                await _context.Database.EnsureCreatedAsync();
 
+            if (!_context.Statuses.Any())
+            {
+                AddStatus("Pendiente de Iniciar");
+                AddStatus("Cerrado");
+                AddStatus("Terminado");
+                AddStatus("Cancelado");
+                await _context.SaveChangesAsync();
+            }
+
             if (!_context.TournamentTypes.Any())
             {
                 AddTounamentType("Point Match (ej:Soccer, BaseBall, BasketBall)");
@@ -53,6 +62,14 @@
 
             await _context.SaveChangesAsync();
 
+        }
+
+        private void AddStatus(string v)
+        {
+            _context.Statuses.Add(new Status
+            {
+                Name = v
+            });
         }
 
         private void AddTounamentType(string v)

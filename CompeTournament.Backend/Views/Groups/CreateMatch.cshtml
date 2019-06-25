@@ -1,0 +1,72 @@
+﻿@model CompeTournament.Backend.Data.Entities.Match
+@{
+    ViewData["Title"] = "Crear Partido";
+}
+
+<h1>Registro de Nuevo Encuentro para tu Competencia o Torneo</h1>
+
+<form asp-action="CreateMatch">
+    <div class="form-group">
+        <input type="hidden" asp-for="GroupId" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="Name" class="control-label"> </label>
+            </div>
+            <div class="col-md-2">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="DateTime" class="control-label"> </label>
+            </div>
+            <div class="col-md-4">
+
+                <input asp-for="DateTime" class="form-control"/>
+                <span asp-validation-for="DateTime" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="Local" class="control-label"> </label>
+            </div>
+            <div class="col-md-4">
+                <select asp-for="LocalId" class="form-control" asp-items="ViewBag.LocalId"></select>
+                <span asp-validation-for="Local" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="Visitor" class="control-label"> </label>
+            </div>
+            <div class="col-md-4">
+                <select asp-for="VisitorId" class="form-control" asp-items="ViewBag.VisitorId"></select>
+                <span asp-validation-for="Visitor" class="text-danger"></span>
+            </div>
+        </div>
+
+        <br /><br />
+        <div class="row">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-5">
+
+                <button type="submit" class="btn btn-primary"> Guardar y Procesar los Cambios</button>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</form>
+
+
+
+
+
