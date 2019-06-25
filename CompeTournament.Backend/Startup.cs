@@ -74,6 +74,7 @@
             services.AddScoped<ITournamentTypeRepository, TournamentTypeRepository>();
             services.AddScoped<ILeagueRepository, LeagueRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<IMatchRepository, MatchRepository>();
 
             #endregion
 

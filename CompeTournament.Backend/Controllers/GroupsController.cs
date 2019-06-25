@@ -14,14 +14,16 @@ namespace CompeTournament.Backend.Controllers
         public readonly ITournamentTypeRepository _typeRepository;
         public readonly ILeagueRepository _leagueRepo;
         private readonly ITeamRepository _teamRepository;
+        private readonly IMatchRepository _matchRepository;
 
         public GroupsController(IGroupRepository groupRepo, ITournamentTypeRepository typeRepository
-            , ILeagueRepository leagueRepo, ITeamRepository teamRepository)
+            , ILeagueRepository leagueRepo, ITeamRepository teamRepository, IMatchRepository matchRepository)
         {
             _groupRepo = groupRepo;
             _typeRepository = typeRepository;
             _leagueRepo = leagueRepo;
             _teamRepository = teamRepository;
+            _matchRepository = matchRepository;
         }
 
         #region Group
@@ -121,6 +123,45 @@ namespace CompeTournament.Backend.Controllers
         }
         #endregion
 
+        #region Match
+
+        public async Task<IActionResult> DetailsMatch(int id)
+        {
+            var model = await _matchRepository.GetByIdWithChildrens(id);
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> CreateMatch(int id)//this id is from the group
+        {
+            var tt = _teamRepository.GetAll().ToList();//TODO: need to be filtered
+            // ViewBag.TournamentTypes = tt.ToList();
+            ViewData["LocalId"] = new SelectList(tt, "Id", "Name");
+            ViewData["VisitorId"] = new SelectList(tt, "Id", "Name");
+
+            var model = new Match
+            {
+                GroupId = id
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMatch(Match model)
+        {//Todo: you need to revalidate than the user than is creating be owner
+
+            if (this.ModelState.IsValid)
+            {
+                model.Id = 0;
+                model.StatusId = 1;
+                await _matchRepository.CreateAsync(model);
+                return this.RedirectToAction(nameof(Details), new { id = model.GroupId });
+            }
+
+            return this.View(model);
+        }
+
+        #endregion
 
     }
 }

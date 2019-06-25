@@ -10,13 +10,7 @@ namespace CompeTournament.Backend.Persistence.Implementations
     public class LeagueRepository : Repository<League>, ILeagueRepository
     {
         private readonly ApplicationDbContext _context;
-        //private readonly IUserHelper _userHelper;
-
-        //public GroupRepository(ApplicationDbContext context, IUserHelper userHelper) : base(context)
-        //{
-        //    _context = context;
-        //    _userHelper = userHelper;
-        //}
+       
         public LeagueRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
