@@ -1,0 +1,44 @@
+﻿@model CompeTournament.Backend.Data.Entities.Team
+@{
+    ViewData["Title"] = "Crear Equipo";
+}
+
+<h1>Registro de Nuevo Equipo dentro de la Liga</h1>
+
+<form asp-action="CreateTeam">
+    <input type="hidden" asp-for="LeagueId" />
+    <div class="form-group">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="Name" class="control-label"> </label>
+            </div>
+            <div class="col-md-2">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+        </div>
+
+
+        <br /><br />
+        <div class="row">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-5">
+
+                <button type="submit" class="btn btn-primary"> Guardar y Procesar los Cambios</button>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</form>
+
+
+
+
+

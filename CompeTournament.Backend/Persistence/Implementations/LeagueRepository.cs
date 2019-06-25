@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using CompeTournament.Backend.Data;
 using CompeTournament.Backend.Data.Entities;
 using CompeTournament.Backend.Persistence.Contracts;
@@ -26,6 +27,13 @@ namespace CompeTournament.Backend.Persistence.Implementations
             return _context.Leagues
                 .Include(p=>p.Group)
                 .AsNoTracking();
+        }
+        public async Task<League> GetByIdWithChildrens(int key)
+        {
+            var entity = await Context.Leagues.Where(p => p.Id == key)
+                .Include(p => p.Teams)
+                .FirstOrDefaultAsync();
+            return entity;
         }
     }
 }
