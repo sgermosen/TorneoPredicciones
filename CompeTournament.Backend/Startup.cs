@@ -64,14 +64,15 @@
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("PsDatabaseCnn"));
             });
 
-           services.AddTransient<SeedDb>();
+            services.AddTransient<SeedDb>();
             services.AddScoped<IUserHelper, UserHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
 
             #region RepositoryScopes
 
-           services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ITournamentTypeRepository, TournamentTypeRepository>();
+            services.AddScoped<ILeagueRepository, LeagueRepository>();
 
             #endregion
 

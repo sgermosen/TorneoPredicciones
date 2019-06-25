@@ -11,18 +11,18 @@
     {
         IQueryable<TEntity> GetAll();
 
-        Task<TEntity> GetByIdAsync(long id);
+        Task<TEntity> GetByIdAsync(int id);
 
         // Task CreateAsync(TEntity entity);
-        Task<bool> ExistAsync(long id);
+        Task<bool> ExistAsync(int id);
         Task<TEntity> AddAsync(TEntity entity);
         Task<TEntity> CreateAsync(TEntity entity);
 
         Task<TEntity> UpdateAsync(TEntity entity);
         Task<bool> DeleteAsync(TEntity entity);
         // Task<bool> UpdateAsync(TEntity entity);
-        bool Exists(long key);
-        Task<TEntity> FindByIdAsync(long key);//will find by id and return the entity
+        bool Exists(int key);
+        Task<TEntity> FindByIdAsync(int key);//will find by id and return the entity
         Task<List<TEntity>> FindByClause(Func<TEntity, bool> selector = null);
         Task<TEntity> GetByClause(Func<TEntity, bool> selector = null);
         //IQueryable<TEntity> GetAll();
