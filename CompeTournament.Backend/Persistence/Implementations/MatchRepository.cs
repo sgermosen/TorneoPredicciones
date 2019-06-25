@@ -7,25 +7,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CompeTournament.Backend.Persistence.Implementations
 {
-    public class LeagueRepository : Repository<League>, ILeagueRepository
+    public class MatchRepository : Repository<Match>, IMatchRepository
     {
         private readonly ApplicationDbContext _context;
-       
-        public LeagueRepository(ApplicationDbContext context) : base(context)
+        
+        public MatchRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public IQueryable<League> GetWithGroup()
+        public IQueryable<Match> GetWithGroup()
         {
-            return _context.Leagues
-                .Include(p=>p.Group)
+            return _context.Matches
+                .Include(p => p.Group)
                 .AsNoTracking();
         }
-        public async Task<League> GetByIdWithChildrens(int key)
+        public async Task<Match> GetByIdWithChildrens(int key)
         {
-            var entity = await Context.Leagues.Where(p => p.Id == key)
-                .Include(p => p.Teams)
+            var entity = await Context.Matches.Where(p => p.Id == key)
+                .Include(p => p.Visitor)
+                 .Include(p => p.Local)
                 .FirstOrDefaultAsync();
             return entity;
         }

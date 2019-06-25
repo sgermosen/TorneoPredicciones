@@ -18,6 +18,8 @@ namespace CompeTournament.Backend.Data.Entities
 
         public ICollection<League> Leagues { get; set; }
 
+        public ICollection<Match> Matches { get; set; }
+
 
     }
 }
