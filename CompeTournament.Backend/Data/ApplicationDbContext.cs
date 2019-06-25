@@ -60,6 +60,7 @@
         public DbSet<League> Leagues { get; set; }
         public DbSet<GroupUser> GroupUsers { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<Match> Matches { get; set; }
         #endregion
 
         public override int SaveChanges()
