@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 
 namespace CompeTournament.Backend.Persistence.Contracts
 {
-    public interface ILeagueRepository : IRepository<League>
+    public interface ITeamRepository : IRepository<Team>
     {
-        IQueryable<League> GetWithGroup();
-        Task<League> GetByIdWithChildrens(int id);
-
+        IQueryable<Team> GetWithLeague(); 
     }
 }
