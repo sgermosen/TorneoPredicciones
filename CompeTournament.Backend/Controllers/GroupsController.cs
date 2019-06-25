@@ -13,13 +13,15 @@ namespace CompeTournament.Backend.Controllers
 
         public readonly ITournamentTypeRepository _typeRepository;
         public readonly ILeagueRepository _leagueRepo;
+        private readonly ITeamRepository _teamRepository;
 
         public GroupsController(IGroupRepository groupRepo, ITournamentTypeRepository typeRepository
-            , ILeagueRepository leagueRepo)
+            , ILeagueRepository leagueRepo, ITeamRepository teamRepository)
         {
             _groupRepo = groupRepo;
             _typeRepository = typeRepository;
             _leagueRepo = leagueRepo;
+            _teamRepository = teamRepository;
         }
 
         #region Group
@@ -63,6 +65,13 @@ namespace CompeTournament.Backend.Controllers
         #endregion
 
         #region League
+        public async Task<IActionResult> DetailsLeague(int id)
+        {
+            var model = await _leagueRepo.GetByIdWithChildrens(id);
+
+            return View(model);
+        }
+
         public async Task<IActionResult> CreateLeague(int id)//this id is from the group
         {
             var model = new League
@@ -79,8 +88,33 @@ namespace CompeTournament.Backend.Controllers
             if (this.ModelState.IsValid)
             {
                 model.Id = 0;
-                   await _leagueRepo.CreateAsync(model);
+                await _leagueRepo.CreateAsync(model);
                 return this.RedirectToAction(nameof(Details), new { id = model.GroupId });
+            }
+
+            return this.View(model);
+        }
+        #endregion
+
+        #region Team
+        public async Task<IActionResult> CreateTeam(int id)//this id is from the group
+        {
+            var model = new Team
+            {
+                LeagueId = id
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTeam(Team model)
+        {//Todo: you need to revalidate than the user than is creating be owner
+
+            if (this.ModelState.IsValid)
+            {
+                model.Id = 0;
+                await _teamRepository.CreateAsync(model);
+                return this.RedirectToAction(nameof(DetailsLeague), new { id = model.LeagueId });
             }
 
             return this.View(model);

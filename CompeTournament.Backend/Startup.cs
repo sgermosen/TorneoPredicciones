@@ -73,6 +73,7 @@
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<ITournamentTypeRepository, TournamentTypeRepository>();
             services.AddScoped<ILeagueRepository, LeagueRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
 
             #endregion
 
