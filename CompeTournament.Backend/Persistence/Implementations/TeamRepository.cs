@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Threading.Tasks;
 using CompeTournament.Backend.Data;
 using CompeTournament.Backend.Data.Entities;
 using CompeTournament.Backend.Persistence.Contracts;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CompeTournament.Backend.Persistence.Implementations
 {
-    public class LeagueRepository : Repository<League>, ILeagueRepository
+    public class TeamRepository : Repository<Team>, ITeamRepository
     {
         private readonly ApplicationDbContext _context;
         //private readonly IUserHelper _userHelper;
@@ -17,23 +16,16 @@ namespace CompeTournament.Backend.Persistence.Implementations
         //    _context = context;
         //    _userHelper = userHelper;
         //}
-        public LeagueRepository(ApplicationDbContext context) : base(context)
+        public TeamRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public IQueryable<League> GetWithGroup()
+        public IQueryable<Team> GetWithLeague()
         {
-            return _context.Leagues
-                .Include(p=>p.Group)
+            return _context.Teams
+                .Include(p=>p.League)
                 .AsNoTracking();
-        }
-        public async Task<League> GetByIdWithChildrens(int key)
-        {
-            var entity = await Context.Leagues.Where(p => p.Id == key)
-                .Include(p => p.Teams)
-                .FirstOrDefaultAsync();
-            return entity;
         }
     }
 }
