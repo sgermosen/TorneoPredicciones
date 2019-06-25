@@ -1,10 +1,11 @@
 ﻿using CompeTournament.Backend.Helpers;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CompeTournament.Backend.Data.Entities
 {
-    public class Group : AuditEntity,  IBaseEntity
+    public class Group : AuditEntity, IBaseEntity
     {
         public string Requirements { get; set; }
 
@@ -13,8 +14,10 @@ namespace CompeTournament.Backend.Data.Entities
 
         public int TournamentTypeId { get; set; }
         [ForeignKey("TournamentTypeId")]
-        public TournamentType TournamentType { get; set; } 
-    
+        public TournamentType TournamentType { get; set; }
+
+        public ICollection<League> Leagues { get; set; }
+
 
     }
 }

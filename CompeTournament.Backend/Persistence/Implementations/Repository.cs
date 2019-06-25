@@ -55,12 +55,12 @@
             return result > 0;
         }
 
-        public async Task<bool> ExistAsync(long id)
+        public async Task<bool> ExistAsync(int id)
         {
             return await Context.Set<TEntity>().AnyAsync(e => e.Id == id);
         }
 
-        public bool Exists(long key)
+        public bool Exists(int key)
         {
             return Context.Set<TEntity>().Any(e => e.Id == key);
         }
@@ -73,7 +73,7 @@
             return Task.Run(() => models.ToList());
         }
 
-        public async Task<TEntity> FindByIdAsync(long key)
+        public async Task<TEntity> FindByIdAsync(int key)
         {
             var entity = await Context.Set<TEntity>().FindAsync(key);
             return entity;
@@ -93,7 +93,7 @@
             return Task.Run(() => models.FirstOrDefault());
         }
 
-        public async Task<TEntity> GetByIdAsync(long id)
+        public async Task<TEntity> GetByIdAsync(int id)
         {
             var entity = await Context.Set<TEntity>().FindAsync(id);
             return entity;

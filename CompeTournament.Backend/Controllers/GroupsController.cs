@@ -12,12 +12,17 @@ namespace CompeTournament.Backend.Controllers
         private readonly IGroupRepository _groupRepo;
 
         public readonly ITournamentTypeRepository _typeRepository;
+        public readonly ILeagueRepository _leagueRepo;
 
-        public GroupsController(IGroupRepository groupRepo, ITournamentTypeRepository typeRepository)
+        public GroupsController(IGroupRepository groupRepo, ITournamentTypeRepository typeRepository
+            , ILeagueRepository leagueRepo)
         {
             _groupRepo = groupRepo;
             _typeRepository = typeRepository;
+            _leagueRepo = leagueRepo;
         }
+
+        #region Group
         public async Task<IActionResult> Index()
         {
             var groups = _groupRepo.GetWithType();
@@ -26,7 +31,7 @@ namespace CompeTournament.Backend.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var model = await _groupRepo.FindByIdAsync(id);
+            var model = await _groupRepo.GetByIdWithChildrens(id);
 
             return View(model);
         }
@@ -34,7 +39,7 @@ namespace CompeTournament.Backend.Controllers
         public async Task<IActionResult> Create()
         {
             var tt = _typeRepository.GetAll().ToList();
-           // ViewBag.TournamentTypes = tt.ToList();
+            // ViewBag.TournamentTypes = tt.ToList();
             ViewData["TournamentTypeId"] = new SelectList(tt, "Id", "Name");
             //var model = new GroupView
             //{
@@ -55,5 +60,33 @@ namespace CompeTournament.Backend.Controllers
 
             return this.View(model);
         }
+        #endregion
+
+        #region League
+        public async Task<IActionResult> CreateLeague(int id)//this id is from the group
+        {
+            var model = new League
+            {
+                GroupId = id
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateLeague(League model)
+        {//Todo: you need to revalidate than the user than is creating be owner
+
+            if (this.ModelState.IsValid)
+            {
+                model.Id = 0;
+                   await _leagueRepo.CreateAsync(model);
+                return this.RedirectToAction(nameof(Details), new { id = model.GroupId });
+            }
+
+            return this.View(model);
+        }
+        #endregion
+
+
     }
 }

@@ -51,25 +51,25 @@
                 </td>
                 <td>
                     @* This need appear only if im not member*@
-                    <a class="btn btn-success" asp-controller="Apply" asp-route-id="@item.Id">
+                    <a class="btn btn-success" asp-action="Apply" asp-route-id="@item.Id">
                         <span class="fa fa-plus"></span>
                         Solicitar Membrecia
                     </a>
                     @* This need appear only im member*@
-                    <a class="btn btn-success" asp-controller="Leave" asp-route-id="@item.Id">
+                    <a class="btn btn-success" asp-action="Leave" asp-route-id="@item.Id">
                         <span class="fa fa-plus"></span>
                         Abandonar Grupo (Perderas todos tus puntos)
                     </a>
 
-                    <a class="btn btn-info" asp-controller="Details" asp-route-id="@item.Id">
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">
                         <span class="fa fa-plus"></span>
                         Entrar al grupo
                     </a>
-                    <a class="btn btn-warning" asp-controller="Edit" asp-route-id="@item.Id">
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">
                         <span class="fa fa-plus"></span>
                         Nuevo Grupo
                     </a>
-                    <a class="btn btn-danger" asp-controller="Delete" asp-route-id="@item.Id">
+                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
                         <span class="fa fa-plus"></span>
                         Nuevo Grupo
                     </a>
