@@ -67,7 +67,7 @@ else
 
 <h2>Proximos Partidos, Enfrentamientos, Encuentros</h2>
 <p>
-   
+
     <a class="btn btn-primary" asp-action="CreateMatch" asp-route-id="@Model.Id">
         <span class="fa fa-plus"></span>
         Registrar Enfrentamiento
@@ -105,38 +105,40 @@ else
         <tbody>
             @foreach (var item in Model.Matches)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Local.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Visitor.Name)
-                </td>
-                <td>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Local.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Visitor.Name)
+                    </td>
+                    <td></td>
 
-                </td>
-
-                <td>
-                    <a class="btn btn-info" asp-action="DetailsMatch" asp-route-id="@item.Id">
-                        <span class="fa fa-plus"></span>
-                        Ver Equipos
-                    </a>
-                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">
-                        <span class="fa fa-plus"></span>
-                        Modificar
-                    </a>
-                    <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
-                        <span class="fa fa-plus"></span>
-                        Eliminar
-                    </a>
-                </td>
-            </tr>
+                    <td>
+                        <a class="btn btn-info" asp-action="DetailsMatch" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Ver Equipos
+                        </a>
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Modificar
+                        </a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
 
             }
         </tbody>
     </table>
 }
+
+<div id="tableHolder">
+    <partial name="_MembersPartial" model="Model.GroupUsers" />
+</div>
 

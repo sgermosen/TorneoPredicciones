@@ -22,6 +22,22 @@ namespace CompeTournament.Backend.Persistence.Implementations
             _context = context;
         }
 
+        public async Task<GroupUser> GroupMember(int key)
+        {
+            var entity = await Context.GroupUsers.Where(p => p.Id == key)
+                .Include(p => p.ApplicationUser)
+                .FirstOrDefaultAsync();
+            return entity;
+        }
+
+        public IQueryable<GroupUser> GroupMembers(int id)
+        {
+            return _context.GroupUsers.Where(p => p.GroupId == id)
+                .Include(p => p.ApplicationUser)
+                .Include(p => p.CreatedUser)
+                .AsNoTracking();
+        }
+
         public IQueryable<Group> GetWithType()
         {
             return _context.Groups
@@ -30,11 +46,12 @@ namespace CompeTournament.Backend.Persistence.Implementations
                 .Include(p => p.CreatedUser)
                 .AsNoTracking();
         }
+
         public async Task<Group> GetByIdWithChildrens(int key)
         {
             var entity = await Context.Groups.Where(p => p.Id == key)
                 .Include(p => p.Leagues)
-                .Include(p=>p.GroupUsers).ThenInclude(p => p.ApplicationUser)
+                .Include(p => p.GroupUsers).ThenInclude(p => p.ApplicationUser)
                 .Include(p => p.Matches).ThenInclude(p => p.Local)
                 .Include(p => p.Matches).ThenInclude(p => p.Visitor)
                 .FirstOrDefaultAsync();
@@ -44,6 +61,13 @@ namespace CompeTournament.Backend.Persistence.Implementations
         public async Task<GroupUser> JoinRequest(GroupUser entity)
         {
             await Context.GroupUsers.AddAsync(entity);
+            await SaveAllAsync();
+            return entity;
+        }
+
+        public async Task<GroupUser> AcceptRequestJoin(GroupUser entity)
+        {
+            Context.Update(entity);
             await SaveAllAsync();
             return entity;
         }
@@ -61,7 +85,7 @@ namespace CompeTournament.Backend.Persistence.Implementations
 
         //        return false;
         //    }
-           
+
 
         //}
     }
