@@ -26,16 +26,43 @@ namespace CompeTournament.Backend.Persistence.Implementations
         {
             return _context.Groups
                 .Include(p => p.TournamentType)
+                .Include(p => p.GroupUsers).ThenInclude(p => p.ApplicationUser)
+                .Include(p => p.CreatedUser)
                 .AsNoTracking();
         }
         public async Task<Group> GetByIdWithChildrens(int key)
         {
             var entity = await Context.Groups.Where(p => p.Id == key)
                 .Include(p => p.Leagues)
-                  .Include(p => p.Matches).ThenInclude(p => p.Local)
-                    .Include(p => p.Matches).ThenInclude(p => p.Visitor)
+                .Include(p=>p.GroupUsers).ThenInclude(p => p.ApplicationUser)
+                .Include(p => p.Matches).ThenInclude(p => p.Local)
+                .Include(p => p.Matches).ThenInclude(p => p.Visitor)
                 .FirstOrDefaultAsync();
             return entity;
         }
+
+        public async Task<GroupUser> JoinRequest(GroupUser entity)
+        {
+            await Context.GroupUsers.AddAsync(entity);
+            await SaveAllAsync();
+            return entity;
+        }
+
+        //public async Task<bool> JoinRequest(GroupUser entity)
+        //{
+        //    try
+        //    {
+        //        await Context.GroupUsers.AddAsync(entity);
+        //        await SaveAllAsync();
+        //        return true;
+        //    }
+        //    catch (System.Exception)
+        //    {
+
+        //        return false;
+        //    }
+           
+
+        //}
     }
 }
