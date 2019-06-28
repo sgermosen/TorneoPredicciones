@@ -20,6 +20,8 @@ namespace CompeTournament.Backend.Data.Entities
 
         public ICollection<Match> Matches { get; set; }
 
+        public ICollection<GroupUser> GroupUsers { get; set; }
+
 
     }
 }

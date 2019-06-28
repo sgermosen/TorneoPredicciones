@@ -8,6 +8,7 @@ namespace CompeTournament.Backend.Persistence.Contracts
     {
         IQueryable<Group> GetWithType();
         Task<Group> GetByIdWithChildrens(int id);
-
+       // Task<bool> JoinRequest(GroupUser entity);
+        Task<GroupUser> JoinRequest(GroupUser entity);
     }
 }
