@@ -3,6 +3,7 @@ using CompeTournament.Backend.Persistence.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CompeTournament.Backend.Controllers
@@ -31,6 +32,30 @@ namespace CompeTournament.Backend.Controllers
         {
             var groups = _groupRepo.GetWithType();
             return View(groups);
+        }
+
+        public async Task<IActionResult> JoinRequest(int id) //groupId
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var uGroup = new GroupUser
+            {
+                GroupId = id,
+                ApplicationUserId = userId,
+                IsAccepted = false,
+                IsBlocked = false,
+                Points = 0
+            };
+            try
+            {
+                await _groupRepo.JoinRequest(uGroup);
+            }
+            catch (System.Exception)
+            {
+                throw;
+
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Details(int id)
