@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<CompeTournament.Backend.Data.Entities.GroupUser>
 @{
-    ViewData["Title"] = "_MembersPartial";
+    ViewData["Title"] = "Members";
 }
 
 <h1>Miembros</h1>
@@ -48,10 +48,17 @@ else
                     <td>
                         @if (item.IsAccepted)
                         {
-                            <a class="btn btn-danger" asp-action="DetailsMatch" asp-route-id="@item.Id">
-                                <span class="fa fa-plus"></span>
-                                Expulsar del Grupo
-                            </a>
+                            if (item.IsBlocked)
+                            {
+                                <div> Este usuario fué expulsado del grupo</div>
+                            }
+                            else
+                            {
+                                <a class="btn btn-danger" asp-action="FireFromGroup" asp-route-id="@item.Id">
+                                    <span class="fa fa-plus"></span>
+                                    Expulsar del Grupo
+                                </a>
+                            }
                         }
                         else
                         {
