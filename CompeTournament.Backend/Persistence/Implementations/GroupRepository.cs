@@ -32,7 +32,8 @@ namespace CompeTournament.Backend.Persistence.Implementations
         {
             var entity = await Context.Groups.Where(p => p.Id == key)
                 .Include(p => p.Leagues)
-                  .Include(p => p.Matches)
+                  .Include(p => p.Matches).ThenInclude(p => p.Local)
+                    .Include(p => p.Matches).ThenInclude(p => p.Visitor)
                 .FirstOrDefaultAsync();
             return entity;
         }
