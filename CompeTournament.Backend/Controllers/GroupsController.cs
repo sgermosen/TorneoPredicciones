@@ -74,6 +74,24 @@ namespace CompeTournament.Backend.Controllers
             return RedirectToAction(nameof(Details), new { id = gMember.GroupId });
         }
 
+        public async Task<IActionResult> FireFromGroup(int id) //groupuserId
+        {
+
+            var gMember = await _groupRepo.GroupMember(id);
+            gMember.IsBlocked = true;
+            try
+            {
+                await _groupRepo.AcceptRequestJoin(gMember);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+
+            return RedirectToAction(nameof(Details), new { id = gMember.GroupId });
+        }
+
+
 
         public async Task<IActionResult> Details(int id)
         {
