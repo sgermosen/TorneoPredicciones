@@ -52,11 +52,28 @@ namespace CompeTournament.Backend.Controllers
             catch (System.Exception)
             {
                 throw;
-
             }
 
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> AcceptRequestJoin(int id) //groupuserId
+        {
+
+            var gMember = await _groupRepo.GroupMember(id);
+            gMember.IsAccepted = true;
+            try
+            {
+                await _groupRepo.AcceptRequestJoin(gMember);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+
+            return RedirectToAction(nameof(Details), new { id = gMember.GroupId });
+        }
+
 
         public async Task<IActionResult> Details(int id)
         {
