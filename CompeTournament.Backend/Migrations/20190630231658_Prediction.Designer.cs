@@ -4,14 +4,16 @@ using CompeTournament.Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CompeTournament.Backend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190630231658_Prediction")]
+    partial class Prediction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,6 +253,9 @@ namespace CompeTournament.Backend.Migrations
 
                     b.Property<int>("AdquiredPoints");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasMaxLength(450);
+
                     b.Property<DateTime?>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
@@ -272,6 +277,8 @@ namespace CompeTournament.Backend.Migrations
                     b.Property<int?>("VisitorPoints");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CreatedBy");
 
@@ -544,6 +551,10 @@ namespace CompeTournament.Backend.Migrations
 
             modelBuilder.Entity("CompeTournament.Backend.Data.Entities.Prediction", b =>
                 {
+                    b.HasOne("CompeTournament.Backend.Data.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("CompeTournament.Backend.Data.ApplicationUser", "CreatedUser")
                         .WithMany()
                         .HasForeignKey("CreatedBy");

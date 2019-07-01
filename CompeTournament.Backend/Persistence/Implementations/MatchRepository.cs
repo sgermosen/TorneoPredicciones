@@ -30,5 +30,11 @@ namespace CompeTournament.Backend.Persistence.Implementations
                 .FirstOrDefaultAsync();
             return entity;
         }
+        public async Task<Prediction> AddPrediction(Prediction entity)
+        {
+            await Context.Predictions.AddAsync(entity);
+            await SaveAllAsync();
+            return entity;
+        }
     }
 }
