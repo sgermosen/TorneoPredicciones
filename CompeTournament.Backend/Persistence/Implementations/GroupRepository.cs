@@ -54,6 +54,7 @@ namespace CompeTournament.Backend.Persistence.Implementations
                 .Include(p => p.GroupUsers).ThenInclude(p => p.ApplicationUser)
                 .Include(p => p.Matches).ThenInclude(p => p.Local)
                 .Include(p => p.Matches).ThenInclude(p => p.Visitor)
+                .Include(p => p.Matches).ThenInclude(p => p.Predictions)
                 .FirstOrDefaultAsync();
             return entity;
         }

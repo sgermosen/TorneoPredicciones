@@ -1,5 +1,6 @@
 ﻿using CompeTournament.Backend.Helpers;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -30,6 +31,7 @@ namespace CompeTournament.Backend.Data.Entities
         [ForeignKey("GroupId")]
         public Group Group { get; set; }
 
+        public ICollection<Prediction>  Predictions { get; set; }
 
     }
 }

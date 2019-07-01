@@ -1,0 +1,54 @@
+﻿@model CompeTournament.Backend.Data.Entities.Prediction
+@{
+    ViewData["Title"] = "Crear Prediccion";
+}
+
+<h1>Registro de Nueva Prediccion</h1>
+
+<form asp-action="MakePrediction">
+    <div class="form-group">
+        <input type="hidden" asp-for="MatchId" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="LocalPoints" class="control-label"> </label>
+            </div>
+            <div class="col-md-2">
+                <input asp-for="LocalPoints" class="form-control" />
+                <span asp-validation-for="LocalPoints" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="VisitorPoints" class="control-label"> </label>
+            </div>
+            <div class="col-md-4">
+
+                <input asp-for="VisitorPoints" class="form-control" />
+                <span asp-validation-for="VisitorPoints" class="text-danger"></span>
+            </div>
+
+        </div>
+     
+
+        <br /><br />
+        <div class="row">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-5">
+
+                <button type="submit" class="btn btn-primary"> Guardar y Procesar los Cambios</button>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</form>
+
+
+
+
+
