@@ -125,7 +125,8 @@ namespace CompeTournament.Backend.Migrations
 
                     b.Property<bool>("Active");
 
-                    b.Property<string>("ApplicationUserId");
+                    b.Property<string>("ApplicationUserId")
+                        .HasMaxLength(450);
 
                     b.Property<DateTime?>("CreatedAt");
 
@@ -135,7 +136,7 @@ namespace CompeTournament.Backend.Migrations
 
                     b.Property<DateTime?>("DeletedAt");
 
-                    b.Property<int?>("GroupId");
+                    b.Property<int>("GroupId");
 
                     b.Property<bool>("IsAccepted");
 
@@ -238,6 +239,45 @@ namespace CompeTournament.Backend.Migrations
                     b.HasIndex("VisitorId");
 
                     b.ToTable("Matches");
+                });
+
+            modelBuilder.Entity("CompeTournament.Backend.Data.Entities.Prediction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Active");
+
+                    b.Property<int>("AdquiredPoints");
+
+                    b.Property<DateTime?>("CreatedAt");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<bool>("Deleted");
+
+                    b.Property<DateTime?>("DeletedAt");
+
+                    b.Property<int?>("LocalPoints");
+
+                    b.Property<int>("MatchId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int?>("Position");
+
+                    b.Property<DateTime?>("UpdatedAt");
+
+                    b.Property<int?>("VisitorPoints");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("MatchId");
+
+                    b.ToTable("Predictions");
                 });
 
             modelBuilder.Entity("CompeTournament.Backend.Data.Entities.Status", b =>
@@ -458,8 +498,9 @@ namespace CompeTournament.Backend.Migrations
                         .HasForeignKey("CreatedBy");
 
                     b.HasOne("CompeTournament.Backend.Data.Entities.Group", "Group")
-                        .WithMany()
-                        .HasForeignKey("GroupId");
+                        .WithMany("GroupUsers")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("CompeTournament.Backend.Data.Entities.League", b =>
@@ -481,7 +522,7 @@ namespace CompeTournament.Backend.Migrations
                         .HasForeignKey("CreatedBy");
 
                     b.HasOne("CompeTournament.Backend.Data.Entities.Group", "Group")
-                        .WithMany()
+                        .WithMany("Matches")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -498,6 +539,18 @@ namespace CompeTournament.Backend.Migrations
                     b.HasOne("CompeTournament.Backend.Data.Entities.Team", "Visitor")
                         .WithMany()
                         .HasForeignKey("VisitorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("CompeTournament.Backend.Data.Entities.Prediction", b =>
+                {
+                    b.HasOne("CompeTournament.Backend.Data.ApplicationUser", "CreatedUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy");
+
+                    b.HasOne("CompeTournament.Backend.Data.Entities.Match", "Match")
+                        .WithMany()
+                        .HasForeignKey("MatchId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

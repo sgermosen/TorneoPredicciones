@@ -8,6 +8,7 @@ namespace CompeTournament.Backend.Persistence.Contracts
     {
         IQueryable<Match> GetWithGroup();
         Task<Match> GetByIdWithChildrens(int id);
+        Task<Prediction> AddPrediction(Prediction entity);
 
     }
 }
