@@ -27,6 +27,33 @@ namespace CompeTournament.Backend.Controllers
             _matchRepository = matchRepository;
         }
 
+        #region Prediction
+        public async Task<IActionResult> MakePrediction(int id)
+        { 
+            var prediction = new Prediction
+            {
+                MatchId = id
+            }; 
+           
+            return View(prediction);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MakePrediction(Prediction model)
+        {
+
+            if (this.ModelState.IsValid)
+            {
+                model.AdquiredPoints = 0;
+                model.Id = 0;
+                await _matchRepository.AddPrediction(model);
+                return this.RedirectToAction(nameof(Index)); //new { id = gMember.GroupId }
+            }
+
+            return this.View(model);
+        }
+        #endregion
+
         #region Group
         public async Task<IActionResult> Index()
         {
@@ -90,9 +117,7 @@ namespace CompeTournament.Backend.Controllers
 
             return RedirectToAction(nameof(Details), new { id = gMember.GroupId });
         }
-
-
-
+               
         public async Task<IActionResult> Details(int id)
         {
             var model = await _groupRepo.GetByIdWithChildrens(id);

@@ -56,13 +56,24 @@ else
                     <td></td>
 
                     <td>
+                        @if (item.Predictions.Where(p => p.CreatedBy == User.FindFirstValue(ClaimTypes.NameIdentifier)).Count() == 0)
+                        {
+                            <a class="btn btn-primary" asp-action="MakePrediction" asp-route-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                                Hacer una Prediccion
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-info" asp-action="MakePrediction" asp-route-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                                Ver Mi Prediccion
+                            </a>
+                        }
+
                         <a class="btn btn-info" asp-action="DetailsMatch" asp-route-id="@item.Id">
                             <span class="fa fa-plus"></span>
                             Ver Equipos
-                        </a>
-                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">
-                            <span class="fa fa-plus"></span>
-                            Modificar
                         </a>
                         <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
                             <span class="fa fa-plus"></span>
