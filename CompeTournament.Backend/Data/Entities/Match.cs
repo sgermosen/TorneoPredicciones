@@ -30,7 +30,7 @@ namespace CompeTournament.Backend.Data.Entities
         public int GroupId { get; set; }
         [ForeignKey("GroupId")]
         public Group Group { get; set; }
-
+        
         public ICollection<Prediction>  Predictions { get; set; }
 
     }
