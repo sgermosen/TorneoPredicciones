@@ -65,7 +65,7 @@ else
                         }
                         else
                         {
-                            <a class="btn btn-info" asp-action="MakePrediction" asp-route-id="@item.Id">
+                            <a class="btn btn-info" asp-action="SeePrediction" asp-route-id="@item.Id">
                                 <span class="fa fa-plus"></span>
                                 Ver Mi Prediccion
                             </a>
@@ -73,12 +73,22 @@ else
 
                         <a class="btn btn-info" asp-action="DetailsMatch" asp-route-id="@item.Id">
                             <span class="fa fa-plus"></span>
-                            Ver Equipos
+                            Detalles del Partido
                         </a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
-                            <span class="fa fa-plus"></span>
-                            Eliminar
-                        </a>
+
+                        @if (item.CreatedBy == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                        {
+                            <a class="btn btn-warning" asp-action="CloseMatch" asp-route-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                               Cerrar Partido
+                            </a>
+                           
+                            <a class="btn btn-danger" asp-action="DeleteMatch" asp-route-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                                Eliminar
+                            </a>
+                        }
+
                     </td>
                 </tr>
 
