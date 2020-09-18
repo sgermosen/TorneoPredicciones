@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Domain.League>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Leagues</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new { }, new { @class = "btn btn-primary" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Logo)
+        </th>
+        <th>
+            # Teams
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.Logo))
+                {
+                    <img src="@Url.Content(item.Logo)" alt="Image" style="width:100px;height:100px;max-width: 100%; height: auto;" />
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Teams.Count)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.LeagueId }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Details", "Details", new { id=item.LeagueId }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Delete", "Delete", new { id=item.LeagueId }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+@*@model IEnumerable<Domain.League>
+
+@{
+    ViewBag.Title = "Ligas";
+}
+
+<h2>Ligas/Confederaciones</h2>
+
+<p>
+    <a class="btn btn-primary" href="/Leagues/Create"> <span class="glyphicon glyphicon-plus"></span> Nuev&#64;  </a>
+               
+    
+
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Liga
+           
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Logoxx)
+        </th>
+        <th>
+          # Equipos
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @if (!string.IsNullOrEmpty(item.Logoxx))
+            {
+                <img src="@Url.Content(item.Logoxx)" class="LogoMedio" />
+            }
+
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Teams.Count)
+        </td>
+        <td>
+            <a class="btn btn-warning" href="/Leagues/Edit/@item.LeagueId"> <span class="glyphicon glyphicon-edit"></span> Editar  </a>
+            <a class="btn btn-info" href="/Leagues/Details/@item.LeagueId"> <span class="glyphicon glyphicon-exclamation-sign"></span> Detalle </a>
+            <a class="btn btn-danger" href="/Leagues/Delete/@item.LeagueId"> <span class="glyphicon glyphicon-trash"></span> Eliminar  </a>
+  
+            
+        </td>
+    </tr>
+}
+
+</table>*@

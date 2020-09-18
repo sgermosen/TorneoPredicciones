@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+             x:Class="TorneoPredicciones.Pages.HomePage"
+             BackgroundColor="{StaticResource AccentColor1}"
+             Title="Torneo Predicciones"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}">
+    <StackLayout VerticalOptions="Center"
+                 HorizontalOptions="Center">
+        <Label Text="Welcome"
+               TextColor="Red"
+               FontAttributes="Bold"
+               FontSize="Medium"
+               VerticalOptions="Center"
+               HorizontalOptions="Center">
+        </Label>
+        <Label Text="{Binding CurrentUser.NickName, Mode=TwoWay}"
+               FontSize="Large"
+               TextColor="Navy"
+               FontAttributes="Bold"
+               VerticalOptions="Center"
+               HorizontalOptions="Center">
+        </Label>
+        <Label Text="{Binding CurrentUser.FullName, Mode=TwoWay}"
+               FontSize="Medium"
+               TextColor="Black"
+               FontAttributes="Bold"
+               VerticalOptions="Center"
+               HorizontalOptions="Center">
+        </Label>
+        <RelativeLayout>
+            <controls:CircleImage Source="{Binding CurrentUser.FullPicture}"
+                                  Aspect="AspectFill"
+                                  WidthRequest="250"
+                                  HeightRequest="250">
+            </controls:CircleImage>
+            <Image Source="{Binding CurrentUser.FavoriteTeam.FullLogo}"
+                   WidthRequest="80"
+                   RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=160}"
+                   RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=160}">
+            </Image>
+        </RelativeLayout>
+        <Label Text="{Binding CurrentUser.Email, Mode=TwoWay}"
+               FontSize="Medium"
+               TextColor="Black"
+               FontAttributes="Bold"
+               VerticalOptions="Center"
+               HorizontalOptions="Center">
+        </Label>
+        <Label Text="{Binding CurrentUser.Points, Mode=TwoWay, StringFormat='Points: {0}'}"
+               FontSize="Large"
+               TextColor="Black"
+               FontAttributes="Bold"
+               VerticalOptions="Center"
+               HorizontalOptions="Center">
+        </Label>
+    </StackLayout>
+
+
+
+</ContentPage>

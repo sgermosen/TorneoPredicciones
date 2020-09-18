@@ -1,0 +1,7 @@
+
+Add-Migration Initial -IgnoreChanges
+
+do some changes, and then update database from "Initial" file:
+
+
+Update-Database -verbose

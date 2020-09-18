@@ -1,0 +1,78 @@
+﻿@model Domain.Prediction
+@{
+    ViewBag.Title = "Create";
+}
+<div class="row">
+    <div class="col-md-6">
+        <h2>Create</h2>
+    </div>
+    <div class="col-md-6">
+        <br />
+        <table>
+            <tr>
+                <td width="200px" align="center">
+                    @if (!string.IsNullOrEmpty(Model.Match.Local.Logo))
+                    {
+                        <img src="@Url.Content(Model.Match.Local.Logo)" alt="Image" style="width:120px;height:120px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+                <td width="50px" align="center">
+                    <h2>Vs.</h2>
+                </td>
+                <td width="200px" align="center">
+                    @if (!string.IsNullOrEmpty(Model.Match.Visitor.Logo))
+                    {
+                        <img src="@Url.Content(Model.Match.Visitor.Logo)" alt="Image" style="width:120px;height:120px;max-width: 100%; height: auto;" />
+                    }
+                </td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <h3>@Model.Match.Local.Name</h3>
+                </td>
+                <td width="50px" align="center"></td>
+                <td align="center">
+                    <h3>@Model.Match.Visitor.Name</h3>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Prediction</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.MatchId)
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserId, "User", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("UserId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.LocalGoals, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LocalGoals, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.LocalGoals, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.VisitorGoals, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.VisitorGoals, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.VisitorGoals, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-primary" />
+                @Html.ActionLink("Back to Match", "Predictions", new { id = Model.MatchId }, new { @class = "btn btn-success" })
+            </div>
+        </div>
+    </div>
+}
