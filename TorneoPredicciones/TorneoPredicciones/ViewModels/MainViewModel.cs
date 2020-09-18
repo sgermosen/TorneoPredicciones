@@ -144,7 +144,7 @@ namespace TorneoPredicciones.ViewModels
             {
                 Icon = "groups.png",
                 PageName = "SelectUserGroupPage",
-                Title = "Groups",
+                Title = "My Groups",
             });
 
             Menu.Add(new MenuItemViewModel
@@ -173,6 +173,13 @@ namespace TorneoPredicciones.ViewModels
                 Icon = "logut.png",
                 PageName = "LoginPage",
                 Title = "Logut",
+            });
+
+            Menu.Add(new MenuItemViewModel
+            {
+                Icon = "groups.png",
+                PageName = "SelectGroupPage",
+                Title = "All Groups",
             });
         }
 
