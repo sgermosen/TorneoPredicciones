@@ -1,0 +1,19 @@
+﻿@model CompeTournament.Backend.Data.Entities.Group
+@{
+    ViewData["Title"] = "Detalles del Grupo";
+}
+
+<h1>Info y Detalles del Grupo</h1>
+  
+<div id="tableHolder">
+    <partial name="_LeaguesPartial" model="Model.Leagues" />
+</div>
+
+<div id="tableHolder">
+    <partial name="_MatchesPartial" model="Model.Matches" />
+</div>
+
+<div id="tableHolder">
+    <partial name="_MembersPartial" model="Model.GroupUsers" />
+</div>
+

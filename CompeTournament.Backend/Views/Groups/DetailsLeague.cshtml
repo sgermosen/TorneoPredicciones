@@ -1,0 +1,66 @@
+﻿@model CompeTournament.Backend.Data.Entities.League
+@{
+    ViewData["Title"] = "Equipos de la Liga";
+}
+
+<h1>Info y Detalles de la Liga</h1>
+
+<p>
+    <a class="btn btn-success" asp-action="Details" asp-route-id="@Model.GroupId">
+        <span class="fa fa-plus"></span>
+        Regresar al Grupo
+    </a>
+    <a class="btn btn-primary" asp-action="CreateTeam" asp-route-id="@Model.Id">
+        <span class="fa fa-plus"></span>
+        Registrar Nuevo Equipo
+    </a>
+</p>
+@if (Model.Teams.Count() == 0)
+{
+    <div>
+        No tienes Equipos, Participantes u Opciones registradas para esta Liga, prueba agregando algunas
+    </div>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Teams)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+
+                    <td>
+                        <a class="btn btn-info" asp-action="DetailsTeam" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Ver Detalles
+                        </a>
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Modificar
+                        </a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Eliminar
+                        </a>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
