@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TorneoPredicciones.Pages.LoginPage"
+             Title="Torneo Predicciones"
+             BackgroundColor="{StaticResource MainColor}"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}">
+    <ScrollView 
+        BindingContext="{Binding Login}">
+        <StackLayout 
+            Padding="8"
+            Spacing="10">
+            <Image Source="Tournament.png">
+            </Image>
+
+            
+
+            <Label 
+                Text="Login!"
+                FontAttributes="Bold"
+                Font="Large"
+                HorizontalOptions="Center" 
+                TextColor="{StaticResource BackgroundColor}">
+            </Label>
+            <Grid Padding="30,0,30,0">
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0"
+                           Text="Email"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Center"
+                           TextColor="{StaticResource BackgroundColor}">
+                    </Label>
+                    <Entry Grid.Column="1"
+                           Text="{Binding Email}"
+                           Placeholder="Enter an email..."
+                           Keyboard="Email"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="Center"
+                           BackgroundColor="{StaticResource BackgroundColor}">
+                    </Entry>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0"
+                           Text="Password"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Start"
+                           VerticalOptions="Center"
+                           TextColor="{StaticResource BackgroundColor}">
+                    </Label>
+                    <Entry Grid.Column="1"
+                           Text="{Binding Password}"
+                           Placeholder="Enter a password..."
+                           IsPassword="True"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="Center"
+                           BackgroundColor="{StaticResource BackgroundColor}">
+                    </Entry>
+                </Grid>
+            </Grid>
+
+            <StackLayout Padding="30,0,30,0"
+                         Orientation="Horizontal">
+                <Switch HorizontalOptions="Start"
+                        VerticalOptions="Center"
+                        IsToggled="{Binding IsRemembered}">
+                </Switch>
+                <Label Text="Rememberme"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"
+                       TextColor="{StaticResource BackgroundColor}">
+                </Label>
+            </StackLayout>
+            <ActivityIndicator IsRunning="{Binding IsRunning}">
+            </ActivityIndicator>
+            <StackLayout Padding="30,0,30,0"
+                         Orientation="Vertical">
+                <Button Command="{Binding LoginCommand}"
+                        IsEnabled="{Binding IsEnabled}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Orange"
+                        TextColor="White"
+                        Text="Login">
+                </Button>
+                <Button Command="{Binding LoginFacebookCommand}"
+                        IsEnabled="{Binding IsEnabled}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Navy"
+                        TextColor="White"
+                        Text="Login With Facebook">
+                </Button>
+                <Button Command="{Binding RegisterCommand}"
+                        IsEnabled="{Binding IsEnabled}"
+                        VerticalOptions="Center"
+                        HorizontalOptions="FillAndExpand"
+                        BackgroundColor="Purple"
+                        TextColor="White"
+                        Text="Register New User">
+                </Button>
+                <Label Text="Forgot your password?"
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="{StaticResource BackgroundColor}">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+        </StackLayout>
+
+    </ScrollView>
+</ContentPage>
