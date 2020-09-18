@@ -1,0 +1,99 @@
+﻿@model IEnumerable<CompeTournament.Backend.Data.Entities.Match>
+@{
+    ViewData["Title"] = "Matches";
+}
+
+<h1>Proximos Partidos, Enfrentamientos, Encuentros</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="CreateMatch" asp-route-id="@Model.FirstOrDefault().GroupId">
+        <span class="fa fa-plus"></span>
+        Registrar Enfrentamiento
+    </a>
+</p>
+@if (Model.Count() == 0)
+{
+    <div>
+        No tienes enfrentamientos registrados para este torneo, prueba agregando algunos
+    </div>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Local
+                </th>
+                <th>
+                    Visitante
+                </th>
+                <th>
+                    Resultados
+                </th>
+
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Local.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Visitor.Name)
+                    </td>
+                    <td></td>
+
+                    <td>
+                        @if (item.Predictions.Where(p => p.CreatedBy == User.FindFirstValue(ClaimTypes.NameIdentifier)).Count() == 0)
+                        {
+                            <a class="btn btn-primary" asp-action="MakePrediction" asp-route-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                                Hacer una Prediccion
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-info" asp-action="SeePrediction" asp-route-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                                Ver Mi Prediccion
+                            </a>
+                        }
+
+                        <a class="btn btn-info" asp-action="DetailsMatch" asp-route-id="@item.Id">
+                            <span class="fa fa-plus"></span>
+                            Detalles del Partido
+                        </a>
+
+                        @if (item.CreatedBy == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                        {
+                            <a class="btn btn-warning" asp-action="CloseMatch" asp-route-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                               Cerrar Partido
+                            </a>
+                           
+                            <a class="btn btn-danger" asp-action="DeleteMatch" asp-route-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                                Eliminar
+                            </a>
+                        }
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+

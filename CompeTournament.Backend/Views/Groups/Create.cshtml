@@ -1,0 +1,65 @@
+﻿@model CompeTournament.Backend.Data.Entities.Group
+@{
+    ViewData["Title"] = "Crear Grupo";
+}
+
+<h1>Registro de Nuevo Grupo de Seguimiento para Competencia o Torneo</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="Name" class="control-label"> </label>
+            </div>
+            <div class="col-md-2">
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="Requirements" class="control-label"> </label>
+            </div>
+            <div class="col-md-4">
+
+                <textarea asp-for="Requirements" class="form-control"></textarea>
+                <span asp-validation-for="Requirements" class="text-danger"></span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="TournamentType" class="control-label"> </label>
+            </div>
+            <div class="col-md-4">
+                
+                <select asp-for="TournamentTypeId" class="form-control" asp-items="ViewBag.TournamentTypeId"></select>
+                
+                <span asp-validation-for="TournamentType" class="text-danger"></span>
+            </div>
+
+        </div>
+
+        <br /><br />
+        <div class="row">
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-5">
+
+                <button type="submit" class="btn btn-primary"> Guardar y Procesar los Cambios</button>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</form>
+
+
+
+
+

@@ -1,0 +1,78 @@
+﻿@model IEnumerable<CompeTournament.Backend.Data.Entities.GroupUser>
+@{
+    ViewData["Title"] = "Members";
+}
+
+<h1>Miembros</h1>
+
+@if (Model.Count() == 0)
+{
+    <div>
+        No tienes usuarios agregados al grupo, intenta invitar algunos amigos
+    </div>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    Nombre
+                </th>
+                <th>
+                    Desde
+                </th>
+                <th>
+                    Puntos
+                </th>
+                <th>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ApplicationUser.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Points)
+                    </td>
+                    <td></td>
+
+                    <td>
+                        @if (item.IsAccepted)
+                        {
+                            if (item.IsBlocked)
+                            {
+                                <div> Este usuario fué expulsado del grupo</div>
+                            }
+                            else
+                            {
+                                <a class="btn btn-danger" asp-action="FireFromGroup" asp-route-id="@item.Id">
+                                    <span class="fa fa-plus"></span>
+                                    Expulsar del Grupo
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            <a class="btn btn-success" asp-action="AcceptRequestJoin" asp-route-id="@item.Id">
+                                <span class="fa fa-plus"></span>
+                                Aceptar Membrecia
+                            </a>
+                        }
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
