@@ -1,0 +1,60 @@
+namespace CompeTournament.Mobile.Core.ViewModels
+{
+    using CommunityToolkit.Mvvm.ComponentModel;
+    using CommunityToolkit.Mvvm.Input;
+    using CompeTournament.Mobile.Core.Services;
+    using CompeTournament.Shared.Auth;
+
+    public partial class ProfileViewModel : BaseViewModel
+    {
+        private readonly IApiClient _apiClient;
+        private readonly ITokenStore _tokenStore;
+        private readonly ISession _session;
+        private readonly INavigationService _navigation;
+
+        public ProfileViewModel(IApiClient apiClient, ITokenStore tokenStore, ISession session, INavigationService navigation)
+        {
+            _apiClient = apiClient;
+            _tokenStore = tokenStore;
+            _session = session;
+            _navigation = navigation;
+        }
+
+        public UserDto? CurrentUser => _session.CurrentUser;
+
+        [RelayCommand]
+        private async Task RefreshAsync()
+        {
+            if (IsBusy)
+            {
+                return;
+            }
+
+            ClearError();
+
+            try
+            {
+                IsBusy = true;
+                var user = await _apiClient.GetMeAsync();
+                _session.SetUser(user);
+                OnPropertyChanged(nameof(CurrentUser));
+            }
+            catch (Exception ex)
+            {
+                ShowError(DescribeError(ex));
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task LogoutAsync()
+        {
+            await _tokenStore.ClearAsync();
+            _session.Clear();
+            await _navigation.GoToAsync($"//{AppRoutes.Login}");
+        }
+    }
+}
