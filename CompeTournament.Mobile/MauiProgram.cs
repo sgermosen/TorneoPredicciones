@@ -3,6 +3,7 @@ using CompeTournament.Mobile.Core.Services;
 using CompeTournament.Mobile.Core.ViewModels;
 using CompeTournament.Mobile.Services;
 using CompeTournament.Mobile.Views;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 
 namespace CompeTournament.Mobile
@@ -23,6 +24,19 @@ namespace CompeTournament.Mobile
             builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
             {
                 client.BaseAddress = new Uri(ApiConstants.BaseUrl);
+            });
+
+            builder.Services.AddTransient<ILiveTournamentClient>(sp =>
+            {
+                var tokenStore = sp.GetRequiredService<ITokenStore>();
+                var connection = new HubConnectionBuilder()
+                    .WithUrl($"{ApiConstants.BaseUrl}hubs/tournament", options =>
+                    {
+                        options.AccessTokenProvider = () => tokenStore.GetTokenAsync();
+                    })
+                    .WithAutomaticReconnect()
+                    .Build();
+                return new LiveTournamentClient(connection);
             });
 
             builder.Services.AddSingleton<AppShell>();
