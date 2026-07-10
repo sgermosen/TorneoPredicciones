@@ -80,6 +80,12 @@ namespace CompeTournament.Mobile.Core.Services
             return SendAsync<List<PredictionDto>>(() => new HttpRequestMessage(HttpMethod.Get, path));
         }
 
+        public Task<InsightsDto> GetInsightsAsync(int? groupId = null)
+        {
+            var path = groupId.HasValue ? $"api/insights/me?groupId={groupId.Value}" : "api/insights/me";
+            return SendAsync<InsightsDto>(() => new HttpRequestMessage(HttpMethod.Get, path));
+        }
+
         private async Task<T> SendAsync<T>(Func<HttpRequestMessage> requestFactory)
         {
             var response = await SendWithRefreshAsync(requestFactory);
