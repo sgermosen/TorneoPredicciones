@@ -51,7 +51,12 @@
 
                 //if (claims.Any(x => x.Type.Equals("nameidentifier")))
                 {
-                    result.UserId = claims.First().Value;
+                    var idClaim = claims.FirstOrDefault(x => x.Type.Equals(ClaimTypes.NameIdentifier))
+                        ?? claims.FirstOrDefault();
+                    if (idClaim != null)
+                    {
+                        result.UserId = idClaim.Value;
+                    }
                 }
 
                 if (claims.Any(x => x.Type.Equals(ClaimTypes.Name)))

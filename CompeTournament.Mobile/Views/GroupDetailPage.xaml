@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             xmlns:dto="clr-namespace:CompeTournament.Shared.Tournaments;assembly=CompeTournament.Shared"
+             x:Class="CompeTournament.Mobile.Views.GroupDetailPage"
+             x:DataType="vm:GroupDetailViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16,16,32" Spacing="18">
+
+            <VerticalStackLayout Spacing="6" Padding="8,0">
+                <Label Style="{StaticResource Eyebrow}" Text="Grupo" />
+                <Label Style="{StaticResource Headline}" Text="{Binding Group.Name}" />
+                <Label Style="{StaticResource Muted}" Text="{Binding Group.Requirements}" />
+                <HorizontalStackLayout Spacing="8" IsVisible="{Binding IsLive}">
+                    <Ellipse WidthRequest="9" HeightRequest="9" Fill="{StaticResource Win}" VerticalOptions="Center" />
+                    <Label Style="{StaticResource Muted}" Text="En vivo" VerticalOptions="Center" />
+                </HorizontalStackLayout>
+                <Button Style="{StaticResource GhostButton}"
+                        Text="Unirme al grupo"
+                        Margin="0,8,0,0"
+                        IsVisible="{Binding CanJoin}"
+                        Command="{Binding JoinCommand}" />
+                <Button Style="{StaticResource GhostButton}"
+                        Text="Compartir invitacion"
+                        Margin="0,8,0,0"
+                        Clicked="OnShareInviteClicked"
+                        IsVisible="{Binding InviteCode, Converter={StaticResource NotEmpty}}" />
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Card}" IsVisible="{Binding Recap, Converter={StaticResource NotEmpty}}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource Eyebrow}" Text="Resumen de la jornada" />
+                    <Label Style="{StaticResource Body}" Text="{Binding Recap}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Partidos" Padding="8,0" />
+            <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Matches}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="dto:MatchDto">
+                        <Border Style="{StaticResource Card}">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupDetailViewModel}}, Path=OpenMatchCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                                <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0" Style="{StaticResource Muted}"
+                                           Text="{Binding DateTime, StringFormat='{0:dd MMM · HH:mm}'}" />
+                                    <Label Grid.Column="1" Style="{StaticResource Muted}" Text="{Binding StatusName}" />
+                                </Grid>
+
+                                <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto,Auto,*" ColumnSpacing="8">
+                                    <Label Grid.Column="0" Style="{StaticResource SubHeadline}"
+                                           Text="{Binding LocalInitials}" HorizontalOptions="End" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Style="{StaticResource Score}"
+                                           Text="{Binding LocalPoints, TargetNullValue='–'}" />
+                                    <Label Grid.Column="2" Style="{StaticResource Score}" Text=":" />
+                                    <Label Grid.Column="3" Style="{StaticResource Score}"
+                                           Text="{Binding VisitorPoints, TargetNullValue='–'}" />
+                                    <Label Grid.Column="4" Style="{StaticResource SubHeadline}"
+                                           Text="{Binding VisitorInitials}" HorizontalOptions="Start" VerticalOptions="Center" />
+                                </Grid>
+
+                                <HorizontalStackLayout Grid.Row="2" Spacing="8"
+                                                       IsVisible="{Binding MyPrediction, Converter={StaticResource NotNull}}">
+                                    <Label Style="{StaticResource Muted}" Text="Tu prediccion:" />
+                                    <Label FontAttributes="Bold" TextColor="{StaticResource Accent}"
+                                           Text="{Binding MyPrediction.LocalPoints}" />
+                                    <Label FontAttributes="Bold" TextColor="{StaticResource Accent}" Text="-" />
+                                    <Label FontAttributes="Bold" TextColor="{StaticResource Accent}"
+                                           Text="{Binding MyPrediction.VisitorPoints}" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Tabla de posiciones" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding Standings}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:StandingDto">
+                            <Grid ColumnDefinitions="28,*,44,44" ColumnSpacing="6">
+                                <Label Grid.Column="0" Style="{StaticResource Body}" FontAttributes="Bold"
+                                       TextColor="{StaticResource Accent}" Text="{Binding Position}" />
+                                <Label Grid.Column="1" Style="{StaticResource Body}" Text="{Binding Name}" />
+                                <Label Grid.Column="2" Style="{StaticResource Muted}" HorizontalTextAlignment="Center"
+                                       Text="{Binding MatchesPlayed}" />
+                                <Label Grid.Column="3" Style="{StaticResource Body}" FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center" Text="{Binding CumulativePoints}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Ranking de amigos" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Leaderboard}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:LeaderboardEntryDto">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0" Style="{StaticResource Body}" Text="{Binding FullName}" />
+                                <Label Grid.Column="1" Style="{StaticResource Body}" FontAttributes="Bold"
+                                       TextColor="{StaticResource Accent}"
+                                       Text="{Binding Points, StringFormat='{0} pts'}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

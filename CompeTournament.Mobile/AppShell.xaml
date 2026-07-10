@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:CompeTournament.Mobile.Views"
+       x:Class="CompeTournament.Mobile.AppShell"
+       FlyoutBehavior="Disabled">
+
+    <ShellContent Route="login"
+                  ContentTemplate="{DataTemplate views:LoginPage}"
+                  Shell.NavBarIsVisible="False" />
+
+    <TabBar Route="main">
+        <Tab Title="Torneos">
+            <ShellContent Route="groups"
+                          ContentTemplate="{DataTemplate views:GroupsPage}" />
+        </Tab>
+        <Tab Title="Perfil">
+            <ShellContent Route="profile"
+                          ContentTemplate="{DataTemplate views:ProfilePage}" />
+        </Tab>
+    </TabBar>
+
+</Shell>
