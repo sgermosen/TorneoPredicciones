@@ -34,5 +34,7 @@ namespace CompeTournament.Mobile.Core.Services
         Task<PredictionDto> SavePredictionAsync(PredictionRequest request);
 
         Task<List<PredictionDto>> GetMyPredictionsAsync(int? groupId = null);
+
+        Task<InsightsDto> GetInsightsAsync(int? groupId = null);
     }
 }

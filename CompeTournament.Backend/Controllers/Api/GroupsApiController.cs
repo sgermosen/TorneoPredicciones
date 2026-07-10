@@ -261,6 +261,7 @@ namespace CompeTournament.Backend.Controllers.Api
                     MatchId = prediction.MatchId,
                     LocalPoints = prediction.LocalPoints,
                     VisitorPoints = prediction.VisitorPoints,
+                    IsBanker = prediction.IsBanker,
                     AdquiredPoints = prediction.AdquiredPoints
                 }
             };
