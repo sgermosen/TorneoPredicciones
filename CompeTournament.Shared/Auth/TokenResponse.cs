@@ -8,6 +8,10 @@ namespace CompeTournament.Shared.Auth
 
         public DateTime Expiration { get; set; }
 
+        public string RefreshToken { get; set; }
+
+        public DateTime RefreshTokenExpiration { get; set; }
+
         public UserDto User { get; set; }
     }
 }

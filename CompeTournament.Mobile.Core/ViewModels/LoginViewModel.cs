@@ -51,7 +51,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
                     Password = Password
                 });
 
-                await _tokenStore.SetTokenAsync(response.Token);
+                await _tokenStore.SetTokensAsync(response.Token, response.RefreshToken);
                 _session.SetUser(response.User);
                 Password = string.Empty;
 

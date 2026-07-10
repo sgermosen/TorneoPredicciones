@@ -4,7 +4,9 @@ namespace CompeTournament.Mobile.Core.Services
     {
         Task<string?> GetTokenAsync();
 
-        Task SetTokenAsync(string token);
+        Task<string?> GetRefreshTokenAsync();
+
+        Task SetTokensAsync(string accessToken, string refreshToken);
 
         Task ClearAsync();
     }
