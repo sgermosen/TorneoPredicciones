@@ -29,6 +29,8 @@ namespace CompeTournament.Mobile.Core.Services
 
         Task<List<LeaderboardEntryDto>> GetLeaderboardAsync(int id);
 
+        Task<RecapDto> GetRecapAsync(int id);
+
         Task<MatchDto> GetMatchAsync(int id);
 
         Task<PredictionDto> SavePredictionAsync(PredictionRequest request);
