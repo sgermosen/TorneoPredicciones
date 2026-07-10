@@ -37,6 +37,33 @@ móvil en **.NET MAUI**.
   cohesivo.
 - Datos de ejemplo sembrados automáticamente y pruebas automatizadas.
 
+## Funcionalidades 2026
+
+- **Tiempo real (SignalR):** el leaderboard y las posiciones se actualizan en
+  vivo al cerrarse un partido, y el chat de cada partido se difunde al instante.
+- **Autenticación robusta:** JWT de corta vida + refresh tokens con rotación y
+  auto-refresh en el cliente.
+- **Gamificación:** predicción *banker* (dobla los puntos de un partido por
+  grupo) y estadísticas del jugador (precisión y rachas).
+- **Crecimiento social:** invitaciones por código/link y chat por partido.
+- **Cierre automático:** un servicio en segundo plano bloquea los partidos al
+  kickoff y los cierra cuando hay resultado, mediante un proveedor de resultados
+  enchufable (seam para una API deportiva real).
+- **Resumen de jornada con IA:** endpoint que narra el estado del grupo en
+  lenguaje natural (plantilla por defecto, con seam para un proveedor LLM).
+- **Notificaciones push:** registro de dispositivos como base para FCM/APNs.
+- **Observabilidad:** health checks y OpenTelemetry (trazas y métricas).
+
+Todo el backend y la lógica del cliente están cubiertos por pruebas
+automatizadas (integración de API, tiempo real y ViewModels).
+
+## Nota sobre el esquema de base de datos
+
+El esquema se materializa con `EnsureCreated` a partir del modelo (igual que en
+el diseño original), lo que mantiene el desarrollo y las pruebas sin fricción y
+funciona con SQLite y SQL Server. Para producción con control de versiones del
+esquema se recomienda añadir migraciones de EF Core por proveedor.
+
 ## Requisitos
 
 - SDK de **.NET 10**.
@@ -95,14 +122,26 @@ arquitectura de la app y los pasos de compilación con MAUI.
 
 | Método | Ruta | Descripción |
 | --- | --- | --- |
-| `POST` | `/api/auth/token` | Inicio de sesión (devuelve JWT). |
+| `POST` | `/api/auth/token` | Inicio de sesión (devuelve JWT + refresh token). |
+| `POST` | `/api/auth/refresh` | Renueva el par de tokens (rota el refresh). |
+| `POST` | `/api/auth/logout` | Revoca el refresh token. |
 | `POST` | `/api/auth/register` | Registro de usuario. |
 | `GET` | `/api/auth/me` | Perfil y puntos del usuario actual. |
 | `GET` | `/api/groups` | Lista de torneos/grupos. |
 | `GET` | `/api/groups/mine` | Grupos del usuario. |
 | `GET` | `/api/groups/{id}` | Detalle con partidos y posiciones. |
 | `POST` | `/api/groups/{id}/join` | Solicitud para unirse a un grupo. |
+| `GET` | `/api/groups/{id}/invite` | Código de invitación del grupo (miembros). |
+| `POST` | `/api/groups/join-by-code` | Unirse a un grupo con su código. |
 | `GET` | `/api/groups/{id}/leaderboard` | Ranking de miembros. |
+| `GET` | `/api/groups/{id}/recap` | Resumen de la jornada en lenguaje natural. |
 | `GET` | `/api/matches/{id}` | Detalle de partido y mi predicción. |
-| `POST` | `/api/predictions` | Crear/actualizar predicción. |
+| `POST` | `/api/matches/{id}/close` | Cierra el partido (admin) y difunde en vivo. |
+| `GET` | `/api/matches/{id}/comments` | Chat del partido. |
+| `POST` | `/api/matches/{id}/comments` | Publicar comentario. |
+| `POST` | `/api/predictions` | Crear/actualizar predicción (incluye banker). |
 | `GET` | `/api/predictions/mine` | Mis predicciones. |
+| `GET` | `/api/insights/me` | Estadísticas del jugador (precisión, rachas). |
+| `POST` | `/api/devices` | Registrar dispositivo para push. |
+| `GET` | `/health` | Estado del servicio. |
+| `WS` | `/hubs/tournament` | Hub SignalR de tiempo real. |
