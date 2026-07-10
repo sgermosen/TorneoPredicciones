@@ -15,6 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System;
 using System.Text;
 using System.Threading.RateLimiting;
@@ -153,6 +156,29 @@ namespace CompeTournament.Backend
             builder.Services.AddControllersWithViews();
             builder.Services.AddOpenApi();
 
+            builder.Services.AddHealthChecks()
+                .AddDbContextCheck<ApplicationDbContext>("database");
+
+            var otlpEndpoint = builder.Configuration["Observability:OtlpEndpoint"];
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddService("CompeTournament.Backend"))
+                .WithTracing(tracing =>
+                {
+                    tracing.AddAspNetCoreInstrumentation().AddHttpClientInstrumentation();
+                    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                    {
+                        tracing.AddOtlpExporter(options => options.Endpoint = new Uri(otlpEndpoint));
+                    }
+                })
+                .WithMetrics(metrics =>
+                {
+                    metrics.AddAspNetCoreInstrumentation().AddHttpClientInstrumentation();
+                    if (!string.IsNullOrWhiteSpace(otlpEndpoint))
+                    {
+                        metrics.AddOtlpExporter(options => options.Endpoint = new Uri(otlpEndpoint));
+                    }
+                });
+
             var app = builder.Build();
 
             await SeedAsync(app);
@@ -186,6 +212,7 @@ namespace CompeTournament.Backend
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapHealthChecks("/health");
             app.MapControllers();
             app.MapHub<TournamentHub>("/hubs/tournament");
             app.MapControllerRoute(
