@@ -1,7 +1,9 @@
 namespace CompeTournament.Backend.Controllers.Api
 {
     using CompeTournament.Backend.Data;
+    using CompeTournament.Backend.Helpers;
     using CompeTournament.Shared.Tournaments;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using System.Linq;
@@ -11,10 +13,25 @@ namespace CompeTournament.Backend.Controllers.Api
     public class MatchesApiController : ApiControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMatchClosingService _matchClosingService;
 
-        public MatchesApiController(ApplicationDbContext context)
+        public MatchesApiController(ApplicationDbContext context, IMatchClosingService matchClosingService)
         {
             _context = context;
+            _matchClosingService = matchClosingService;
+        }
+
+        [HttpPost("{id:int}/close")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> Close(int id, [FromBody] CloseMatchRequest request)
+        {
+            var closed = await _matchClosingService.CloseMatchAsync(id, request.LocalPoints, request.VisitorPoints);
+            if (!closed)
+            {
+                return NotFound(new { message = "El partido no existe o ya esta cerrado." });
+            }
+
+            return NoContent();
         }
 
         [HttpGet("{id:int}")]

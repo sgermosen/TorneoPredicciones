@@ -3,6 +3,7 @@ using CompeTournament.Backend.Extensions;
 using CompeTournament.Backend.Helpers;
 using CompeTournament.Backend.Persistence.Contracts;
 using CompeTournament.Backend.Persistence.Implementations;
+using CompeTournament.Backend.Realtime;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -56,6 +57,19 @@ namespace CompeTournament.Backend
                     cfg.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
                     cfg.SaveToken = true;
                     cfg.MapInboundClaims = false;
+                    cfg.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            if (!string.IsNullOrEmpty(accessToken) && context.HttpContext.Request.Path.StartsWithSegments("/hubs"))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
                     cfg.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -116,7 +130,9 @@ namespace CompeTournament.Backend
             builder.Services.AddScoped<IUserHelper, UserHelper>();
             builder.Services.AddScoped<IMailHelper, MailHelper>();
             builder.Services.AddScoped<ITokenService, TokenService>();
+            builder.Services.AddScoped<IMatchClosingService, MatchClosingService>();
             builder.Services.AddScoped<INotificationService, LoggerNotificationService>();
+            builder.Services.AddSignalR();
 
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();
             builder.Services.AddScoped<ITournamentTypeRepository, TournamentTypeRepository>();
@@ -167,6 +183,7 @@ namespace CompeTournament.Backend
             app.UseAuthorization();
 
             app.MapControllers();
+            app.MapHub<TournamentHub>("/hubs/tournament");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
