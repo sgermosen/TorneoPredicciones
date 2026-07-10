@@ -55,6 +55,7 @@ namespace CompeTournament.Backend
                 {
                     cfg.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
                     cfg.SaveToken = true;
+                    cfg.MapInboundClaims = false;
                     cfg.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
@@ -114,6 +115,7 @@ namespace CompeTournament.Backend
             builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped<IUserHelper, UserHelper>();
             builder.Services.AddScoped<IMailHelper, MailHelper>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<INotificationService, LoggerNotificationService>();
 
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();
@@ -156,7 +158,6 @@ namespace CompeTournament.Backend
                 await next();
             });
 
-            app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
@@ -165,6 +166,7 @@ namespace CompeTournament.Backend
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapControllers();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -32,4 +32,8 @@
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.53.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CompeTournament.Shared\CompeTournament.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

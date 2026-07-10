@@ -61,10 +61,95 @@
             await CheckUser("elis@gmail.com", "Elis", "Pascual", "User");
             await CheckUser("starling@gmail.com", "Starling", "Germosen", "User");
             await CheckUser("toreneo@gmail.com", "Mersy", "RD", "Admin");
-            await CheckUser("sgrysoft@gmail.com", "Starling", "Germosen", "Admin");
+            var admin = await CheckUser("sgrysoft@gmail.com", "Starling", "Germosen", "Admin");
 
             await _context.SaveChangesAsync();
 
+            await SeedDemoTournamentAsync(admin);
+        }
+
+        private async Task SeedDemoTournamentAsync(ApplicationUser owner)
+        {
+            if (_context.Groups.Any())
+            {
+                return;
+            }
+
+            var tournamentType = _context.TournamentTypes.First();
+
+            var group = new Group
+            {
+                Name = "Copa Amistosa 2026",
+                Requirements = "Reta a tus amigos a predecir los partidos de la copa.",
+                Active = true,
+                TournamentTypeId = tournamentType.Id
+            };
+            _context.Groups.Add(group);
+            await _context.SaveChangesAsync();
+
+            var league = new League
+            {
+                Name = "Liga Nacional",
+                Active = true,
+                GroupId = group.Id
+            };
+            _context.Leagues.Add(league);
+            await _context.SaveChangesAsync();
+
+            var tigres = AddTeam("Tigres", "TIG", league.Id);
+            var leones = AddTeam("Leones", "LEO", league.Id);
+            var aguilas = AddTeam("Aguilas", "AGU", league.Id);
+            var toros = AddTeam("Toros", "TOR", league.Id);
+            await _context.SaveChangesAsync();
+
+            AddMatch(group.Id, tigres.Id, leones.Id, 2);
+            AddMatch(group.Id, aguilas.Id, toros.Id, 4);
+            await _context.SaveChangesAsync();
+
+            _context.GroupUsers.Add(new GroupUser
+            {
+                GroupId = group.Id,
+                ApplicationUserId = owner.Id,
+                IsAccepted = true,
+                IsBlocked = false,
+                Points = 0
+            });
+            await _context.SaveChangesAsync();
+        }
+
+        private Team AddTeam(string name, string initials, int leagueId)
+        {
+            var team = new Team
+            {
+                Name = name,
+                Initials = initials,
+                Active = true,
+                LeagueId = leagueId,
+                MatchesPlayed = 0,
+                MatchesWon = 0,
+                MatchesTied = 0,
+                MatchesLost = 0,
+                FavorPoints = 0,
+                AgainstPoints = 0,
+                CumulativePoints = 0,
+                Position = 0
+            };
+            _context.Teams.Add(team);
+            return team;
+        }
+
+        private void AddMatch(int groupId, int localId, int visitorId, int daysFromNow)
+        {
+            _context.Matches.Add(new Match
+            {
+                Name = "Partido",
+                Active = true,
+                GroupId = groupId,
+                LocalId = localId,
+                VisitorId = visitorId,
+                DateTime = DateTime.UtcNow.AddDays(daysFromNow),
+                StatusId = 1
+            });
         }
 
         private void AddStatus(string v)
