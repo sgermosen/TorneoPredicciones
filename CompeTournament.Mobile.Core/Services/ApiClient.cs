@@ -86,6 +86,15 @@ namespace CompeTournament.Mobile.Core.Services
             return SendAsync<InsightsDto>(() => new HttpRequestMessage(HttpMethod.Get, path));
         }
 
+        public Task<List<CommentDto>> GetCommentsAsync(int matchId) =>
+            SendAsync<List<CommentDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/matches/{matchId}/comments"));
+
+        public Task<CommentDto> PostCommentAsync(int matchId, string body) =>
+            SendAsync<CommentDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/matches/{matchId}/comments")
+            {
+                Content = JsonContent.Create(new CommentRequest { Body = body })
+            });
+
         private async Task<T> SendAsync<T>(Func<HttpRequestMessage> requestFactory)
         {
             var response = await SendWithRefreshAsync(requestFactory);
