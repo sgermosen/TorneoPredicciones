@@ -59,6 +59,9 @@ namespace CompeTournament.Backend.Controllers.Api
                 return Conflict(new { message = "El usuario ya esta registrado." });
             }
 
+            var localType = await _context.UserTypes.FirstOrDefaultAsync(ut => ut.Name == "Local")
+                ?? await _context.UserTypes.FirstOrDefaultAsync();
+
             var user = new ApplicationUser
             {
                 Name = request.FirstName,
@@ -66,7 +69,7 @@ namespace CompeTournament.Backend.Controllers.Api
                 Email = request.Email,
                 UserName = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                UserType = new UserType { Id = 1, Name = "Local" }
+                UserType = localType
             };
 
             var result = await _userHelper.AddUserAsync(user, request.Password);

@@ -2,6 +2,7 @@
 using CompeTournament.Backend.Data.Entities;
 using CompeTournament.Backend.Helpers;
 using CompeTournament.Backend.Persistence.Contracts;
+using CompeTournament.Shared.Scoring;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -222,17 +223,7 @@ namespace CompeTournament.Backend.Controllers
 
         private int GetStatus(int LocalPoints, int VisitorPoints)
         {
-            if (LocalPoints > VisitorPoints)
-            {
-                return 1; // Local win
-            }
-
-            if (VisitorPoints > LocalPoints)
-            {
-                return 2; // Visitor win
-            }
-
-            return 3; // Draw
+            return (int)PredictionScoring.GetOutcome(LocalPoints, VisitorPoints);
         }
 
         private async Task SendNotificationThreePoints(List<string> tags, Match match)
@@ -376,25 +367,21 @@ namespace CompeTournament.Backend.Controllers
                         .ToListAsync();
                     foreach (var prediction in predictions)
                     {
-                        var points = 0;
-                        if (prediction.LocalPoints == oldMatch.LocalPoints &&
-                            prediction.VisitorPoints == oldMatch.VisitorPoints)
+                        var points = PredictionScoring.CalculatePoints(
+                            oldMatch.LocalPoints.Value, oldMatch.VisitorPoints.Value,
+                            prediction.LocalPoints.Value, prediction.VisitorPoints.Value);
+
+                        if (points == PredictionScoring.ExactPoints)
                         {
-                            points = 3;
                             threePoints.Add(string.Format("userId:{0}", prediction.CreatedBy));
+                        }
+                        else if (points == PredictionScoring.OutcomePoints)
+                        {
+                            onePoint.Add(string.Format("userId:{0}", prediction.CreatedBy));
                         }
                         else
                         {
-                            var statusPrediction = GetStatus(prediction.LocalPoints.Value, prediction.VisitorPoints.Value);
-                            if (statusMatch == statusPrediction)
-                            {
-                                points = 1;
-                                onePoint.Add(string.Format("userId:{0}", prediction.CreatedBy));
-                            }
-                            else
-                            {
-                                noPoints.Add(string.Format("userId:{0}", prediction.CreatedBy));
-                            }
+                            noPoints.Add(string.Format("userId:{0}", prediction.CreatedBy));
                         }
 
                         if (points != 0)
