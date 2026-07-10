@@ -9,6 +9,9 @@ namespace CompeTournament.Backend.Data.Entities
     {
         public string Requirements { get; set; }
 
+        [StringLength(12)]
+        public string InviteCode { get; set; }
+
         [DataType(DataType.ImageUrl)]
         public string Logo { get; set; }
 
