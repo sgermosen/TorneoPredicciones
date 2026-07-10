@@ -14,10 +14,12 @@ namespace CompeTournament.Backend.Controllers.Api
     public class GroupsApiController : ApiControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IJornadaRecapGenerator _recapGenerator;
 
-        public GroupsApiController(ApplicationDbContext context)
+        public GroupsApiController(ApplicationDbContext context, IJornadaRecapGenerator recapGenerator)
         {
             _context = context;
+            _recapGenerator = recapGenerator;
         }
 
         [HttpGet]
@@ -197,6 +199,54 @@ namespace CompeTournament.Backend.Controllers.Api
             }
 
             return Ok(MapGroup(group, userId));
+        }
+
+        [HttpGet("{id:int}/recap")]
+        public async Task<ActionResult<RecapDto>> Recap(int id)
+        {
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var leaderboard = await _context.GroupUsers
+                .Where(gu => gu.GroupId == id && gu.IsAccepted && !gu.IsBlocked)
+                .Include(gu => gu.ApplicationUser)
+                .OrderByDescending(gu => gu.Points)
+                .Select(gu => new LeaderboardEntryDto
+                {
+                    UserId = gu.ApplicationUserId,
+                    FullName = gu.ApplicationUser != null ? gu.ApplicationUser.FullName : null,
+                    Points = gu.Points,
+                    IsAccepted = gu.IsAccepted,
+                    IsBlocked = gu.IsBlocked
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            var lastMatch = await _context.Matches
+                .Where(m => m.GroupId == id && m.StatusId == 3)
+                .Include(m => m.Local)
+                .Include(m => m.Visitor)
+                .OrderByDescending(m => m.DateTime)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            string lastMatchSummary = null;
+            if (lastMatch != null)
+            {
+                lastMatchSummary = $"{lastMatch.Local?.Initials} {lastMatch.LocalPoints}-{lastMatch.VisitorPoints} {lastMatch.Visitor?.Initials}";
+            }
+
+            var text = await _recapGenerator.GenerateAsync(new RecapContext
+            {
+                GroupName = group.Name,
+                Leaderboard = leaderboard,
+                LastMatchSummary = lastMatchSummary
+            });
+
+            return Ok(new RecapDto { GroupId = id, Text = text });
         }
 
         [HttpGet("{id:int}/leaderboard")]

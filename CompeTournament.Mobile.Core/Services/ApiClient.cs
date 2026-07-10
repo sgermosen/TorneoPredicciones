@@ -66,6 +66,9 @@ namespace CompeTournament.Mobile.Core.Services
         public Task<List<LeaderboardEntryDto>> GetLeaderboardAsync(int id) =>
             SendAsync<List<LeaderboardEntryDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{id}/leaderboard"));
 
+        public Task<RecapDto> GetRecapAsync(int id) =>
+            SendAsync<RecapDto>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{id}/recap"));
+
         public Task<MatchDto> GetMatchAsync(int id) => SendAsync<MatchDto>(() => new HttpRequestMessage(HttpMethod.Get, $"api/matches/{id}"));
 
         public Task<PredictionDto> SavePredictionAsync(PredictionRequest request) =>
