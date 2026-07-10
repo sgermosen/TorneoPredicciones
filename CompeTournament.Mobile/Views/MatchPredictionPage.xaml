@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             x:Class="CompeTournament.Mobile.Views.MatchPredictionPage"
+             x:DataType="vm:MatchPredictionViewModel"
+             Title="Prediccion">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="24">
+
+            <VerticalStackLayout Spacing="6">
+                <Label Style="{StaticResource Eyebrow}" Text="Tu prediccion" />
+                <Label Style="{StaticResource Headline}" Text="Marca el resultado" />
+                <Label Style="{StaticResource Muted}"
+                       Text="Acierto exacto: 3 puntos · Solo el ganador: 1 punto." />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Card}">
+                <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="12">
+
+                    <VerticalStackLayout Grid.Column="0" Spacing="12" HorizontalOptions="Center">
+                        <Label Style="{StaticResource SubHeadline}" HorizontalOptions="Center"
+                               Text="{Binding Match.LocalInitials}" />
+                        <Label Style="{StaticResource Score}" Text="{Binding LocalPoints}" />
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Button Text="−" WidthRequest="46" HeightRequest="46" CornerRadius="23"
+                                    BackgroundColor="{StaticResource SurfaceRaised}" TextColor="{StaticResource TextPrimary}"
+                                    Command="{Binding DecrementLocalCommand}" />
+                            <Button Text="+" WidthRequest="46" HeightRequest="46" CornerRadius="23"
+                                    BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}"
+                                    Command="{Binding IncrementLocalCommand}" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <Label Grid.Column="1" Style="{StaticResource Score}" Text=":" VerticalOptions="Center" />
+
+                    <VerticalStackLayout Grid.Column="2" Spacing="12" HorizontalOptions="Center">
+                        <Label Style="{StaticResource SubHeadline}" HorizontalOptions="Center"
+                               Text="{Binding Match.VisitorInitials}" />
+                        <Label Style="{StaticResource Score}" Text="{Binding VisitorPoints}" />
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Button Text="−" WidthRequest="46" HeightRequest="46" CornerRadius="23"
+                                    BackgroundColor="{StaticResource SurfaceRaised}" TextColor="{StaticResource TextPrimary}"
+                                    Command="{Binding DecrementVisitorCommand}" />
+                            <Button Text="+" WidthRequest="46" HeightRequest="46" CornerRadius="23"
+                                    BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}"
+                                    Command="{Binding IncrementVisitorCommand}" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                </Grid>
+            </Border>
+
+            <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
+            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource Win}" FontSize="13"
+                   IsVisible="{Binding SuccessMessage, Converter={StaticResource NotEmpty}}" />
+
+            <Button Style="{StaticResource PrimaryButton}"
+                    Text="Guardar prediccion"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding CanPredict}" />
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

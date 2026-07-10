@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             x:Class="CompeTournament.Mobile.Views.ProfilePage"
+             x:DataType="vm:ProfileViewModel"
+             Title="Perfil">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+
+            <Label Style="{StaticResource Eyebrow}" Text="Mi perfil" />
+            <Label Style="{StaticResource Headline}" Text="{Binding CurrentUser.FullName}" />
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="14">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Style="{StaticResource Muted}" Text="Puntos acumulados" />
+                        <Label Style="{StaticResource Score}" HorizontalOptions="Start"
+                               Text="{Binding CurrentUser.Points}" />
+                    </VerticalStackLayout>
+                    <BoxView HeightRequest="1" Color="{StaticResource Line}" />
+                    <VerticalStackLayout Spacing="4">
+                        <Label Style="{StaticResource Muted}" Text="Correo" />
+                        <Label Style="{StaticResource Body}" Text="{Binding CurrentUser.Email}" />
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="4">
+                        <Label Style="{StaticResource Muted}" Text="Telefono" />
+                        <Label Style="{StaticResource Body}" Text="{Binding CurrentUser.PhoneNumber}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13" />
+
+            <Button Style="{StaticResource GhostButton}"
+                    Text="Actualizar puntos"
+                    Command="{Binding RefreshCommand}" />
+
+            <Button Style="{StaticResource PrimaryButton}"
+                    Text="Cerrar sesion"
+                    BackgroundColor="{StaticResource Loss}"
+                    TextColor="{StaticResource White}"
+                    Command="{Binding LogoutCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

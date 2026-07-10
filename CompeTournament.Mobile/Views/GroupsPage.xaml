@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             xmlns:dto="clr-namespace:CompeTournament.Shared.Tournaments;assembly=CompeTournament.Shared"
+             x:Class="CompeTournament.Mobile.Views.GroupsPage"
+             x:DataType="vm:GroupsViewModel"
+             Title="Torneos">
+
+    <Grid RowDefinitions="Auto,*" Padding="0">
+
+        <VerticalStackLayout Grid.Row="0" Padding="24,20,24,10" Spacing="12">
+            <Label Style="{StaticResource Eyebrow}" Text="Torneos activos" />
+            <Label Style="{StaticResource Headline}" Text="{Binding Title}" />
+            <HorizontalStackLayout Spacing="10">
+                <Switch IsToggled="{Binding ShowOnlyMine}" OnColor="{StaticResource Accent}" />
+                <Label Style="{StaticResource Body}" Text="Solo mis grupos" VerticalOptions="Center" />
+            </HorizontalStackLayout>
+            <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13" />
+        </VerticalStackLayout>
+
+        <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding Groups}"
+                            SelectionMode="None">
+                <CollectionView.EmptyView>
+                    <Label Style="{StaticResource Muted}"
+                           Padding="24"
+                           HorizontalTextAlignment="Center"
+                           Text="No hay torneos para mostrar todavia." />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="dto:GroupDto">
+                        <Border Style="{StaticResource Card}" Margin="16,8">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupsViewModel}}, Path=OpenGroupCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="6">
+                                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SubHeadline}" Text="{Binding Name}" />
+                                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" Text="{Binding TournamentTypeName}" />
+                                <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource Muted}"
+                                       Text="{Binding MembersCount, StringFormat='{0} participantes'}" />
+
+                                <Label Grid.Row="0" Grid.Column="1"
+                                       Text="Miembro"
+                                       IsVisible="{Binding IsMember}"
+                                       TextColor="{StaticResource Win}"
+                                       FontSize="12"
+                                       FontAttributes="Bold" />
+                                <Button Grid.Row="2" Grid.Column="1"
+                                        Text="Unirme"
+                                        IsVisible="{Binding IsMember, Converter={StaticResource InvertBool}}"
+                                        HeightRequest="38"
+                                        Padding="16,0"
+                                        FontSize="13"
+                                        BackgroundColor="{StaticResource Accent}"
+                                        TextColor="{StaticResource Ink}"
+                                        CornerRadius="12"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupsViewModel}}, Path=JoinCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+    </Grid>
+</ContentPage>
