@@ -131,6 +131,9 @@ namespace CompeTournament.Backend
             builder.Services.AddScoped<IMailHelper, MailHelper>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IMatchClosingService, MatchClosingService>();
+            builder.Services.AddScoped<IMatchResultsProvider, ManualResultsProvider>();
+            builder.Services.AddScoped<IMatchScheduler, MatchScheduler>();
+            builder.Services.AddHostedService<MatchSchedulerHostedService>();
             builder.Services.AddScoped<INotificationService, LoggerNotificationService>();
             builder.Services.AddSignalR();
 

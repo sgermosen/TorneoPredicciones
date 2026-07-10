@@ -17,6 +17,7 @@ namespace CompeTournament.Tests
             builder.UseSetting("ConnectionStrings:SqliteCnn", $"Data Source={_dbPath}");
             builder.UseSetting("Tokens:Key", "integration-test-signing-key-should-be-long-enough-0123456789");
             builder.UseSetting("Seed:DefaultPassword", "Torneo2026");
+            builder.UseSetting("Scheduler:Enabled", "false");
         }
 
         protected override void Dispose(bool disposing)
