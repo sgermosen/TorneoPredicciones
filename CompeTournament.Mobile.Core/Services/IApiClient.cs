@@ -42,5 +42,11 @@ namespace CompeTournament.Mobile.Core.Services
         Task<List<CommentDto>> GetCommentsAsync(int matchId);
 
         Task<CommentDto> PostCommentAsync(int matchId, string body);
+
+        Task RegisterDeviceAsync(string token, string platform);
+
+        Task UnregisterDeviceAsync(string token);
+
+        Task<List<string>> GetMyDevicesAsync();
     }
 }
