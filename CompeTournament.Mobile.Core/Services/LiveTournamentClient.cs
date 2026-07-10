@@ -1,6 +1,7 @@
 namespace CompeTournament.Mobile.Core.Services
 {
     using CompeTournament.Shared.Live;
+    using CompeTournament.Shared.Tournaments;
     using Microsoft.AspNetCore.SignalR.Client;
 
     public class LiveTournamentClient : ILiveTournamentClient
@@ -11,9 +12,12 @@ namespace CompeTournament.Mobile.Core.Services
         {
             _connection = connection;
             _connection.On<LiveMatchClosedDto>("MatchClosed", payload => MatchClosed?.Invoke(payload));
+            _connection.On<CommentDto>("CommentPosted", payload => CommentPosted?.Invoke(payload));
         }
 
         public event Action<LiveMatchClosedDto>? MatchClosed;
+
+        public event Action<CommentDto>? CommentPosted;
 
         public async Task JoinGroupAsync(int groupId)
         {

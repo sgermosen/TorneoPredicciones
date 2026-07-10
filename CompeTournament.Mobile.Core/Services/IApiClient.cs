@@ -36,5 +36,9 @@ namespace CompeTournament.Mobile.Core.Services
         Task<List<PredictionDto>> GetMyPredictionsAsync(int? groupId = null);
 
         Task<InsightsDto> GetInsightsAsync(int? groupId = null);
+
+        Task<List<CommentDto>> GetCommentsAsync(int matchId);
+
+        Task<CommentDto> PostCommentAsync(int matchId, string body);
     }
 }
