@@ -4,17 +4,20 @@ namespace CompeTournament.Mobile.Core.ViewModels
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using CompeTournament.Mobile.Core.Services;
+    using CompeTournament.Shared.Live;
     using CompeTournament.Shared.Tournaments;
 
     public partial class GroupDetailViewModel : BaseViewModel
     {
         private readonly IApiClient _apiClient;
         private readonly INavigationService _navigation;
+        private readonly ILiveTournamentClient? _live;
 
-        public GroupDetailViewModel(IApiClient apiClient, INavigationService navigation)
+        public GroupDetailViewModel(IApiClient apiClient, INavigationService navigation, ILiveTournamentClient? live = null)
         {
             _apiClient = apiClient;
             _navigation = navigation;
+            _live = live;
         }
 
         [ObservableProperty]
@@ -24,6 +27,15 @@ namespace CompeTournament.Mobile.Core.ViewModels
         [NotifyPropertyChangedFor(nameof(Title))]
         [NotifyPropertyChangedFor(nameof(CanJoin))]
         private GroupDetailDto? _group;
+
+        [ObservableProperty]
+        private string? _recap;
+
+        [ObservableProperty]
+        private string? _inviteCode;
+
+        [ObservableProperty]
+        private bool _isLive;
 
         public string Title => Group?.Name ?? "Grupo";
 
@@ -39,6 +51,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
         {
             GroupId = groupId;
             await LoadAsync();
+            await ConnectLiveAsync();
         }
 
         [RelayCommand]
@@ -58,23 +71,26 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 var group = await _apiClient.GetGroupAsync(GroupId);
                 Group = group;
 
-                Matches.Clear();
-                foreach (var match in group.Matches)
-                {
-                    Matches.Add(match);
-                }
+                Replace(Matches, group.Matches);
+                Replace(Standings, group.Standings);
 
-                Standings.Clear();
-                foreach (var standing in group.Standings)
-                {
-                    Standings.Add(standing);
-                }
-
-                Leaderboard.Clear();
                 var leaderboard = await _apiClient.GetLeaderboardAsync(GroupId);
-                foreach (var entry in leaderboard)
+                Replace(Leaderboard, leaderboard);
+
+                var recap = await _apiClient.GetRecapAsync(GroupId);
+                Recap = recap.Text;
+
+                if (group.IsMember)
                 {
-                    Leaderboard.Add(entry);
+                    try
+                    {
+                        var invite = await _apiClient.GetInviteAsync(GroupId);
+                        InviteCode = invite.Code;
+                    }
+                    catch (Exception)
+                    {
+                        InviteCode = null;
+                    }
                 }
             }
             catch (Exception ex)
@@ -87,10 +103,48 @@ namespace CompeTournament.Mobile.Core.ViewModels
             }
         }
 
+        private async Task ConnectLiveAsync()
+        {
+            if (_live == null)
+            {
+                return;
+            }
+
+            try
+            {
+                _live.MatchClosed += OnMatchClosed;
+                await _live.JoinGroupAsync(GroupId);
+                IsLive = true;
+            }
+            catch (Exception)
+            {
+                IsLive = false;
+            }
+        }
+
+        private void OnMatchClosed(LiveMatchClosedDto payload)
+        {
+            if (payload.GroupId != GroupId)
+            {
+                return;
+            }
+
+            Replace(Standings, payload.Standings);
+            Replace(Leaderboard, payload.Leaderboard);
+
+            var match = Matches.FirstOrDefault(m => m.Id == payload.MatchId);
+            if (match != null)
+            {
+                match.LocalPoints = payload.LocalPoints;
+                match.VisitorPoints = payload.VisitorPoints;
+                match.IsOpen = false;
+            }
+        }
+
         [RelayCommand]
         private Task OpenMatchAsync(MatchDto match)
         {
-            if (match == null || !match.IsOpen)
+            if (match == null)
             {
                 return Task.CompletedTask;
             }
@@ -127,6 +181,15 @@ namespace CompeTournament.Mobile.Core.ViewModels
             }
 
             await LoadAsync();
+        }
+
+        private static void Replace<T>(ObservableCollection<T> target, IEnumerable<T> items)
+        {
+            target.Clear();
+            foreach (var item in items)
+            {
+                target.Add(item);
+            }
         }
     }
 }

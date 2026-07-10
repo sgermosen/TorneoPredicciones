@@ -4,6 +4,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
     using CommunityToolkit.Mvvm.Input;
     using CompeTournament.Mobile.Core.Services;
     using CompeTournament.Shared.Auth;
+    using CompeTournament.Shared.Tournaments;
 
     public partial class ProfileViewModel : BaseViewModel
     {
@@ -22,6 +23,9 @@ namespace CompeTournament.Mobile.Core.ViewModels
 
         public UserDto? CurrentUser => _session.CurrentUser;
 
+        [ObservableProperty]
+        private InsightsDto? _insights;
+
         [RelayCommand]
         private async Task RefreshAsync()
         {
@@ -38,6 +42,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 var user = await _apiClient.GetMeAsync();
                 _session.SetUser(user);
                 OnPropertyChanged(nameof(CurrentUser));
+                Insights = await _apiClient.GetInsightsAsync();
             }
             catch (Exception ex)
             {

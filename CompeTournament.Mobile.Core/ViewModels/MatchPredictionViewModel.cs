@@ -1,5 +1,6 @@
 namespace CompeTournament.Mobile.Core.ViewModels
 {
+    using System.Collections.ObjectModel;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using CompeTournament.Mobile.Core.Services;
@@ -15,6 +16,11 @@ namespace CompeTournament.Mobile.Core.ViewModels
             _apiClient = apiClient;
             _navigation = navigation;
         }
+
+        public ObservableCollection<CommentDto> Comments { get; } = new();
+
+        [ObservableProperty]
+        private string _newCommentBody = string.Empty;
 
         [ObservableProperty]
         private int _matchId;
@@ -64,6 +70,13 @@ namespace CompeTournament.Mobile.Core.ViewModels
                     LocalPoints = match.MyPrediction.LocalPoints ?? 0;
                     VisitorPoints = match.MyPrediction.VisitorPoints ?? 0;
                     IsBanker = match.MyPrediction.IsBanker;
+                }
+
+                Comments.Clear();
+                var comments = await _apiClient.GetCommentsAsync(MatchId);
+                foreach (var comment in comments)
+                {
+                    Comments.Add(comment);
                 }
             }
             catch (Exception ex)
@@ -132,6 +145,28 @@ namespace CompeTournament.Mobile.Core.ViewModels
             finally
             {
                 IsBusy = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task PostCommentAsync()
+        {
+            if (string.IsNullOrWhiteSpace(NewCommentBody))
+            {
+                return;
+            }
+
+            ClearError();
+
+            try
+            {
+                var comment = await _apiClient.PostCommentAsync(MatchId, NewCommentBody.Trim());
+                Comments.Add(comment);
+                NewCommentBody = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                ShowError(DescribeError(ex));
             }
         }
     }

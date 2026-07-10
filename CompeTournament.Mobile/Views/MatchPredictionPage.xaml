@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             xmlns:dto="clr-namespace:CompeTournament.Shared.Tournaments;assembly=CompeTournament.Shared"
              x:Class="CompeTournament.Mobile.Views.MatchPredictionPage"
              x:DataType="vm:MatchPredictionViewModel"
              Title="Prediccion">
@@ -12,7 +13,7 @@
     </ContentPage.Resources>
 
     <ScrollView>
-        <VerticalStackLayout Padding="24" Spacing="24">
+        <VerticalStackLayout Padding="24" Spacing="20">
 
             <VerticalStackLayout Spacing="6">
                 <Label Style="{StaticResource Eyebrow}" Text="Tu prediccion" />
@@ -57,6 +58,15 @@
                 </Grid>
             </Border>
 
+            <Border Style="{StaticResource Card}">
+                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="4">
+                    <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SubHeadline}" Text="Banker" VerticalOptions="Center" />
+                    <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding IsBanker}" OnColor="{StaticResource Accent}" />
+                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Muted}"
+                           Text="Dobla los puntos de este partido si aciertas. Solo uno por grupo." />
+                </Grid>
+            </Border>
+
             <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13"
                    IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
             <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource Win}" FontSize="13"
@@ -68,6 +78,32 @@
                     IsEnabled="{Binding CanPredict}" />
 
             <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+
+            <Label Style="{StaticResource Eyebrow}" Text="Chat del partido" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Comments}">
+                        <BindableLayout.EmptyView>
+                            <Label Style="{StaticResource Muted}" Text="Se el primero en comentar." />
+                        </BindableLayout.EmptyView>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="dto:CommentDto">
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Style="{StaticResource Muted}" FontAttributes="Bold" Text="{Binding AuthorName}" />
+                                    <Label Style="{StaticResource Body}" Text="{Binding Body}" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                        <Entry Grid.Column="0" Style="{StaticResource Field}" Placeholder="Escribe un mensaje..." Text="{Binding NewCommentBody}" />
+                        <Button Grid.Column="1" Text="Enviar" Command="{Binding PostCommentCommand}"
+                                BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}"
+                                CornerRadius="12" HeightRequest="44" Padding="16,0" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>
