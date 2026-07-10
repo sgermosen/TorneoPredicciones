@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             x:Class="CompeTournament.Mobile.Views.RegisterPage"
+             x:DataType="vm:RegisterViewModel"
+             Title="Crear cuenta">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+
+            <Label Style="{StaticResource Eyebrow}" Text="Nuevo jugador" />
+            <Label Style="{StaticResource Headline}" Text="Unete a la copa" />
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="14">
+                    <Entry Style="{StaticResource Field}" Placeholder="Nombre" Text="{Binding FirstName}" />
+                    <Entry Style="{StaticResource Field}" Placeholder="Apellido" Text="{Binding LastName}" />
+                    <Entry Style="{StaticResource Field}" Keyboard="Email" Placeholder="Correo" Text="{Binding Email}" />
+                    <Entry Style="{StaticResource Field}" Keyboard="Telephone" Placeholder="Telefono" Text="{Binding PhoneNumber}" />
+                    <Entry Style="{StaticResource Field}" IsPassword="True" Placeholder="Contrasena" Text="{Binding Password}" />
+                    <Entry Style="{StaticResource Field}" IsPassword="True" Placeholder="Confirmar contrasena" Text="{Binding Confirm}" />
+
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="{StaticResource Loss}"
+                           FontSize="13"
+                           IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
+
+                    <Label Text="{Binding SuccessMessage}"
+                           TextColor="{StaticResource Win}"
+                           FontSize="13"
+                           IsVisible="{Binding SuccessMessage, Converter={StaticResource NotEmpty}}" />
+
+                    <Button Style="{StaticResource PrimaryButton}"
+                            Text="Crear cuenta"
+                            Command="{Binding RegisterCommand}"
+                            IsEnabled="{Binding IsNotBusy}" />
+
+                    <Button Style="{StaticResource GhostButton}"
+                            Text="Cancelar"
+                            Command="{Binding CancelCommand}" />
+
+                    <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
