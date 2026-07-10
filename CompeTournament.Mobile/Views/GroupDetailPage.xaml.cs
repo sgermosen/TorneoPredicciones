@@ -24,5 +24,18 @@ namespace CompeTournament.Mobile.Views
                 await _viewModel.InitializeAsync(GroupId);
             }
         }
+
+        private async void OnShareInviteClicked(object sender, EventArgs e)
+        {
+            var code = _viewModel.InviteCode;
+            if (!string.IsNullOrWhiteSpace(code))
+            {
+                await Share.Default.RequestAsync(new ShareTextRequest
+                {
+                    Title = "Unete a mi grupo",
+                    Text = $"Unete a mi grupo en Copa Amistosa con el codigo {code}"
+                });
+            }
+        }
     }
 }

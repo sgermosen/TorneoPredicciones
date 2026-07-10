@@ -31,6 +31,28 @@
                 </VerticalStackLayout>
             </Border>
 
+            <Border Style="{StaticResource Card}" IsVisible="{Binding Insights, Converter={StaticResource NotNull}}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Style="{StaticResource Eyebrow}" Text="Tus estadisticas" />
+                    <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="4">
+                        <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SubHeadline}"
+                               TextColor="{StaticResource Accent}" HorizontalTextAlignment="Center"
+                               Text="{Binding Insights.Accuracy, StringFormat='{0:P0}'}" />
+                        <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource SubHeadline}"
+                               TextColor="{StaticResource Accent}" HorizontalTextAlignment="Center"
+                               Text="{Binding Insights.CurrentStreak}" />
+                        <Label Grid.Row="0" Grid.Column="2" Style="{StaticResource SubHeadline}"
+                               TextColor="{StaticResource Accent}" HorizontalTextAlignment="Center"
+                               Text="{Binding Insights.BestStreak}" />
+                        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" HorizontalTextAlignment="Center" Text="Precision" />
+                        <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Muted}" HorizontalTextAlignment="Center" Text="Racha" />
+                        <Label Grid.Row="1" Grid.Column="2" Style="{StaticResource Muted}" HorizontalTextAlignment="Center" Text="Mejor racha" />
+                    </Grid>
+                    <Label Style="{StaticResource Muted}"
+                           Text="{Binding Insights.ExactHits, StringFormat='Aciertos exactos: {0}'}" />
+                </VerticalStackLayout>
+            </Border>
+
             <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13" />
 
             <Button Style="{StaticResource GhostButton}"
