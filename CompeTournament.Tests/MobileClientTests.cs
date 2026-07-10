@@ -33,7 +33,7 @@ namespace CompeTournament.Tests
                 Username = "sgrysoft@gmail.com",
                 Password = "Torneo2026"
             });
-            await store.SetTokenAsync(token.Token);
+            await store.SetTokensAsync(token.Token, token.RefreshToken);
 
             var groups = await client.GetGroupsAsync();
             Assert.NotEmpty(groups);
@@ -105,7 +105,7 @@ namespace CompeTournament.Tests
                 Username = "sgrysoft@gmail.com",
                 Password = "Torneo2026"
             });
-            await store.SetTokenAsync(token.Token);
+            await store.SetTokensAsync(token.Token, token.RefreshToken);
 
             var navigation = new FakeNavigationService();
             var vm = new GroupDetailViewModel(apiClient, navigation);

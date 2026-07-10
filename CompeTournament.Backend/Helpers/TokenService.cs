@@ -1,14 +1,18 @@
 namespace CompeTournament.Backend.Helpers
 {
     using CompeTournament.Backend.Data;
+    using CompeTournament.Backend.Data.Entities;
     using CompeTournament.Shared.Auth;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
     using System;
     using System.Collections.Generic;
     using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
     using System.Security.Claims;
+    using System.Security.Cryptography;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -16,11 +20,13 @@ namespace CompeTournament.Backend.Helpers
     {
         private readonly IConfiguration _configuration;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public TokenService(IConfiguration configuration, UserManager<ApplicationUser> userManager)
+        public TokenService(IConfiguration configuration, UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _configuration = configuration;
             _userManager = userManager;
+            _context = context;
         }
 
         public async Task<TokenResponse> CreateTokenAsync(ApplicationUser user, int points)
@@ -54,10 +60,14 @@ namespace CompeTournament.Backend.Helpers
                 expires: expiration,
                 signingCredentials: credentials);
 
+            var refreshToken = await CreateRefreshTokenAsync(user.Id);
+
             return new TokenResponse
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = expiration,
+                RefreshToken = refreshToken.Token,
+                RefreshTokenExpiration = refreshToken.ExpiresAt,
                 User = new UserDto
                 {
                     Id = user.Id,
@@ -67,6 +77,70 @@ namespace CompeTournament.Backend.Helpers
                     Points = points
                 }
             };
+        }
+
+        public async Task<TokenResponse> RefreshAsync(string refreshToken)
+        {
+            var stored = await _context.RefreshTokens
+                .FirstOrDefaultAsync(t => t.Token == refreshToken);
+
+            if (stored == null || !stored.IsActive)
+            {
+                return null;
+            }
+
+            stored.RevokedAt = DateTime.UtcNow;
+
+            var user = await _userManager.FindByIdAsync(stored.ApplicationUserId);
+            if (user == null)
+            {
+                await _context.SaveChangesAsync();
+                return null;
+            }
+
+            var points = await _context.GroupUsers
+                .Where(gu => gu.ApplicationUserId == user.Id && gu.IsAccepted && !gu.IsBlocked)
+                .SumAsync(gu => (int?)gu.Points) ?? 0;
+
+            return await CreateTokenAsync(user, points);
+        }
+
+        public async Task RevokeAsync(string refreshToken)
+        {
+            var stored = await _context.RefreshTokens
+                .FirstOrDefaultAsync(t => t.Token == refreshToken);
+
+            if (stored != null && stored.RevokedAt == null)
+            {
+                stored.RevokedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        private async Task<RefreshToken> CreateRefreshTokenAsync(string userId)
+        {
+            var days = int.TryParse(_configuration["Tokens:RefreshTokenDays"], out var configured) ? configured : 30;
+
+            var entity = new RefreshToken
+            {
+                Token = GenerateSecureToken(),
+                ApplicationUserId = userId,
+                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddDays(days)
+            };
+
+            _context.RefreshTokens.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity;
+        }
+
+        private static string GenerateSecureToken()
+        {
+            var bytes = RandomNumberGenerator.GetBytes(48);
+            return Convert.ToBase64String(bytes)
+                .Replace("+", "-")
+                .Replace("/", "_")
+                .Replace("=", string.Empty);
         }
     }
 }

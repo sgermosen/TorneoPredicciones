@@ -52,6 +52,18 @@ namespace CompeTournament.Mobile.Core.ViewModels
         [RelayCommand]
         private async Task LogoutAsync()
         {
+            var refreshToken = await _tokenStore.GetRefreshTokenAsync();
+            if (!string.IsNullOrWhiteSpace(refreshToken))
+            {
+                try
+                {
+                    await _apiClient.LogoutAsync(refreshToken);
+                }
+                catch (Exception)
+                {
+                }
+            }
+
             await _tokenStore.ClearAsync();
             _session.Clear();
             await _navigation.GoToAsync($"//{AppRoutes.Login}");
