@@ -6,7 +6,9 @@ using CompeTournament.Backend.Persistence.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using System.Threading.RateLimiting;
 using System.Threading.Tasks;
 
 namespace CompeTournament.Backend
@@ -65,7 +68,35 @@ namespace CompeTournament.Backend
                     };
                 });
 
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+            });
+
+            var corsOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("MauiClient", policy =>
+                {
+                    if (corsOrigins.Length > 0)
+                    {
+                        policy.WithOrigins(corsOrigins)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    }
+                });
+            });
+
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+                options.AddFixedWindowLimiter("auth", limiter =>
+                {
+                    limiter.Window = TimeSpan.FromMinutes(1);
+                    limiter.PermitLimit = 10;
+                    limiter.QueueLimit = 0;
+                });
+            });
 
             var provider = builder.Configuration["Database:Provider"] ?? "Sqlite";
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -115,10 +146,22 @@ namespace CompeTournament.Backend
                 app.UseHsts();
             }
 
+            app.Use(async (context, next) =>
+            {
+                var headers = context.Response.Headers;
+                headers["X-Content-Type-Options"] = "nosniff";
+                headers["X-Frame-Options"] = "DENY";
+                headers["Referrer-Policy"] = "no-referrer";
+                headers["X-Permitted-Cross-Domain-Policies"] = "none";
+                await next();
+            });
+
             app.UseStatusCodePagesWithReExecute("/error/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseCors("MauiClient");
+            app.UseRateLimiter();
             app.UseAuthentication();
             app.UseAuthorization();
 
