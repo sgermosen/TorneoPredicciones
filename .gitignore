@@ -240,3 +240,12 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# Local SQLite databases
+*.db
+*.db-shm
+*.db-wal
+
+# Local secrets
+secrets.json
+*.secrets.json

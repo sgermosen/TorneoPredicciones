@@ -20,6 +20,8 @@ namespace CompeTournament.Backend.Data.Entities
 
         public int? Position { get; set; }
 
+        public bool IsBanker { get; set; }
+
         public int AdquiredPoints { get; set; }
 
         //public int GroupId { get; set; }

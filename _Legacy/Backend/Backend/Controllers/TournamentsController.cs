@@ -20,7 +20,7 @@
 
         public TournamentsController()
         {
-            _hub = NotificationHubClient.CreateClientFromConnectionString("Endpoint=sb://psmhub.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=VRZxkd15WUJsWXWmkt0UySRsCg6K/9ZSytBIdsV7Grs=", "MainNotification");
+            _hub = NotificationHubClient.CreateClientFromConnectionString("Endpoint=sb://psmhub.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=REDACTED-SECRET", "MainNotification");
                        }
 
         [HttpPost]
@@ -1075,7 +1075,7 @@
 
     //        public TournamentsController()
     //        {
-    //            _hub = NotificationHubClient.CreateClientFromConnectionString("Endpoint=sb://psmhub.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=VRZxkd15WUJsWXWmkt0UySRsCg6K/9ZSytBIdsV7Grs=", "MainNotification");
+    //            _hub = NotificationHubClient.CreateClientFromConnectionString("Endpoint=sb://psmhub.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=REDACTED-SECRET", "MainNotification");
     //        }
 
 

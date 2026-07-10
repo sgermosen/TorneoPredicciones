@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             x:Class="CompeTournament.Mobile.Views.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Shell.NavBarIsVisible="False">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24,72,24,24" Spacing="28">
+
+            <VerticalStackLayout Spacing="6">
+                <Label Style="{StaticResource Eyebrow}" Text="Copa Amistosa" />
+                <Label Style="{StaticResource Headline}" Text="Predice. Compite. Gana." />
+                <Label Style="{StaticResource Muted}"
+                       Text="Reta a tus amigos y acumula puntos por cada acierto." />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="18">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Style="{StaticResource Muted}" Text="Correo" />
+                        <Entry Style="{StaticResource Field}"
+                               Keyboard="Email"
+                               Placeholder="tu@correo.com"
+                               Text="{Binding Email}" />
+                        <BoxView HeightRequest="1" Color="{StaticResource Line}" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="6">
+                        <Label Style="{StaticResource Muted}" Text="Contrasena" />
+                        <Entry Style="{StaticResource Field}"
+                               IsPassword="True"
+                               Placeholder="********"
+                               Text="{Binding Password}" />
+                        <BoxView HeightRequest="1" Color="{StaticResource Line}" />
+                    </VerticalStackLayout>
+
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="{StaticResource Loss}"
+                           FontSize="13"
+                           IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
+
+                    <Button Style="{StaticResource PrimaryButton}"
+                            Text="Entrar"
+                            Command="{Binding LoginCommand}"
+                            IsEnabled="{Binding IsNotBusy}" />
+
+                    <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
+                <Label Style="{StaticResource Muted}" Text="No tienes cuenta?" />
+                <Label Text="Registrate"
+                       TextColor="{StaticResource Accent}"
+                       FontAttributes="Bold">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
