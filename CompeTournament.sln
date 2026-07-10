@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompeTournament.Backend", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompeTournament.Shared", "CompeTournament.Shared\CompeTournament.Shared.csproj", "{3F79DD55-246D-4377-9473-BE1B81E3D9EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompeTournament.Tests", "CompeTournament.Tests\CompeTournament.Tests.csproj", "{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{3F79DD55-246D-4377-9473-BE1B81E3D9EB}.Release|x64.Build.0 = Release|Any CPU
 		{3F79DD55-246D-4377-9473-BE1B81E3D9EB}.Release|x86.ActiveCfg = Release|Any CPU
 		{3F79DD55-246D-4377-9473-BE1B81E3D9EB}.Release|x86.Build.0 = Release|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Debug|x64.Build.0 = Debug|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Debug|x86.Build.0 = Debug|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Release|x64.ActiveCfg = Release|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Release|x64.Build.0 = Release|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Release|x86.ActiveCfg = Release|Any CPU
+		{A7C2C7B2-EEDE-4E83-BDE5-917D43E8EABC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
