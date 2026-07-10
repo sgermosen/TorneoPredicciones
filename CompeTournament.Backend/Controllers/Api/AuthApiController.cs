@@ -48,6 +48,27 @@ namespace CompeTournament.Backend.Controllers.Api
             return Ok(response);
         }
 
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        [EnableRateLimiting("auth")]
+        public async Task<ActionResult<TokenResponse>> Refresh([FromBody] RefreshRequest request)
+        {
+            var response = await _tokenService.RefreshAsync(request.RefreshToken);
+            if (response == null)
+            {
+                return Unauthorized();
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] RefreshRequest request)
+        {
+            await _tokenService.RevokeAsync(request.RefreshToken);
+            return NoContent();
+        }
+
         [HttpPost("register")]
         [AllowAnonymous]
         [EnableRateLimiting("auth")]

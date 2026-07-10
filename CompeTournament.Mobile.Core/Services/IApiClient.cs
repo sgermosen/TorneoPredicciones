@@ -7,6 +7,10 @@ namespace CompeTournament.Mobile.Core.Services
     {
         Task<TokenResponse> LoginAsync(TokenRequest request);
 
+        Task<TokenResponse> RefreshAsync(string refreshToken);
+
+        Task LogoutAsync(string refreshToken);
+
         Task<UserDto> RegisterAsync(RegisterRequest request);
 
         Task<UserDto> GetMeAsync();

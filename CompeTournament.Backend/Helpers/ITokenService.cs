@@ -7,5 +7,9 @@ namespace CompeTournament.Backend.Helpers
     public interface ITokenService
     {
         Task<TokenResponse> CreateTokenAsync(ApplicationUser user, int points);
+
+        Task<TokenResponse> RefreshAsync(string refreshToken);
+
+        Task RevokeAsync(string refreshToken);
     }
 }
