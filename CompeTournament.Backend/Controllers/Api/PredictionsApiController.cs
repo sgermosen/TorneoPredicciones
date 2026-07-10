@@ -40,6 +40,7 @@ namespace CompeTournament.Backend.Controllers.Api
                 MatchId = p.MatchId,
                 LocalPoints = p.LocalPoints,
                 VisitorPoints = p.VisitorPoints,
+                IsBanker = p.IsBanker,
                 AdquiredPoints = p.AdquiredPoints
             }).ToList());
         }
@@ -77,6 +78,7 @@ namespace CompeTournament.Backend.Controllers.Api
                     MatchId = request.MatchId,
                     LocalPoints = request.LocalPoints,
                     VisitorPoints = request.VisitorPoints,
+                    IsBanker = request.IsBanker,
                     AdquiredPoints = 0
                 };
                 _context.Predictions.Add(prediction);
@@ -85,7 +87,19 @@ namespace CompeTournament.Backend.Controllers.Api
             {
                 prediction.LocalPoints = request.LocalPoints;
                 prediction.VisitorPoints = request.VisitorPoints;
+                prediction.IsBanker = request.IsBanker;
                 _context.Predictions.Update(prediction);
+            }
+
+            if (request.IsBanker)
+            {
+                var others = await _context.Predictions
+                    .Where(p => p.CreatedBy == userId && p.MatchId != request.MatchId && p.Match.GroupId == match.GroupId && p.IsBanker)
+                    .ToListAsync();
+                foreach (var other in others)
+                {
+                    other.IsBanker = false;
+                }
             }
 
             await _context.SaveChangesAsync();
@@ -96,6 +110,7 @@ namespace CompeTournament.Backend.Controllers.Api
                 MatchId = prediction.MatchId,
                 LocalPoints = prediction.LocalPoints,
                 VisitorPoints = prediction.VisitorPoints,
+                IsBanker = prediction.IsBanker,
                 AdquiredPoints = prediction.AdquiredPoints
             });
         }

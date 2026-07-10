@@ -10,6 +10,8 @@ namespace CompeTournament.Shared.Tournaments
 
         public int? VisitorPoints { get; set; }
 
+        public bool IsBanker { get; set; }
+
         public int AdquiredPoints { get; set; }
     }
 }

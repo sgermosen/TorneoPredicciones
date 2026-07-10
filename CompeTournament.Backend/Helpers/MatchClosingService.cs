@@ -99,15 +99,15 @@ namespace CompeTournament.Backend.Helpers
             var predictions = await _context.Predictions.Where(p => p.MatchId == match.Id).ToListAsync();
             foreach (var prediction in predictions)
             {
-                var points = PredictionScoring.CalculatePoints(
+                var basePoints = PredictionScoring.CalculatePoints(
                     localPoints, visitorPoints,
                     prediction.LocalPoints ?? 0, prediction.VisitorPoints ?? 0);
 
-                if (points == PredictionScoring.ExactPoints)
+                if (basePoints == PredictionScoring.ExactPoints)
                 {
                     threePoints.Add($"userId:{prediction.CreatedBy}");
                 }
-                else if (points == PredictionScoring.OutcomePoints)
+                else if (basePoints == PredictionScoring.OutcomePoints)
                 {
                     onePoint.Add($"userId:{prediction.CreatedBy}");
                 }
@@ -115,6 +115,8 @@ namespace CompeTournament.Backend.Helpers
                 {
                     noPoints.Add($"userId:{prediction.CreatedBy}");
                 }
+
+                var points = prediction.IsBanker ? basePoints * 2 : basePoints;
 
                 if (points != 0)
                 {

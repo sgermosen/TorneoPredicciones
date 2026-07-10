@@ -14,5 +14,7 @@ namespace CompeTournament.Shared.Tournaments
         [Required]
         [Range(0, 999)]
         public int VisitorPoints { get; set; }
+
+        public bool IsBanker { get; set; }
     }
 }

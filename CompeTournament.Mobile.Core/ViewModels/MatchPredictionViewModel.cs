@@ -30,6 +30,9 @@ namespace CompeTournament.Mobile.Core.ViewModels
         private int _visitorPoints;
 
         [ObservableProperty]
+        private bool _isBanker;
+
+        [ObservableProperty]
         private string? _successMessage;
 
         public bool CanPredict => Match?.IsOpen == true;
@@ -60,6 +63,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 {
                     LocalPoints = match.MyPrediction.LocalPoints ?? 0;
                     VisitorPoints = match.MyPrediction.VisitorPoints ?? 0;
+                    IsBanker = match.MyPrediction.IsBanker;
                 }
             }
             catch (Exception ex)
@@ -114,7 +118,8 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 {
                     MatchId = MatchId,
                     LocalPoints = LocalPoints,
-                    VisitorPoints = VisitorPoints
+                    VisitorPoints = VisitorPoints,
+                    IsBanker = IsBanker
                 });
 
                 SuccessMessage = "Prediccion guardada.";
