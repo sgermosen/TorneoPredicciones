@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CompeTournament.Shared\CompeTournament.Shared.csproj" />
     <ProjectReference Include="..\CompeTournament.Backend\CompeTournament.Backend.csproj" />
+    <ProjectReference Include="..\CompeTournament.Mobile.Core\CompeTournament.Mobile.Core.csproj" />
   </ItemGroup>
 
 </Project>
