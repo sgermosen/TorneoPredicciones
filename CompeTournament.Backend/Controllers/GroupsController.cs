@@ -1,9 +1,9 @@
 ﻿using CompeTournament.Backend.Data;
 using CompeTournament.Backend.Data.Entities;
+using CompeTournament.Backend.Helpers;
 using CompeTournament.Backend.Persistence.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Azure.NotificationHubs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace CompeTournament.Backend.Controllers
 {
     public class GroupsController : Controller
     {
-        private readonly NotificationHubClient _hub;
+        private readonly INotificationService _notificationService;
 
         private readonly IGroupRepository _groupRepo;
         private readonly ITournamentTypeRepository _typeRepository;
@@ -26,7 +26,7 @@ namespace CompeTournament.Backend.Controllers
 
         public GroupsController(IGroupRepository groupRepo, ITournamentTypeRepository typeRepository
             , ILeagueRepository leagueRepo, ITeamRepository teamRepository, IMatchRepository matchRepository,
-            ApplicationDbContext context)
+            ApplicationDbContext context, INotificationService notificationService)
         {
             _groupRepo = groupRepo;
             _typeRepository = typeRepository;
@@ -34,10 +34,7 @@ namespace CompeTournament.Backend.Controllers
             _teamRepository = teamRepository;
             _matchRepository = matchRepository;
             _context = context;
-
-            _hub = NotificationHubClient
-                .CreateClientFromConnectionString("Endpoint=sb://psmhub.servicebus.windows.net/;SharedAccessKeyName=DefaultFullSharedAccessSignature;SharedAccessKey=REDACTED-SECRET", "MainNotification");
-
+            _notificationService = notificationService;
         }
 
         #region Prediction
@@ -267,8 +264,7 @@ namespace CompeTournament.Backend.Controllers
                 {
                     if (tags.Count <= 20)
                     {
-                        //Todo: search the equivalent of gcm, mean while comment it
-                      //  await _hub.SendGcmNativeNotificationAsync("{ \"data\" : {\"Message\":\"" + message + "\"}}", tags);
+                        await _notificationService.NotifyAsync(tags, message);
                         tags.Clear();
                     }
                     else
@@ -280,8 +276,7 @@ namespace CompeTournament.Backend.Controllers
                         }
 
                         tags.RemoveRange(0, 20);
-                        //Todo: search the equivalent of gcm, mean while comment it
-                       // await _hub.SendGcmNativeNotificationAsync("{ \"data\" : {\"Message\":\"" + message + "\"}}", tags20);
+                        await _notificationService.NotifyAsync(tags20, message);
                     }
                 } while (tags.Count > 0);
 
