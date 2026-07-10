@@ -41,10 +41,10 @@
             //if I want to remove the AspNet prefix from the identity tables
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                var table = entityType.Relational().TableName;
-                if (table.StartsWith("AspNet"))
+                var table = entityType.GetTableName();
+                if (table != null && table.StartsWith("AspNet"))
                 {
-                    entityType.Relational().TableName = table.Substring(6);
+                    entityType.SetTableName(table.Substring(6));
                 }
             };
 
