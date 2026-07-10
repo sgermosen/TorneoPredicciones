@@ -64,6 +64,7 @@
         public DbSet<Prediction> Predictions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<MatchComment> MatchComments { get; set; }
+        public DbSet<DeviceToken> DeviceTokens { get; set; }
         #endregion
 
         public override int SaveChanges()

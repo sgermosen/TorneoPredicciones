@@ -98,6 +98,21 @@ namespace CompeTournament.Mobile.Core.Services
                 Content = JsonContent.Create(new CommentRequest { Body = body })
             });
 
+        public Task RegisterDeviceAsync(string token, string platform) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, "api/devices")
+            {
+                Content = JsonContent.Create(new DeviceRegistrationRequest { Token = token, Platform = platform })
+            });
+
+        public Task UnregisterDeviceAsync(string token) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Delete, "api/devices")
+            {
+                Content = JsonContent.Create(new DeviceRegistrationRequest { Token = token })
+            });
+
+        public Task<List<string>> GetMyDevicesAsync() =>
+            SendAsync<List<string>>(() => new HttpRequestMessage(HttpMethod.Get, "api/devices/mine"));
+
         private async Task<T> SendAsync<T>(Func<HttpRequestMessage> requestFactory)
         {
             var response = await SendWithRefreshAsync(requestFactory);
