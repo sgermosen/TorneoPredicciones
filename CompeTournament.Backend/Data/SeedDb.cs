@@ -3,6 +3,7 @@
     using CompeTournament.Backend.Data.Entities;
     using Helpers;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.Extensions.Configuration;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -11,12 +12,14 @@
     {
         private readonly ApplicationDbContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly IConfiguration _configuration;
         private readonly Random _random;
 
-        public SeedDb(ApplicationDbContext context, IUserHelper userHelper)
+        public SeedDb(ApplicationDbContext context, IUserHelper userHelper, IConfiguration configuration)
         {
             _context = context;
             _userHelper = userHelper;
+            _configuration = configuration;
             _random = new Random();
         }
 
@@ -141,10 +144,12 @@
                 //City = context.Countries.FirstOrDefault().Cities.FirstOrDefault()
             };
 
-            var result = await _userHelper.AddUserAsync(user, "123456");
+            var seedPassword = _configuration["Seed:DefaultPassword"] ?? "Torneo2026";
+            var result = await _userHelper.AddUserAsync(user, seedPassword);
             if (result != IdentityResult.Success)
             {
-                throw new InvalidOperationException("Could not create the user in seeder");
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Could not create the user in seeder: {errors}");
             }
           // _userHelper.AddClaim(user, new Claim("OwnerId", owner.Id.ToString()));
 
