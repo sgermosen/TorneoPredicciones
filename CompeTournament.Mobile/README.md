@@ -17,11 +17,21 @@ API REST de `CompeTournament.Backend` y comparte los contratos con
 
 ## Pantallas
 
-- Login y registro.
-- Torneos (listado de grupos, con filtro "solo mis grupos" y unión a un grupo).
-- Detalle de grupo: partidos, tabla de posiciones y ranking de amigos.
-- Predicción de partido (marcador con pasos +/−).
-- Perfil con puntos acumulados y cierre de sesión.
+- Login y registro (con refresh token y auto-refresh transparente).
+- Torneos (listado de grupos, con filtro "solo mis grupos" y unión a un grupo o
+  por código de invitación).
+- Detalle de grupo: partidos, tabla de posiciones y ranking de amigos que se
+  **actualizan en vivo** (SignalR), resumen de la jornada y compartir invitación.
+- Predicción de partido: marcador con pasos +/−, opción **banker** (doble
+  puntos) y **chat del partido** en tiempo real.
+- Perfil con puntos acumulados, **estadísticas** (precisión y rachas) y cierre
+  de sesión.
+
+## Servicios de la capa Core
+
+`ApiClient` (con auto-refresh), `ILiveTournamentClient` (SignalR),
+`ITokenStore`, `ISession` e `INavigationService`. Todos los ViewModels se
+prueban contra la API real en `CompeTournament.Tests`.
 
 ## Requisitos para compilar
 
