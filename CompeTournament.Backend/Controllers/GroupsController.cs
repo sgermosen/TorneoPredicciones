@@ -152,6 +152,11 @@ namespace CompeTournament.Backend.Controllers
 
             if (this.ModelState.IsValid)
             {
+                if (string.IsNullOrEmpty(model.InviteCode))
+                {
+                    model.InviteCode = InviteCodeGenerator.Generate();
+                }
+
                 await _groupRepo.CreateAsync(model);
                 return this.RedirectToAction(nameof(Index));
             }

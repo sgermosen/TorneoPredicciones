@@ -2,6 +2,7 @@ namespace CompeTournament.Backend.Controllers.Api
 {
     using CompeTournament.Backend.Data;
     using CompeTournament.Backend.Data.Entities;
+    using CompeTournament.Backend.Helpers;
     using CompeTournament.Shared.Tournaments;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
@@ -130,6 +131,72 @@ namespace CompeTournament.Backend.Controllers.Api
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("{id:int}/invite")]
+        public async Task<ActionResult<GroupInviteDto>> Invite(int id)
+        {
+            var userId = CurrentUserId;
+
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var isMember = await _context.GroupUsers
+                .AnyAsync(gu => gu.GroupId == id && gu.ApplicationUserId == userId && !gu.IsBlocked);
+            if (!isMember)
+            {
+                return Forbid();
+            }
+
+            if (string.IsNullOrEmpty(group.InviteCode))
+            {
+                group.InviteCode = InviteCodeGenerator.Generate();
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new GroupInviteDto
+            {
+                GroupId = group.Id,
+                GroupName = group.Name,
+                Code = group.InviteCode
+            });
+        }
+
+        [HttpPost("join-by-code")]
+        public async Task<ActionResult<GroupDto>> JoinByCode([FromBody] JoinByCodeRequest request)
+        {
+            var userId = CurrentUserId;
+            var code = request.Code.Trim().ToUpperInvariant();
+
+            var group = await _context.Groups
+                .Include(g => g.TournamentType)
+                .Include(g => g.GroupUsers)
+                .FirstOrDefaultAsync(g => g.InviteCode == code);
+
+            if (group == null)
+            {
+                return NotFound(new { message = "Codigo de invitacion invalido." });
+            }
+
+            if (group.GroupUsers.All(gu => gu.ApplicationUserId != userId))
+            {
+                var membership = new GroupUser
+                {
+                    GroupId = group.Id,
+                    ApplicationUserId = userId,
+                    IsAccepted = true,
+                    IsBlocked = false,
+                    Points = 0
+                };
+                _context.GroupUsers.Add(membership);
+                await _context.SaveChangesAsync();
+                group.GroupUsers.Add(membership);
+            }
+
+            return Ok(MapGroup(group, userId));
         }
 
         [HttpGet("{id:int}/leaderboard")]

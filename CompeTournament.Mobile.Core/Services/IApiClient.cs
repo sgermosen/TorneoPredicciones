@@ -23,6 +23,10 @@ namespace CompeTournament.Mobile.Core.Services
 
         Task JoinGroupAsync(int id);
 
+        Task<GroupInviteDto> GetInviteAsync(int id);
+
+        Task<GroupDto> JoinByCodeAsync(string code);
+
         Task<List<LeaderboardEntryDto>> GetLeaderboardAsync(int id);
 
         Task<MatchDto> GetMatchAsync(int id);

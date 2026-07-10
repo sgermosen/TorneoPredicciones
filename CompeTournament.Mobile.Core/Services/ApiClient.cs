@@ -55,6 +55,14 @@ namespace CompeTournament.Mobile.Core.Services
 
         public Task JoinGroupAsync(int id) => SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{id}/join"));
 
+        public Task<GroupInviteDto> GetInviteAsync(int id) => SendAsync<GroupInviteDto>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{id}/invite"));
+
+        public Task<GroupDto> JoinByCodeAsync(string code) =>
+            SendAsync<GroupDto>(() => new HttpRequestMessage(HttpMethod.Post, "api/groups/join-by-code")
+            {
+                Content = JsonContent.Create(new JoinByCodeRequest { Code = code })
+            });
+
         public Task<List<LeaderboardEntryDto>> GetLeaderboardAsync(int id) =>
             SendAsync<List<LeaderboardEntryDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{id}/leaderboard"));
 

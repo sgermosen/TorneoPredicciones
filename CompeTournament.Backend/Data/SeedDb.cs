@@ -81,6 +81,7 @@
             {
                 Name = "Copa Amistosa 2026",
                 Requirements = "Reta a tus amigos a predecir los partidos de la copa.",
+                InviteCode = "COPA2026",
                 Active = true,
                 TournamentTypeId = tournamentType.Id
             };
