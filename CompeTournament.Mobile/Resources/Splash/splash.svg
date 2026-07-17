@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="456" height="456" viewBox="0 0 456 456" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="228" cy="228" r="120" stroke="#FFB020" stroke-width="20" fill="none"/>
-  <circle cx="228" cy="228" r="66" stroke="#FFB020" stroke-width="16" fill="none"/>
-  <circle cx="228" cy="228" r="20" fill="#FFB020"/>
+  <g fill="none" stroke="#FFB020">
+    <circle cx="228" cy="228" r="116" stroke-width="26" opacity="0.32" />
+    <circle cx="228" cy="228" r="76" stroke-width="26" opacity="0.62" />
+    <circle cx="228" cy="228" r="38" stroke-width="26" />
+  </g>
+  <circle cx="228" cy="228" r="15" fill="#FFB020" />
 </svg>
