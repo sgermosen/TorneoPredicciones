@@ -1,5 +1,7 @@
 # Competitions And Tournaments — Copa Amistosa
 
+[![CI](https://github.com/sgermosen/TorneoPredicciones/actions/workflows/ci.yml/badge.svg)](https://github.com/sgermosen/TorneoPredicciones/actions/workflows/ci.yml)
+
 App de "apuestas amistosas" basada en **predicciones** de partidos de torneos y
 competencias. Un administrador configura ligas, equipos, torneos y partidos;
 desde la app los usuarios predicen el marcador de cada partido y acumulan puntos:
@@ -79,6 +81,15 @@ dotnet run
 Al iniciar se crea y siembra una base SQLite local (`competournament.db`) con
 estados, tipos, usuarios de ejemplo y un torneo demo. El documento OpenAPI queda
 disponible en `/openapi/v1.json` en desarrollo.
+
+### Con Docker (API + SQL Server)
+
+```bash
+docker compose up --build
+```
+
+Levanta el backend en `http://localhost:8080` junto con SQL Server. Verifica con
+`http://localhost:8080/health`.
 
 ### Usuarios de ejemplo
 
