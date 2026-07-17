@@ -1,0 +1,15 @@
+**/bin/
+**/obj/
+**/.vs/
+.git/
+.github/
+_Legacy/
+TorneoPredicciones/
+CompeTournament.Mobile/
+CompeTournament.Mobile.Core/
+CompeTournament.Tests/
+docs/
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/appsettings.Development.json
