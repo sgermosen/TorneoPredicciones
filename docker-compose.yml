@@ -1,0 +1,24 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "***SECRET-REMOVED***"
+    ports:
+      - "1433:1433"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      Database__Provider: SqlServer
+      ConnectionStrings__SqlServerCnn: "Server=db,1433;Database=CompeTournamentDb;User Id=sa;Password=***SECRET-REMOVED***;TrustServerCertificate=True;MultipleActiveResultSets=true"
+      Tokens__Key: "***SECRET-REMOVED***"
+      Tokens__Issuer: CompeTournament
+      Tokens__Audience: CompeTournamentUsers
+    ports:
+      - "8080:8080"
