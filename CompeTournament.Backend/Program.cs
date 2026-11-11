@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.RateLimiting;
@@ -190,6 +191,14 @@ namespace CompeTournament.Backend
             var app = builder.Build();
 
             await SeedAsync(app);
+
+            var forwardedHeaderOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+            forwardedHeaderOptions.KnownIPNetworks.Clear();
+            forwardedHeaderOptions.KnownProxies.Clear();
+            app.UseForwardedHeaders(forwardedHeaderOptions);
 
             if (app.Environment.IsDevelopment())
             {
