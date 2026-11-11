@@ -3,9 +3,9 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "***SECRET-REMOVED***"
+      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD:?Defina MSSQL_SA_PASSWORD en .env}"
     ports:
-      - "1433:1433"
+      - "127.0.0.1:1433:1433"
 
   api:
     build:
@@ -16,9 +16,10 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       Database__Provider: SqlServer
-      ConnectionStrings__SqlServerCnn: "Server=db,1433;Database=CompeTournamentDb;User Id=sa;Password=***SECRET-REMOVED***;TrustServerCertificate=True;MultipleActiveResultSets=true"
-      Tokens__Key: "***SECRET-REMOVED***"
+      ConnectionStrings__SqlServerCnn: "Server=db,1433;Database=CompeTournamentDb;User Id=sa;Password=${MSSQL_SA_PASSWORD:?Defina MSSQL_SA_PASSWORD en .env};TrustServerCertificate=True;MultipleActiveResultSets=true"
+      Tokens__Key: "${TOKENS_KEY:?Defina TOKENS_KEY en .env}"
       Tokens__Issuer: CompeTournament
       Tokens__Audience: CompeTournamentUsers
+      Seed__DefaultPassword: "${SEED_DEFAULT_PASSWORD:?Defina SEED_DEFAULT_PASSWORD en .env}"
     ports:
       - "8080:8080"

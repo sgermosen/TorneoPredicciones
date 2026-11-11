@@ -19,9 +19,9 @@ dotnet user-secrets set "Tokens:Key" "$(openssl rand -base64 48)"
 dotnet user-secrets set "Mail:Password" "<tu-app-password>"
 ```
 
-Si `Tokens:Key` no está configurada, en desarrollo se deriva una clave efímera
-solo-desarrollo y se emite una advertencia. En producción la aplicación **no
-arranca** sin una clave fuerte configurada.
+Si `Tokens:Key` no está configurada, en desarrollo se usa una clave fija solo
+para desarrollo. En producción la aplicación **no arranca** sin una clave fuerte
+propia, y rechaza las claves de ejemplo.
 
 ### Variables de entorno en producción
 
@@ -29,19 +29,12 @@ arranca** sin una clave fuerte configurada.
 ConnectionStrings__SqlServerCnn=...
 Database__Provider=SqlServer
 Tokens__Key=...
+Seed__DefaultPassword=...
 Mail__Password=...
 Cors__AllowedOrigins__0=https://tu-dominio
 ```
 
-## Credenciales previamente expuestas
-
-Versiones anteriores de este repositorio contenían secretos reales embebidos en
-el código (una clave de firma JWT y una cadena de conexión de Azure Notification
-Hub). Esos valores se consideran **comprometidos** por haber estado en un
-repositorio público y **deben rotarse/revocarse** en el proveedor
-correspondiente, aunque ya no aparezcan en el código actual.
-
 ## Reporte de vulnerabilidades
 
-Si encuentras una vulnerabilidad, por favor abre un issue privado o contacta al
-mantenedor del repositorio antes de divulgarla públicamente.
+Si encuentras una vulnerabilidad, repórtala de forma privada desde la pestaña
+«Security» del repositorio («Report a vulnerability»). No abras un issue público.

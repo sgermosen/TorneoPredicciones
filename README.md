@@ -50,9 +50,9 @@ móvil en **.NET MAUI**.
 - **Crecimiento social:** invitaciones por código/link y chat por partido.
 - **Cierre automático:** un servicio en segundo plano bloquea los partidos al
   kickoff y los cierra cuando hay resultado, mediante un proveedor de resultados
-  enchufable (seam para una API deportiva real).
-- **Resumen de jornada con IA:** endpoint que narra el estado del grupo en
-  lenguaje natural (plantilla por defecto, con seam para un proveedor LLM).
+  enchufable (preparado para conectar una API deportiva real).
+- **Resumen automático de jornada:** endpoint que narra el estado del grupo en
+  lenguaje natural a partir de una plantilla.
 - **Notificaciones push:** registro de dispositivos como base para FCM/APNs.
 - **Observabilidad:** health checks y OpenTelemetry (trazas y métricas).
 
@@ -85,20 +85,24 @@ disponible en `/openapi/v1.json` en desarrollo.
 ### Con Docker (API + SQL Server)
 
 ```bash
+cp .env.example .env
 docker compose up --build
 ```
+
+Antes de levantarlo, completa en `.env` los valores de `MSSQL_SA_PASSWORD`,
+`TOKENS_KEY` y `SEED_DEFAULT_PASSWORD`. El archivo `.env` no se versiona.
 
 Levanta el backend en `http://localhost:8080` junto con SQL Server. Verifica con
 `http://localhost:8080/health`.
 
 ### Usuarios de ejemplo
 
-Se crean con la contraseña por defecto `***SECRET-REMOVED***` (configurable con
-`Seed:DefaultPassword`):
+Se crean al iniciar con la contraseña de `Seed:DefaultPassword`, que es
+obligatoria fuera de Development:
 
-- `sgrysoft@gmail.com` — Admin, miembro del torneo demo.
-- `toreneo@gmail.com` — Admin.
-- `elis@gmail.com`, `starling@gmail.com` — Usuarios.
+- `admin@example.com` — Admin, miembro del torneo demo.
+- `organizador@example.com` — Admin.
+- `jugador1@example.com`, `jugador2@example.com` — Usuarios.
 
 ## Configuración de secretos
 
