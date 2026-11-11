@@ -1,64 +1,41 @@
 ﻿@model CompeTournament.Backend.Data.Entities.Match
 @{
-    ViewData["Title"] = "Cerrar Partido";
+    ViewData["Title"] = "Cerrar partido";
 }
 
-<h1>Cerrar el encuentro</h1>
+<h1>Cerrar partido</h1>
+<p>@Model.Local?.Name vs @Model.Visitor?.Name</p>
 
 <form asp-action="CloseMatch">
     <div class="form-group">
         <input type="hidden" asp-for="Id" />
-        <input type="hidden" asp-for="Name" />
-        <input type="hidden" asp-for="DateTime" />
-        <input type="hidden" asp-for="LocalId" />
-        <input type="hidden" asp-for="VisitorId" />
-
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <div class="col-md-2">
-                <label asp-for="LocalPoints" class="control-label"> </label>
+                <label asp-for="LocalPoints" class="control-label">@Model.Local?.Name</label>
             </div>
             <div class="col-md-2">
-                <label   class="control-label"> @Model.Local.Name</label>
-            </div>
-            <div class="col-md-2">
-                <input asp-for="LocalPoints" class="form-control" />
+                <input asp-for="LocalPoints" type="number" min="0" class="form-control" />
                 <span asp-validation-for="LocalPoints" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-2">
-                <label asp-for="VisitorPoints" class="control-label"> </label>
+                <label asp-for="VisitorPoints" class="control-label">@Model.Visitor?.Name</label>
             </div>
             <div class="col-md-2">
-                <label class="control-label"> @Model.Visitor.Name</label>
-            </div>
-            <div class="col-md-2">
-                <input asp-for="VisitorPoints" class="form-control" />
+                <input asp-for="VisitorPoints" type="number" min="0" class="form-control" />
                 <span asp-validation-for="VisitorPoints" class="text-danger"></span>
             </div>
         </div>
-
-
-
-
         <br /><br />
         <div class="row">
             <div class="col-md-2">
-
             </div>
             <div class="col-md-5">
-
-                <button type="submit" class="btn btn-primary"> Cerrar y Procesar los Cambios</button>
+                <button type="submit" class="btn btn-primary">Cerrar partido y repartir puntos</button>
+                <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.GroupId">Cancelar</a>
             </div>
-
         </div>
     </div>
-
-
-
 </form>
-
-
-
-
-

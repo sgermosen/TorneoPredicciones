@@ -94,7 +94,7 @@ namespace CompeTournament.Backend.Controllers.Api
             if (request.IsBanker)
             {
                 var others = await _context.Predictions
-                    .Where(p => p.CreatedBy == userId && p.MatchId != request.MatchId && p.Match.GroupId == match.GroupId && p.IsBanker)
+                    .Where(p => p.CreatedBy == userId && p.MatchId != request.MatchId && p.Match.GroupId == match.GroupId && p.Match.StatusId == 1 && p.IsBanker)
                     .ToListAsync();
                 foreach (var other in others)
                 {

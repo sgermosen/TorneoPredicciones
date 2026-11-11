@@ -30,8 +30,8 @@ namespace CompeTournament.Tests
 
             var token = await client.LoginAsync(new CompeTournament.Shared.Auth.TokenRequest
             {
-                Username = "sgrysoft@gmail.com",
-                Password = "***SECRET-REMOVED***"
+                Username = "admin@example.com",
+                Password = "Torneo2026"
             });
             await store.SetTokensAsync(token.Token, token.RefreshToken);
 
@@ -60,14 +60,14 @@ namespace CompeTournament.Tests
 
             var vm = new LoginViewModel(apiClient, store, session, navigation)
             {
-                Email = "sgrysoft@gmail.com",
-                Password = "***SECRET-REMOVED***"
+                Email = "admin@example.com",
+                Password = "Torneo2026"
             };
 
             await vm.LoginCommand.ExecuteAsync(null);
 
             Assert.True(session.IsAuthenticated);
-            Assert.Equal("sgrysoft@gmail.com", session.CurrentUser!.Email);
+            Assert.Equal("admin@example.com", session.CurrentUser!.Email);
             Assert.Contains(navigation.Routes, r => r.Contains(AppRoutes.Groups));
             Assert.Null(vm.ErrorMessage);
         }
@@ -83,7 +83,7 @@ namespace CompeTournament.Tests
 
             var vm = new LoginViewModel(apiClient, store, session, navigation)
             {
-                Email = "sgrysoft@gmail.com",
+                Email = "admin@example.com",
                 Password = "wrong-password"
             };
 
@@ -102,8 +102,8 @@ namespace CompeTournament.Tests
 
             var token = await apiClient.LoginAsync(new CompeTournament.Shared.Auth.TokenRequest
             {
-                Username = "sgrysoft@gmail.com",
-                Password = "***SECRET-REMOVED***"
+                Username = "admin@example.com",
+                Password = "Torneo2026"
             });
             await store.SetTokensAsync(token.Token, token.RefreshToken);
 

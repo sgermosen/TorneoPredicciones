@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CompeTournament</title>
+    <title>@ViewData["Title"] - Copa Amistosa</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -21,7 +21,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">CompeTournament</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Copa Amistosa</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -29,37 +29,34 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="Index">Groups</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="Index">Torneos</a>
                             </li>
 
                             <li class="nav-item dropdown">
 
                                 <a class="nav-link dropdown-toggle"
                                    id="navbarDropdown"
+                                   href="#"
                                    role="button" data-toggle="dropdown" aria-haspopup="true"
-                                   aria-expanded="false"
-                                   asp-area="" asp-controller="Account" asp-action="ChangeUser">
+                                   aria-expanded="false">
                                     @this.User.Identity.Name
-
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="#">Alertas </a>
-                                    <a class="dropdown-item" href="#">Mi Informacion</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Accounts" asp-action="ChangeUser">Mi información</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Accounts" asp-action="ChangePassword">Cambiar contraseña</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" asp-area=""
-                                       asp-controller="Account"
-                                       asp-action="Logout">Cerrar Sesion/Salir</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Ayuda</a>
+                                       asp-controller="Accounts"
+                                       asp-action="Logout">Cerrar sesión</a>
                                 </div>
                             </li>
                         }
@@ -68,7 +65,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area=""
                                    asp-controller="Accounts"
-                                   asp-action="Login">Login</a>
+                                   asp-action="Login">Iniciar sesión</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area=""
+                                   asp-controller="Accounts"
+                                   asp-action="Register">Crear cuenta</a>
                             </li>
                         }
                     </ul>
@@ -86,7 +88,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - CompeTournament - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - Copa Amistosa - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
         </div>
     </footer>
 

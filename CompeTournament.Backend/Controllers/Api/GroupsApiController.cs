@@ -6,6 +6,7 @@ namespace CompeTournament.Backend.Controllers.Api
     using CompeTournament.Shared.Tournaments;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -95,8 +96,8 @@ namespace CompeTournament.Backend.Controllers.Api
                 Requirements = group.Requirements,
                 Logo = group.Logo,
                 TournamentTypeName = group.TournamentType?.Name,
-                IsMember = membership != null,
-                IsAccepted = membership != null && membership.IsAccepted,
+                IsMember = membership != null && !membership.IsBlocked,
+                IsAccepted = membership != null && membership.IsAccepted && !membership.IsBlocked,
                 Matches = matches.Select(m => MapMatch(m, predictions.FirstOrDefault(p => p.MatchId == m.Id))).ToList(),
                 Standings = standings.Select(MapStanding).ToList()
             };
@@ -147,7 +148,7 @@ namespace CompeTournament.Backend.Controllers.Api
             }
 
             var isMember = await _context.GroupUsers
-                .AnyAsync(gu => gu.GroupId == id && gu.ApplicationUserId == userId && !gu.IsBlocked);
+                .AnyAsync(gu => gu.GroupId == id && gu.ApplicationUserId == userId && gu.IsAccepted && !gu.IsBlocked);
             if (!isMember)
             {
                 return Forbid();
@@ -180,10 +181,22 @@ namespace CompeTournament.Backend.Controllers.Api
 
             if (group == null)
             {
-                return NotFound(new { message = "Codigo de invitacion invalido." });
+                return NotFound(new { message = "Código de invitación inválido." });
             }
 
-            if (group.GroupUsers.All(gu => gu.ApplicationUserId != userId))
+            var existing = group.GroupUsers.FirstOrDefault(gu => gu.ApplicationUserId == userId);
+            if (existing != null && existing.IsBlocked)
+            {
+                return Forbid();
+            }
+
+            if (existing != null && !existing.IsAccepted)
+            {
+                existing.IsAccepted = true;
+                await _context.SaveChangesAsync();
+            }
+
+            if (existing == null)
             {
                 var membership = new GroupUser
                 {
@@ -252,6 +265,11 @@ namespace CompeTournament.Backend.Controllers.Api
         [HttpGet("{id:int}/leaderboard")]
         public async Task<ActionResult<List<LeaderboardEntryDto>>> Leaderboard(int id)
         {
+            if (!await _context.Groups.AnyAsync(g => g.Id == id))
+            {
+                return NotFound();
+            }
+
             var members = await _context.GroupUsers
                 .Where(gu => gu.GroupId == id && gu.IsAccepted && !gu.IsBlocked)
                 .Include(gu => gu.ApplicationUser)
@@ -280,8 +298,8 @@ namespace CompeTournament.Backend.Controllers.Api
                 Logo = group.Logo,
                 TournamentTypeName = group.TournamentType?.Name,
                 MembersCount = group.GroupUsers?.Count(gu => gu.IsAccepted && !gu.IsBlocked) ?? 0,
-                IsMember = membership != null,
-                IsAccepted = membership != null && membership.IsAccepted
+                IsMember = membership != null && !membership.IsBlocked,
+                IsAccepted = membership != null && membership.IsAccepted && !membership.IsBlocked
             };
         }
 
@@ -290,7 +308,7 @@ namespace CompeTournament.Backend.Controllers.Api
             return new MatchDto
             {
                 Id = match.Id,
-                DateTime = match.DateTime,
+                DateTime = DateTime.SpecifyKind(match.DateTime, DateTimeKind.Utc),
                 GroupId = match.GroupId,
                 LocalId = match.LocalId,
                 LocalName = match.Local?.Name,

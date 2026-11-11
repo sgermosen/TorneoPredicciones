@@ -6,7 +6,7 @@
              xmlns:dto="clr-namespace:CompeTournament.Shared.Tournaments;assembly=CompeTournament.Shared"
              x:Class="CompeTournament.Mobile.Views.MatchPredictionPage"
              x:DataType="vm:MatchPredictionViewModel"
-             Title="Prediccion">
+             Title="Predicción">
 
     <ContentPage.Resources>
         <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
@@ -16,10 +16,14 @@
         <VerticalStackLayout Padding="24" Spacing="20">
 
             <VerticalStackLayout Spacing="6">
-                <Label Style="{StaticResource Eyebrow}" Text="Tu prediccion" />
+                <Label Style="{StaticResource Eyebrow}" Text="Tu predicción" />
                 <Label Style="{StaticResource Headline}" Text="Marca el resultado" />
                 <Label Style="{StaticResource Muted}"
                        Text="Acierto exacto: 3 puntos · Solo el ganador: 1 punto." />
+                <Label Style="{StaticResource Muted}"
+                       TextColor="{StaticResource Loss}"
+                       Text="Este partido ya no admite predicciones."
+                       IsVisible="{Binding IsClosed}" />
             </VerticalStackLayout>
 
             <Border Style="{StaticResource Card}">
@@ -32,9 +36,11 @@
                         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
                             <Button Text="−" WidthRequest="46" HeightRequest="46" CornerRadius="23"
                                     BackgroundColor="{StaticResource SurfaceRaised}" TextColor="{StaticResource TextPrimary}"
+                                    IsEnabled="{Binding CanPredict}"
                                     Command="{Binding DecrementLocalCommand}" />
                             <Button Text="+" WidthRequest="46" HeightRequest="46" CornerRadius="23"
                                     BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}"
+                                    IsEnabled="{Binding CanPredict}"
                                     Command="{Binding IncrementLocalCommand}" />
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
@@ -48,9 +54,11 @@
                         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
                             <Button Text="−" WidthRequest="46" HeightRequest="46" CornerRadius="23"
                                     BackgroundColor="{StaticResource SurfaceRaised}" TextColor="{StaticResource TextPrimary}"
+                                    IsEnabled="{Binding CanPredict}"
                                     Command="{Binding DecrementVisitorCommand}" />
                             <Button Text="+" WidthRequest="46" HeightRequest="46" CornerRadius="23"
                                     BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}"
+                                    IsEnabled="{Binding CanPredict}"
                                     Command="{Binding IncrementVisitorCommand}" />
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
@@ -61,7 +69,7 @@
             <Border Style="{StaticResource Card}">
                 <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="4">
                     <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SubHeadline}" Text="Banker" VerticalOptions="Center" />
-                    <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding IsBanker}" OnColor="{StaticResource Accent}" />
+                    <Switch Grid.Row="0" Grid.Column="1" IsToggled="{Binding IsBanker}" IsEnabled="{Binding CanPredict}" OnColor="{StaticResource Accent}" />
                     <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Muted}"
                            Text="Dobla los puntos de este partido si aciertas. Solo uno por grupo." />
                 </Grid>
@@ -73,7 +81,7 @@
                    IsVisible="{Binding SuccessMessage, Converter={StaticResource NotEmpty}}" />
 
             <Button Style="{StaticResource PrimaryButton}"
-                    Text="Guardar prediccion"
+                    Text="Guardar predicción"
                     Command="{Binding SaveCommand}"
                     IsEnabled="{Binding CanPredict}" />
 
@@ -84,7 +92,7 @@
                 <VerticalStackLayout Spacing="12">
                     <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Comments}">
                         <BindableLayout.EmptyView>
-                            <Label Style="{StaticResource Muted}" Text="Se el primero en comentar." />
+                            <Label Style="{StaticResource Muted}" Text="Sé el primero en comentar." />
                         </BindableLayout.EmptyView>
                         <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="dto:CommentDto">

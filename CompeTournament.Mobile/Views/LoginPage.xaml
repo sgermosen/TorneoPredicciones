@@ -33,7 +33,7 @@
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Spacing="6">
-                        <Label Style="{StaticResource Muted}" Text="Contrasena" />
+                        <Label Style="{StaticResource Muted}" Text="Contraseña" />
                         <Entry Style="{StaticResource Field}"
                                IsPassword="True"
                                Placeholder="********"
@@ -56,8 +56,8 @@
             </Border>
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="6">
-                <Label Style="{StaticResource Muted}" Text="No tienes cuenta?" />
-                <Label Text="Registrate"
+                <Label Style="{StaticResource Muted}" Text="¿No tienes cuenta?" />
+                <Label Text="Regístrate"
                        TextColor="{StaticResource Accent}"
                        FontAttributes="Bold">
                     <Label.GestureRecognizers>

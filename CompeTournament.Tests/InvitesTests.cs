@@ -27,7 +27,7 @@ namespace CompeTournament.Tests
         [Fact]
         public async Task Member_CanReadInviteCode()
         {
-            var client = await AuthenticatedClientAsync("sgrysoft@gmail.com", "***SECRET-REMOVED***");
+            var client = await AuthenticatedClientAsync("admin@example.com", "Torneo2026");
             var invite = await client.GetInviteAsync(1);
             Assert.Equal("COPA2026", invite.Code);
         }
@@ -61,9 +61,37 @@ namespace CompeTournament.Tests
         }
 
         [Fact]
+        public async Task PendingRequest_CannotReadInvite_ButJoinByCodeAcceptsIt()
+        {
+            var client = _factory.CreateClient();
+            var store = new InMemoryTokenStore();
+            var api = new ApiClient(client, store);
+
+            await api.RegisterAsync(new RegisterRequest
+            {
+                FirstName = "Pending",
+                LastName = "Player",
+                Email = "pending@test.com",
+                PhoneNumber = "8095555555",
+                Password = "Pending2026",
+                Confirm = "Pending2026"
+            });
+            var token = await api.LoginAsync(new TokenRequest { Username = "pending@test.com", Password = "Pending2026" });
+            await store.SetTokensAsync(token.Token, token.RefreshToken);
+
+            await api.JoinGroupAsync(1);
+            await Assert.ThrowsAsync<ApiException>(() => api.GetInviteAsync(1));
+
+            var group = await api.JoinByCodeAsync("COPA2026");
+
+            Assert.True(group.IsMember);
+            Assert.True(group.IsAccepted);
+        }
+
+        [Fact]
         public async Task JoinByCode_InvalidCode_Throws()
         {
-            var api = await AuthenticatedClientAsync("elis@gmail.com", "***SECRET-REMOVED***");
+            var api = await AuthenticatedClientAsync("jugador1@example.com", "Torneo2026");
             await Assert.ThrowsAsync<ApiException>(() => api.JoinByCodeAsync("NOPE9999"));
         }
     }

@@ -21,10 +21,14 @@ namespace CompeTournament.Mobile
             builder.Services.AddSingleton<ISession, Session>();
             builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
 
-            builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
+            var apiClient = builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
             {
                 client.BaseAddress = new Uri(ApiConstants.BaseUrl);
+                client.Timeout = TimeSpan.FromSeconds(30);
             });
+#if DEBUG
+            apiClient.ConfigurePrimaryHttpMessageHandler(DevelopmentHttpsHandler.Create);
+#endif
 
             builder.Services.AddTransient<ILiveTournamentClient>(sp =>
             {
@@ -33,6 +37,10 @@ namespace CompeTournament.Mobile
                     .WithUrl($"{ApiConstants.BaseUrl}hubs/tournament", options =>
                     {
                         options.AccessTokenProvider = () => tokenStore.GetTokenAsync();
+#if DEBUG
+                        options.HttpMessageHandlerFactory = _ => DevelopmentHttpsHandler.Create();
+                        options.WebSocketConfiguration = socket => socket.RemoteCertificateValidationCallback = DevelopmentHttpsHandler.ValidateCertificate;
+#endif
                     })
                     .WithAutomaticReconnect()
                     .Build();

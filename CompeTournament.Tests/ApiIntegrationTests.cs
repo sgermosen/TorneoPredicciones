@@ -63,7 +63,7 @@ namespace CompeTournament.Tests
             var client = _factory.CreateClient();
             var login = await client.PostAsJsonAsync("/api/auth/token", new TokenRequest
             {
-                Username = "sgrysoft@gmail.com",
+                Username = "admin@example.com",
                 Password = "definitely-wrong"
             });
             Assert.Equal(HttpStatusCode.Unauthorized, login.StatusCode);
@@ -73,7 +73,7 @@ namespace CompeTournament.Tests
         public async Task Member_CanListGroups_GetDetail_AndPredict()
         {
             var client = _factory.CreateClient();
-            var token = await LoginAsync(client, "sgrysoft@gmail.com", "***SECRET-REMOVED***");
+            var token = await LoginAsync(client, "admin@example.com", "Torneo2026");
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var groups = await client.GetFromJsonAsync<List<GroupDto>>("/api/groups");
@@ -123,7 +123,7 @@ namespace CompeTournament.Tests
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var adminClient = _factory.CreateClient();
-            var adminToken = await LoginAsync(adminClient, "sgrysoft@gmail.com", "***SECRET-REMOVED***");
+            var adminToken = await LoginAsync(adminClient, "admin@example.com", "Torneo2026");
             adminClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
             var detail = await adminClient.GetFromJsonAsync<GroupDetailDto>("/api/groups/1");
             var openMatch = detail.Matches.First(m => m.IsOpen);

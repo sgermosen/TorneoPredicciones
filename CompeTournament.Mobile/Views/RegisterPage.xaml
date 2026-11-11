@@ -15,16 +15,16 @@
         <VerticalStackLayout Padding="24" Spacing="20">
 
             <Label Style="{StaticResource Eyebrow}" Text="Nuevo jugador" />
-            <Label Style="{StaticResource Headline}" Text="Unete a la copa" />
+            <Label Style="{StaticResource Headline}" Text="Únete a la copa" />
 
             <Border Style="{StaticResource Card}">
                 <VerticalStackLayout Spacing="14">
                     <Entry Style="{StaticResource Field}" Placeholder="Nombre" Text="{Binding FirstName}" />
                     <Entry Style="{StaticResource Field}" Placeholder="Apellido" Text="{Binding LastName}" />
                     <Entry Style="{StaticResource Field}" Keyboard="Email" Placeholder="Correo" Text="{Binding Email}" />
-                    <Entry Style="{StaticResource Field}" Keyboard="Telephone" Placeholder="Telefono" Text="{Binding PhoneNumber}" />
-                    <Entry Style="{StaticResource Field}" IsPassword="True" Placeholder="Contrasena" Text="{Binding Password}" />
-                    <Entry Style="{StaticResource Field}" IsPassword="True" Placeholder="Confirmar contrasena" Text="{Binding Confirm}" />
+                    <Entry Style="{StaticResource Field}" Keyboard="Telephone" Placeholder="Teléfono" Text="{Binding PhoneNumber}" />
+                    <Entry Style="{StaticResource Field}" IsPassword="True" Placeholder="Contraseña" Text="{Binding Password}" />
+                    <Entry Style="{StaticResource Field}" IsPassword="True" Placeholder="Confirmar contraseña" Text="{Binding Confirm}" />
 
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="{StaticResource Loss}"

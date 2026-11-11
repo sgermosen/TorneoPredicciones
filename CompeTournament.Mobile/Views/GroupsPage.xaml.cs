@@ -11,12 +11,25 @@ namespace CompeTournament.Mobile.Views
             InitializeComponent();
             _viewModel = viewModel;
             BindingContext = viewModel;
+            _viewModel.PropertyChanged += (_, e) =>
+            {
+                if (e.PropertyName == nameof(GroupsViewModel.SuccessMessage) && _viewModel.SuccessMessage != null)
+                {
+                    InviteCodeEntry.Unfocus();
+                }
+            };
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
             await _viewModel.LoadAsync();
+        }
+
+        protected override void OnDisappearing()
+        {
+            InviteCodeEntry.Unfocus();
+            base.OnDisappearing();
         }
     }
 }

@@ -50,11 +50,13 @@ namespace CompeTournament.Backend.Persistence.Implementations
         public async Task<Group> GetByIdWithChildrens(int key)
         {
             var entity = await Context.Groups.Where(p => p.Id == key)
+                .Include(p => p.TournamentType)
                 .Include(p => p.Leagues)
                 .Include(p => p.GroupUsers).ThenInclude(p => p.ApplicationUser)
                 .Include(p => p.Matches).ThenInclude(p => p.Local)
                 .Include(p => p.Matches).ThenInclude(p => p.Visitor)
                 .Include(p => p.Matches).ThenInclude(p => p.Predictions)
+                .Include(p => p.Matches).ThenInclude(p => p.Status)
                 .FirstOrDefaultAsync();
             return entity;
         }

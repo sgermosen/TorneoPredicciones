@@ -1,27 +1,22 @@
 ﻿@model LoginViewModel
 @{
-    ViewData["Title"] = "Inicio de Sesion"; 
+    ViewData["Title"] = "Iniciar sesión";
 }
 
 
 <div class="block-center mt-4 wd-xl">
     <!-- START card-->
     <div class="card card-flat">
-        <div class="d-flex justify-content-center ">
-            <div class="p-2">
-                <img class="img-fluid img-thumbnail rounded-circle" src="~/images/logo.png" alt="Logo Mersy" width="200" height="100" />
-            </div>
-        </div>
-       
         <div class="card-body">
-            <p class="text-center py-2">INICIA SESION PARA CONTINUAR</p>
+            <h1 class="h3 text-center">Copa Amistosa</h1>
+            <p class="text-center py-2">Inicia sesión para continuar</p>
             <form class="mb-3" id="loginForm" novalidate="novalidate" method="post">
                 <div asp-validation-summary="ModelOnly"></div>
                 <div class="form-group">
                     <div class="input-group with-focus">
                         <input class="form-control border-right-0"
                                id="exampleInputEmail1" type="email"
-                               placeholder="Digite un Email"
+                               placeholder="Correo electrónico"
                                autocomplete="off" required="required"
                                asp-for="Username" />
                         <div class="input-group-append">
@@ -36,7 +31,7 @@
                     <div class="input-group with-focus">
                         <input class="form-control border-right-0"
                                id="exampleInputPassword1"
-                               type="password" placeholder="Password"
+                               type="password" placeholder="Contraseña"
                                required="required"
                                asp-for="Password" />
                         <div class="input-group-append">
@@ -49,30 +44,27 @@
                 <div class="clearfix">
                     <div class="checkbox c-checkbox float-left mt-0">
                         <label>
-                            <input type="checkbox" value="" name="remember" asp-for="RememberMe" />
+                            <input type="checkbox" asp-for="RememberMe" />
                             <span class="fa fa-check"></span>Recordarme en este equipo
                         </label>
                     </div>
                     <div class="float-right">
                         <a class="text-muted"
-                           asp-action="RecoverPassword"
-                           href="@Url.Action("Recover", "Pages")">Olvidaste tu Contraseña?</a>
+                           asp-action="RecoverPassword">¿Olvidaste tu contraseña?</a>
                     </div>
                 </div>
-                <button class="btn btn-block btn-primary mt-3" type="submit">Acceder</button>
+                <button class="btn btn-block btn-primary mt-3" type="submit">Entrar</button>
             </form>
-             <p class="pt-3 text-center">Necesitas Registrarte?</p>
-                <a class="btn btn-block btn-secondary" href="@Url.Action("Register", "Pages")">Registrarme Ahora</a> 
+             <p class="pt-3 text-center">¿No tienes cuenta?</p>
+                <a class="btn btn-block btn-secondary" asp-action="Register">Registrarme ahora</a>
         </div>
     </div>
     <!-- END card-->
     <div class="p-3 text-center">
         <span class="mr-2">&copy;</span>
-        <span>2019 Competiciones y Torneos</span>
-        <span class="mr-2">-</span>
-        <span>By sGermosen</span>
+        <span>2026 Copa Amistosa</span>
         <br />
-        <span>Sistema de apuestas amistosas: CompeTournaments</span>
+        <span>Predicciones amistosas entre amigos</span>
     </div>
 </div>
 

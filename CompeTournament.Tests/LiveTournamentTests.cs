@@ -31,8 +31,8 @@ namespace CompeTournament.Tests
 
             var login = await apiClient.LoginAsync(new TokenRequest
             {
-                Username = "sgrysoft@gmail.com",
-                Password = "***SECRET-REMOVED***"
+                Username = "admin@example.com",
+                Password = "Torneo2026"
             });
             await store.SetTokensAsync(login.Token, login.RefreshToken);
 

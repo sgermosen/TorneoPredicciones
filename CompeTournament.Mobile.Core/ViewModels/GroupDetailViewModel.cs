@@ -12,12 +12,14 @@ namespace CompeTournament.Mobile.Core.ViewModels
         private readonly IApiClient _apiClient;
         private readonly INavigationService _navigation;
         private readonly ILiveTournamentClient? _live;
+        private readonly SynchronizationContext? _synchronizationContext;
 
         public GroupDetailViewModel(IApiClient apiClient, INavigationService navigation, ILiveTournamentClient? live = null)
         {
             _apiClient = apiClient;
             _navigation = navigation;
             _live = live;
+            _synchronizationContext = SynchronizationContext.Current;
         }
 
         [ObservableProperty]
@@ -26,6 +28,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(Title))]
         [NotifyPropertyChangedFor(nameof(CanJoin))]
+        [NotifyPropertyChangedFor(nameof(IsPending))]
         private GroupDetailDto? _group;
 
         [ObservableProperty]
@@ -40,6 +43,8 @@ namespace CompeTournament.Mobile.Core.ViewModels
         public string Title => Group?.Name ?? "Grupo";
 
         public bool CanJoin => Group != null && !Group.IsMember;
+
+        public bool IsPending => Group != null && Group.IsMember && !Group.IsAccepted;
 
         public ObservableCollection<MatchDto> Matches { get; } = new();
 
@@ -129,15 +134,13 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 return;
             }
 
-            Replace(Standings, payload.Standings);
-            Replace(Leaderboard, payload.Leaderboard);
-
-            var match = Matches.FirstOrDefault(m => m.Id == payload.MatchId);
-            if (match != null)
+            if (_synchronizationContext != null)
             {
-                match.LocalPoints = payload.LocalPoints;
-                match.VisitorPoints = payload.VisitorPoints;
-                match.IsOpen = false;
+                _synchronizationContext.Post(_ => _ = LoadAsync(), null);
+            }
+            else
+            {
+                _ = LoadAsync();
             }
         }
 

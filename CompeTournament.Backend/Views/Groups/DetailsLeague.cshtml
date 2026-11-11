@@ -1,66 +1,50 @@
 ﻿@model CompeTournament.Backend.Data.Entities.League
 @{
-    ViewData["Title"] = "Equipos de la Liga";
+    ViewData["Title"] = Model.Name;
+    var isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Info y Detalles de la Liga</h1>
-
 <p>
-    <a class="btn btn-success" asp-action="Details" asp-route-id="@Model.GroupId">
-        <span class="fa fa-plus"></span>
-        Regresar al Grupo
-    </a>
-    <a class="btn btn-primary" asp-action="CreateTeam" asp-route-id="@Model.Id">
-        <span class="fa fa-plus"></span>
-        Registrar Nuevo Equipo
-    </a>
+    <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.GroupId">Volver al torneo</a>
+    @if (isAdmin)
+    {
+        <a class="btn btn-primary" asp-action="CreateTeam" asp-route-id="@Model.Id">Agregar equipo</a>
+    }
 </p>
+
+<h1>@Model.Name</h1>
+
 @if (Model.Teams.Count() == 0)
 {
-    <div>
-        No tienes Equipos, Participantes u Opciones registradas para esta Liga, prueba agregando algunas
-    </div>
+    <div>Esta liga todavía no tiene equipos.</div>
 }
 else
 {
-    <table>
+    <table class="table">
         <thead>
             <tr>
-                <th>
-                    Nombre
-                </th>
-
-                <th>
-
-                </th>
+                <th>Equipo</th>
+                <th>Siglas</th>
+                <th>Jugados</th>
+                <th>Ganados</th>
+                <th>Empatados</th>
+                <th>Perdidos</th>
+                <th>Puntos</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Teams)
+            @foreach (var item in Model.Teams.OrderByDescending(t => t.CumulativePoints ?? 0).ThenBy(t => t.Name))
             {
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-
-                    <td>
-                        <a class="btn btn-info" asp-action="DetailsTeam" asp-route-id="@item.Id">
-                            <span class="fa fa-plus"></span>
-                            Ver Detalles
-                        </a>
-                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">
-                            <span class="fa fa-plus"></span>
-                            Modificar
-                        </a>
-                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">
-                            <span class="fa fa-plus"></span>
-                            Eliminar
-                        </a>
-                    </td>
+                    <td>@item.Name</td>
+                    <td>@item.Initials</td>
+                    <td>@(item.MatchesPlayed ?? 0)</td>
+                    <td>@(item.MatchesWon ?? 0)</td>
+                    <td>@(item.MatchesTied ?? 0)</td>
+                    <td>@(item.MatchesLost ?? 0)</td>
+                    <td>@(item.CumulativePoints ?? 0)</td>
                 </tr>
-
             }
         </tbody>
     </table>
 }
-

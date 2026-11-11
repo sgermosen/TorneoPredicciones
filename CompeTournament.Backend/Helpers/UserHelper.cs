@@ -77,7 +77,7 @@
                 model.Username,
                 model.Password,
                 model.RememberMe,
-                false);
+                true);
         }
 
         public async Task LogoutAsync()
@@ -95,7 +95,7 @@
             return await _signInManager.CheckPasswordSignInAsync(
                 user,
                 password,
-                false);
+                true);
         }
 
         public async Task<IdentityResult> ConfirmEmailAsync(ApplicationUser user, string token)

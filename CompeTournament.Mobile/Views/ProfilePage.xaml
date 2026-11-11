@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
              x:Class="CompeTournament.Mobile.Views.ProfilePage"
              x:DataType="vm:ProfileViewModel"
+             Shell.NavBarIsVisible="False"
              Title="Perfil">
 
     <ScrollView>
@@ -25,7 +26,7 @@
                         <Label Style="{StaticResource Body}" Text="{Binding CurrentUser.Email}" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Spacing="4">
-                        <Label Style="{StaticResource Muted}" Text="Telefono" />
+                        <Label Style="{StaticResource Muted}" Text="Teléfono" />
                         <Label Style="{StaticResource Body}" Text="{Binding CurrentUser.PhoneNumber}" />
                     </VerticalStackLayout>
                 </VerticalStackLayout>
@@ -33,7 +34,7 @@
 
             <Border Style="{StaticResource Card}" IsVisible="{Binding Insights, Converter={StaticResource NotNull}}">
                 <VerticalStackLayout Spacing="12">
-                    <Label Style="{StaticResource Eyebrow}" Text="Tus estadisticas" />
+                    <Label Style="{StaticResource Eyebrow}" Text="Tus estadísticas" />
                     <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" RowSpacing="4">
                         <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SubHeadline}"
                                TextColor="{StaticResource Accent}" HorizontalTextAlignment="Center"
@@ -44,7 +45,7 @@
                         <Label Grid.Row="0" Grid.Column="2" Style="{StaticResource SubHeadline}"
                                TextColor="{StaticResource Accent}" HorizontalTextAlignment="Center"
                                Text="{Binding Insights.BestStreak}" />
-                        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" HorizontalTextAlignment="Center" Text="Precision" />
+                        <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" HorizontalTextAlignment="Center" Text="Precisión" />
                         <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Muted}" HorizontalTextAlignment="Center" Text="Racha" />
                         <Label Grid.Row="1" Grid.Column="2" Style="{StaticResource Muted}" HorizontalTextAlignment="Center" Text="Mejor racha" />
                     </Grid>
@@ -60,7 +61,7 @@
                     Command="{Binding RefreshCommand}" />
 
             <Button Style="{StaticResource PrimaryButton}"
-                    Text="Cerrar sesion"
+                    Text="Cerrar sesión"
                     BackgroundColor="{StaticResource Loss}"
                     TextColor="{StaticResource White}"
                     Command="{Binding LogoutCommand}" />

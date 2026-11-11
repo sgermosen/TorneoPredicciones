@@ -4,6 +4,7 @@
     using Helpers;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Hosting;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -13,13 +14,15 @@
         private readonly ApplicationDbContext _context;
         private readonly IUserHelper _userHelper;
         private readonly IConfiguration _configuration;
+        private readonly IHostEnvironment _environment;
         private readonly Random _random;
 
-        public SeedDb(ApplicationDbContext context, IUserHelper userHelper, IConfiguration configuration)
+        public SeedDb(ApplicationDbContext context, IUserHelper userHelper, IConfiguration configuration, IHostEnvironment environment)
         {
             _context = context;
             _userHelper = userHelper;
             _configuration = configuration;
+            _environment = environment;
             _random = new Random();
         }
 
@@ -29,7 +32,7 @@
 
             if (!_context.Statuses.Any())
             {
-                AddStatus("Pendiente de Iniciar");
+                AddStatus("Pendiente de iniciar");
                 AddStatus("Cerrado");
                 AddStatus("Terminado");
                 AddStatus("Cancelado");
@@ -38,9 +41,9 @@
 
             if (!_context.TournamentTypes.Any())
             {
-                AddTounamentType("Point Match (ej:Soccer, BaseBall, BasketBall)");
-                AddTounamentType("Only One Winner (ej:Box, Parchis, Votation)");
-                AddTounamentType("Position Match (ej:Bike, Swimming, Lotery)");
+                AddTounamentType("Por marcador (fútbol, béisbol, baloncesto)");
+                AddTounamentType("Un solo ganador (boxeo, parchís, votaciones)");
+                AddTounamentType("Por posiciones (ciclismo, natación, lotería)");
                 await _context.SaveChangesAsync();
             }
 
@@ -58,10 +61,10 @@
             }
 
             await CheckRolesAsync();
-            await CheckUser("elis@gmail.com", "Elis", "Pascual", "User");
-            await CheckUser("starling@gmail.com", "Starling", "Germosen", "User");
-            await CheckUser("toreneo@gmail.com", "Mersy", "RD", "Admin");
-            var admin = await CheckUser("sgrysoft@gmail.com", "Starling", "Germosen", "Admin");
+            await CheckUser("jugador1@example.com", "Ana", "Pérez", "User");
+            await CheckUser("jugador2@example.com", "Luis", "Gómez", "User");
+            await CheckUser("organizador@example.com", "Carla", "Díaz", "Admin");
+            var admin = await CheckUser("admin@example.com", "Administrador", "Copa Amistosa", "Admin");
 
             await _context.SaveChangesAsync();
 
@@ -99,7 +102,7 @@
 
             var tigres = AddTeam("Tigres", "TIG", league.Id);
             var leones = AddTeam("Leones", "LEO", league.Id);
-            var aguilas = AddTeam("Aguilas", "AGU", league.Id);
+            var aguilas = AddTeam("Águilas", "AGU", league.Id);
             var toros = AddTeam("Toros", "TOR", league.Id);
             await _context.SaveChangesAsync();
 
@@ -224,13 +227,23 @@
                 Lastname = lastName,
                 Email = userName,
                 UserName = userName,
-                PhoneNumber = "849 207 7714",
+                PhoneNumber = "809 555 0100",
                 UserType= _context.UserTypes.FirstOrDefault() 
                 //CityId = context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                 //City = context.Countries.FirstOrDefault().Cities.FirstOrDefault()
             };
 
-            var seedPassword = _configuration["Seed:DefaultPassword"] ?? "***SECRET-REMOVED***";
+            var seedPassword = _configuration["Seed:DefaultPassword"];
+            if (string.IsNullOrWhiteSpace(seedPassword))
+            {
+                if (!_environment.IsDevelopment())
+                {
+                    throw new InvalidOperationException(
+                        "Seed:DefaultPassword no esta configurada. Defina la clave de los usuarios de demo via variables de entorno antes de ejecutar fuera de Development.");
+                }
+
+                seedPassword = "Torneo2026";
+            }
             var result = await _userHelper.AddUserAsync(user, seedPassword);
             if (result != IdentityResult.Success)
             {

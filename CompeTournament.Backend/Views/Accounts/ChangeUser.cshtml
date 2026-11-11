@@ -1,9 +1,9 @@
 ﻿@model ChangeUserViewModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Mi información";
 }
 
-<h2>Update User</h2>
+<h2>Mi información</h2>
 
 <div class="row">
     <div class="col-md-4 offset-md-4">
@@ -11,13 +11,13 @@
             <div asp-validation-summary="ModelOnly"></div>
 
             <div class="form-group">
-                <label asp-for="FirstName">First Name</label>
+                <label asp-for="FirstName">Nombres</label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-warning"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="LastName">Last Name</label>
+                <label asp-for="LastName">Apellidos</label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-warning"></span>
             </div>
@@ -37,14 +37,14 @@
            
 
             <div class="form-group">
-                <label asp-for="PhoneNumber">Phone Number</label>
+                <label asp-for="PhoneNumber">Teléfono</label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-warning"></span>
             </div>
 
             <div class="form-group">
-                <input type="submit" value="Update" class="btn btn-primary" />
-                <a asp-action="ChangePassword" class="btn btn-success">Change Password</a>
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+                <a asp-action="ChangePassword" class="btn btn-outline-secondary">Cambiar contraseña</a>
             </div>
 
             <div class="text-success">@ViewBag.UserMessage</div>

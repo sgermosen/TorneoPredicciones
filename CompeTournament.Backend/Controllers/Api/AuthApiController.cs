@@ -63,6 +63,7 @@ namespace CompeTournament.Backend.Controllers.Api
         }
 
         [HttpPost("logout")]
+        [AllowAnonymous]
         public async Task<IActionResult> Logout([FromBody] RefreshRequest request)
         {
             await _tokenService.RevokeAsync(request.RefreshToken);
@@ -77,7 +78,7 @@ namespace CompeTournament.Backend.Controllers.Api
             var existing = await _userHelper.GetUserByEmailAsync(request.Email);
             if (existing != null)
             {
-                return Conflict(new { message = "El usuario ya esta registrado." });
+                return Conflict(new { message = "El usuario ya está registrado." });
             }
 
             var localType = await _context.UserTypes.FirstOrDefaultAsync(ut => ut.Name == "Local")

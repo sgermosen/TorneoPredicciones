@@ -19,7 +19,7 @@ namespace CompeTournament.Tests
         {
             var store = new InMemoryTokenStore();
             var api = new ApiClient(_factory.CreateClient(), store);
-            var token = await api.LoginAsync(new TokenRequest { Username = "elis@gmail.com", Password = "***SECRET-REMOVED***" });
+            var token = await api.LoginAsync(new TokenRequest { Username = "jugador1@example.com", Password = "Torneo2026" });
             await store.SetTokensAsync(token.Token, token.RefreshToken);
 
             await api.RegisterDeviceAsync("device-token-abc", "android");

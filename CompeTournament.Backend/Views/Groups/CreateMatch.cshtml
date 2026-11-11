@@ -1,9 +1,9 @@
 ﻿@model CompeTournament.Backend.Data.Entities.Match
 @{
-    ViewData["Title"] = "Crear Partido";
+    ViewData["Title"] = "Agregar partido";
 }
 
-<h1>Registro de Nuevo Encuentro para tu Competencia o Torneo</h1>
+<h1>Agregar partido</h1>
 
 <form asp-action="CreateMatch">
     <div class="form-group">
@@ -11,62 +11,49 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <div class="col-md-2">
-                <label asp-for="Name" class="control-label"> </label>
-            </div>
-            <div class="col-md-2">
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                <label asp-for="DateTime" class="control-label"> </label>
+                <label asp-for="Name" class="control-label">Nombre</label>
             </div>
             <div class="col-md-4">
-
-                <input asp-for="DateTime" class="form-control"/>
-                <span asp-validation-for="DateTime" class="text-danger"></span>
+                <input asp-for="Name" class="form-control" placeholder="Ej.: Jornada 1" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-
         </div>
         <div class="row">
             <div class="col-md-2">
-                <label asp-for="Local" class="control-label"> </label>
+                <label asp-for="DateTime" class="control-label">Fecha y hora</label>
+            </div>
+            <div class="col-md-4">
+                <input asp-for="DateTime" type="datetime-local" class="form-control" />
+                <small class="form-text text-muted">Hora de Santo Domingo.</small>
+                <span asp-validation-for="DateTime" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="LocalId" class="control-label">Local</label>
             </div>
             <div class="col-md-4">
                 <select asp-for="LocalId" class="form-control" asp-items="ViewBag.LocalId"></select>
-                <span asp-validation-for="Local" class="text-danger"></span>
+                <span asp-validation-for="LocalId" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-2">
-                <label asp-for="Visitor" class="control-label"> </label>
+                <label asp-for="VisitorId" class="control-label">Visitante</label>
             </div>
             <div class="col-md-4">
                 <select asp-for="VisitorId" class="form-control" asp-items="ViewBag.VisitorId"></select>
-                <span asp-validation-for="Visitor" class="text-danger"></span>
+                <span asp-validation-for="VisitorId" class="text-danger"></span>
             </div>
         </div>
-
         <br /><br />
         <div class="row">
             <div class="col-md-2">
-
             </div>
             <div class="col-md-5">
-
-                <button type="submit" class="btn btn-primary"> Guardar y Procesar los Cambios</button>
+                <button type="submit" class="btn btn-primary">Agregar partido</button>
+                <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.GroupId">Cancelar</a>
             </div>
-
         </div>
     </div>
-
-
-
 </form>
-
-
-
-
-

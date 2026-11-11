@@ -1,8 +1,17 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Inicio";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Copa Amistosa</h1>
+    <p class="lead">Predice los resultados, compite con tus amigos y sube en el ranking.</p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a class="btn btn-primary btn-lg" asp-controller="Groups" asp-action="Index">Ver torneos</a>
+    }
+    else
+    {
+        <a class="btn btn-primary btn-lg" asp-controller="Accounts" asp-action="Login">Iniciar sesión</a>
+        <a class="btn btn-outline-primary btn-lg" asp-controller="Accounts" asp-action="Register">Crear cuenta</a>
+    }
 </div>

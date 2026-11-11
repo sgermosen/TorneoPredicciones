@@ -13,6 +13,7 @@
 
             <toolkit:InvertedBoolConverter x:Key="InvertBool" />
             <converters:ObjectIsNotNullConverter x:Key="NotNull" />
+            <converters:UtcToLocalTimeConverter x:Key="ToLocalTime" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

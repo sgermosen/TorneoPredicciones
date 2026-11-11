@@ -18,7 +18,12 @@ namespace CompeTournament.Mobile.Core.ViewModels
 
         protected void ShowError(string message) => ErrorMessage = message;
 
-        protected string DescribeError(Exception exception) =>
-            exception is ApiException api ? api.Message : "Ocurrio un error inesperado.";
+        protected string DescribeError(Exception exception) => exception switch
+        {
+            ApiException api => api.Message,
+            HttpRequestException => "No se pudo conectar con el servidor. Revisa tu conexión.",
+            TaskCanceledException => "El servidor no respondió a tiempo. Intenta de nuevo.",
+            _ => "Ocurrió un error inesperado."
+        };
     }
 }

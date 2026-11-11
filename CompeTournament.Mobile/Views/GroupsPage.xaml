@@ -5,6 +5,7 @@
              xmlns:dto="clr-namespace:CompeTournament.Shared.Tournaments;assembly=CompeTournament.Shared"
              x:Class="CompeTournament.Mobile.Views.GroupsPage"
              x:DataType="vm:GroupsViewModel"
+             Shell.NavBarIsVisible="False"
              Title="Torneos">
 
     <Grid RowDefinitions="Auto,*" Padding="0">
@@ -16,17 +17,35 @@
                 <Switch IsToggled="{Binding ShowOnlyMine}" OnColor="{StaticResource Accent}" />
                 <Label Style="{StaticResource Body}" Text="Solo mis grupos" VerticalOptions="Center" />
             </HorizontalStackLayout>
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                <Entry x:Name="InviteCodeEntry"
+                       Grid.Column="0"
+                       Style="{StaticResource Field}"
+                       Placeholder="Código de invitación"
+                       ReturnCommand="{Binding JoinByCodeCommand}"
+                       Text="{Binding InviteCode}" />
+                <Button Grid.Column="1"
+                        Text="Unirme con código"
+                        HeightRequest="38"
+                        Padding="16,0"
+                        FontSize="13"
+                        BackgroundColor="{StaticResource Accent}"
+                        TextColor="{StaticResource Ink}"
+                        CornerRadius="12"
+                        Command="{Binding JoinByCodeCommand}" />
+            </Grid>
             <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13" />
+            <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource Win}" FontSize="13" />
         </VerticalStackLayout>
 
-        <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsBusy}">
+        <RefreshView Grid.Row="1" Command="{Binding LoadCommand}" IsRefreshing="{Binding IsRefreshing}">
             <CollectionView ItemsSource="{Binding Groups}"
                             SelectionMode="None">
                 <CollectionView.EmptyView>
                     <Label Style="{StaticResource Muted}"
                            Padding="24"
                            HorizontalTextAlignment="Center"
-                           Text="No hay torneos para mostrar todavia." />
+                           Text="No hay torneos para mostrar todavía." />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="dto:GroupDto">
@@ -40,14 +59,21 @@
                                 <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SubHeadline}" Text="{Binding Name}" />
                                 <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" Text="{Binding TournamentTypeName}" />
                                 <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource Muted}"
-                                       Text="{Binding MembersCount, StringFormat='{0} participantes'}" />
+                                       Text="{Binding MembersCount, StringFormat='Participantes: {0}'}" />
 
                                 <Label Grid.Row="0" Grid.Column="1"
                                        Text="Miembro"
                                        IsVisible="{Binding IsMember}"
                                        TextColor="{StaticResource Win}"
                                        FontSize="12"
-                                       FontAttributes="Bold" />
+                                       FontAttributes="Bold">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsAccepted}" Value="False">
+                                            <Setter Property="Text" Value="Pendiente" />
+                                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LightTextMuted}, Dark={StaticResource TextMuted}}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
                                 <Button Grid.Row="2" Grid.Column="1"
                                         Text="Unirme"
                                         IsVisible="{Binding IsMember, Converter={StaticResource InvertBool}}"

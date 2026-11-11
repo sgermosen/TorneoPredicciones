@@ -4,21 +4,24 @@
 
     public class RegisterNewUserViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Escribe tu nombre.")]
+        [MaxLength(50, ErrorMessage = "El nombre no puede tener más de {1} caracteres.")]
         [Display(Name = "Nombre")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Escribe tu apellido.")]
+        [MaxLength(50, ErrorMessage = "El apellido no puede tener más de {1} caracteres.")]
         [Display(Name = "Apellido")]
         public string LastName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Escribe tu correo.")]
+        [EmailAddress(ErrorMessage = "Escribe un correo válido.")]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email")]
+        [Display(Name = "Correo")]
         public string Username { get; set; }
 
-        [MaxLength(20, ErrorMessage = "The field {0} only can contain {1} characters length.")]
-        [Display(Name = "Telefono")]
+        [MaxLength(20, ErrorMessage = "El teléfono no puede tener más de {1} caracteres.")]
+        [Display(Name = "Teléfono")]
         public string PhoneNumber { get; set; }
 
         //[Display(Name = "Ciudad")]
@@ -33,12 +36,12 @@
 
         //public IEnumerable<SelectListItem> Countries { get; set; }
 
-        [Required]
-        [MinLength(6)]
+        [Required(ErrorMessage = "Escribe una contraseña.")]
+        [MinLength(8, ErrorMessage = "La contraseña debe tener al menos {1} caracteres.")]
         public string Password { get; set; }
 
-        [Required]
-        [Compare("Password")]
+        [Required(ErrorMessage = "Confirma la contraseña.")]
+        [Compare("Password", ErrorMessage = "Las contraseñas no coinciden.")]
         public string Confirm { get; set; }
     }
 }

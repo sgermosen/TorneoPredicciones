@@ -7,6 +7,7 @@ namespace CompeTournament.Mobile
         public App(AppShell shell)
         {
             InitializeComponent();
+            UserAppTheme = AppTheme.Dark;
             _shell = shell;
         }
 

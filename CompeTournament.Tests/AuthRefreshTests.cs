@@ -22,8 +22,8 @@ namespace CompeTournament.Tests
 
             var login = await client.LoginAsync(new TokenRequest
             {
-                Username = "sgrysoft@gmail.com",
-                Password = "***SECRET-REMOVED***"
+                Username = "admin@example.com",
+                Password = "Torneo2026"
             });
             Assert.False(string.IsNullOrWhiteSpace(login.RefreshToken));
 
@@ -43,8 +43,8 @@ namespace CompeTournament.Tests
 
             var login = await client.LoginAsync(new TokenRequest
             {
-                Username = "sgrysoft@gmail.com",
-                Password = "***SECRET-REMOVED***"
+                Username = "admin@example.com",
+                Password = "Torneo2026"
             });
 
             await store.SetTokensAsync("invalid.access.token", login.RefreshToken);

@@ -5,6 +5,7 @@ using CompeTournament.Mobile.Core.Services;
 using CompeTournament.Shared.Auth;
 using CompeTournament.Shared.Tournaments;
 using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Xunit;
 
@@ -31,10 +32,10 @@ namespace CompeTournament.Tests
         [Fact]
         public async Task Member_CanPostAndReadComments()
         {
-            var (api, _) = await AuthAsync("sgrysoft@gmail.com", "***SECRET-REMOVED***");
+            var (api, _) = await AuthAsync("admin@example.com", "Torneo2026");
 
             var posted = await api.PostCommentAsync(1, "Los Tigres ganan seguro!");
-            Assert.Equal("Starling Germosen", posted.AuthorName);
+            Assert.Equal("Administrador Copa Amistosa", posted.AuthorName);
 
             var comments = await api.GetCommentsAsync(1);
             Assert.Contains(comments, c => c.Body == "Los Tigres ganan seguro!");
@@ -63,9 +64,42 @@ namespace CompeTournament.Tests
         }
 
         [Fact]
+        public async Task NonMember_CannotReadCommentsNorSubscribe()
+        {
+            var client = _factory.CreateClient();
+            var store = new InMemoryTokenStore();
+            var api = new ApiClient(client, store);
+
+            await api.RegisterAsync(new RegisterRequest
+            {
+                FirstName = "Curious",
+                LastName = "User",
+                Email = "curious@test.com",
+                PhoneNumber = "8094444444",
+                Password = "Curious2026",
+                Confirm = "Curious2026"
+            });
+            var token = await api.LoginAsync(new TokenRequest { Username = "curious@test.com", Password = "Curious2026" });
+            await store.SetTokensAsync(token.Token, token.RefreshToken);
+
+            await Assert.ThrowsAsync<ApiException>(() => api.GetCommentsAsync(1));
+
+            var connection = new HubConnectionBuilder()
+                .WithUrl(new Uri(_factory.Server.BaseAddress, $"hubs/tournament?access_token={token.Token}"), options =>
+                {
+                    options.HttpMessageHandlerFactory = _ => _factory.Server.CreateHandler();
+                    options.Transports = HttpTransportType.LongPolling;
+                })
+                .Build();
+
+            await using var live = new LiveTournamentClient(connection);
+            await Assert.ThrowsAsync<HubException>(() => live.JoinGroupAsync(1));
+        }
+
+        [Fact]
         public async Task PostingComment_BroadcastsToGroupSubscribers()
         {
-            var (api, token) = await AuthAsync("sgrysoft@gmail.com", "***SECRET-REMOVED***");
+            var (api, token) = await AuthAsync("admin@example.com", "Torneo2026");
 
             var connection = new HubConnectionBuilder()
                 .WithUrl(new Uri(_factory.Server.BaseAddress, $"hubs/tournament?access_token={token.Token}"), options =>

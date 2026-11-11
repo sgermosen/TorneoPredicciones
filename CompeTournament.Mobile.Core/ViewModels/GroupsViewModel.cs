@@ -23,6 +23,15 @@ namespace CompeTournament.Mobile.Core.ViewModels
         [NotifyPropertyChangedFor(nameof(Title))]
         private bool _showOnlyMine;
 
+        [ObservableProperty]
+        private bool _isRefreshing;
+
+        [ObservableProperty]
+        private string _inviteCode = string.Empty;
+
+        [ObservableProperty]
+        private string? _successMessage;
+
         public string Title => ShowOnlyMine ? "Mis grupos" : "Torneos";
 
         partial void OnShowOnlyMineChanged(bool value) => _ = LoadAsync();
@@ -57,7 +66,46 @@ namespace CompeTournament.Mobile.Core.ViewModels
             finally
             {
                 IsBusy = false;
+                IsRefreshing = false;
             }
+        }
+
+        [RelayCommand]
+        private async Task JoinByCodeAsync()
+        {
+            if (IsBusy)
+            {
+                return;
+            }
+
+            ClearError();
+            SuccessMessage = null;
+
+            if (string.IsNullOrWhiteSpace(InviteCode))
+            {
+                ShowError("Escribe el código de invitación.");
+                return;
+            }
+
+            GroupDto group;
+            try
+            {
+                IsBusy = true;
+                group = await _apiClient.JoinByCodeAsync(InviteCode.Trim());
+            }
+            catch (Exception ex)
+            {
+                ShowError(DescribeError(ex));
+                return;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
+            InviteCode = string.Empty;
+            await LoadAsync();
+            SuccessMessage = $"Te uniste a {group.Name}.";
         }
 
         [RelayCommand]

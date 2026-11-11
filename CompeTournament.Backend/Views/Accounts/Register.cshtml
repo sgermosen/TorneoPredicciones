@@ -23,7 +23,7 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Username">Email</label>
+                <label asp-for="Username">Correo</label>
                 <input asp-for="Username" class="form-control" />
                 <span asp-validation-for="Username" class="text-warning"></span>
             </div>
@@ -42,7 +42,7 @@
  
 
             <div class="form-group">
-                <label asp-for="PhoneNumber">Telefono</label>
+                <label asp-for="PhoneNumber">Teléfono</label>
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-warning"></span>
             </div>
@@ -54,14 +54,14 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="Confirm">Confirmacion de Contraseña</label>
+                <label asp-for="Confirm">Confirma la contraseña</label>
                 <input asp-for="Confirm" type="password" class="form-control" />
                 <span asp-validation-for="Confirm" class="text-warning"></span>
             </div>
 
             <div class="form-group">
                 <input type="submit" value="Registrarme" class="btn btn-primary" />
-                <a asp-action="Login" class="btn btn-success">Iniciar Session</a>
+                <a asp-action="Login" class="btn btn-outline-secondary">Ya tengo cuenta</a>
             </div>
         </form>
     </div>

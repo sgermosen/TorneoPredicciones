@@ -6,6 +6,7 @@ namespace CompeTournament.Backend.Controllers.Api
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -25,10 +26,15 @@ namespace CompeTournament.Backend.Controllers.Api
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Close(int id, [FromBody] CloseMatchRequest request)
         {
+            if (!await _context.Matches.AnyAsync(m => m.Id == id))
+            {
+                return NotFound(new { message = "El partido no existe." });
+            }
+
             var closed = await _matchClosingService.CloseMatchAsync(id, request.LocalPoints, request.VisitorPoints);
             if (!closed)
             {
-                return NotFound(new { message = "El partido no existe o ya esta cerrado." });
+                return Conflict(new { message = "El partido ya está cerrado." });
             }
 
             return NoContent();
@@ -60,7 +66,7 @@ namespace CompeTournament.Backend.Controllers.Api
             return Ok(new MatchDto
             {
                 Id = match.Id,
-                DateTime = match.DateTime,
+                DateTime = DateTime.SpecifyKind(match.DateTime, DateTimeKind.Utc),
                 GroupId = match.GroupId,
                 LocalId = match.LocalId,
                 LocalName = match.Local?.Name,

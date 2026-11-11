@@ -23,6 +23,10 @@ namespace CompeTournament.Mobile.Views
             {
                 await _viewModel.InitializeAsync(GroupId);
             }
+            else
+            {
+                await _viewModel.LoadAsync();
+            }
         }
 
         private async void OnShareInviteClicked(object sender, EventArgs e)
@@ -32,8 +36,8 @@ namespace CompeTournament.Mobile.Views
             {
                 await Share.Default.RequestAsync(new ShareTextRequest
                 {
-                    Title = "Unete a mi grupo",
-                    Text = $"Unete a mi grupo en Copa Amistosa con el codigo {code}"
+                    Title = "Únete a mi grupo",
+                    Text = $"Únete a mi grupo en Copa Amistosa con el código {code}"
                 });
             }
         }

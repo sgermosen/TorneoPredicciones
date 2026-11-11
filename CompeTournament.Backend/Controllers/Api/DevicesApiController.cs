@@ -64,8 +64,9 @@ namespace CompeTournament.Backend.Controllers.Api
         [HttpDelete]
         public async Task<IActionResult> Unregister([FromBody] DeviceRegistrationRequest request)
         {
+            var userId = CurrentUserId;
             var tokens = await _context.DeviceTokens
-                .Where(d => d.Token == request.Token)
+                .Where(d => d.Token == request.Token && d.ApplicationUserId == userId)
                 .ToListAsync();
 
             if (tokens.Count > 0)

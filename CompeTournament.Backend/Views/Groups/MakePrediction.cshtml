@@ -1,9 +1,17 @@
 ﻿@model CompeTournament.Backend.Data.Entities.Prediction
+@using CompeTournament.Backend.Helpers
+@inject TimeZoneInfo TournamentZone
 @{
-    ViewData["Title"] = "Crear Prediccion";
+    ViewData["Title"] = "Tu predicción";
+    var match = ViewData["Match"] as CompeTournament.Backend.Data.Entities.Match;
 }
 
-<h1>Registro de Nueva Prediccion</h1>
+<h1>Tu predicción</h1>
+@if (match != null)
+{
+    <p>@match.Local?.Name vs @match.Visitor?.Name · @match.DateTime.ToTournamentTime(TournamentZone).ToString("dd/MM/yyyy HH:mm")</p>
+}
+<p class="text-muted">Acierto exacto: 3 puntos. Solo el ganador o el empate: 1 punto.</p>
 
 <form asp-action="MakePrediction">
     <div class="form-group">
@@ -11,44 +19,33 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <div class="col-md-2">
-                <label asp-for="LocalPoints" class="control-label"> </label>
+                <label asp-for="LocalPoints" class="control-label">@match?.Local?.Name</label>
             </div>
             <div class="col-md-2">
-                <input asp-for="LocalPoints" class="form-control" />
+                <input asp-for="LocalPoints" type="number" min="0" class="form-control" />
                 <span asp-validation-for="LocalPoints" class="text-danger"></span>
             </div>
         </div>
         <div class="row">
             <div class="col-md-2">
-                <label asp-for="VisitorPoints" class="control-label"> </label>
+                <label asp-for="VisitorPoints" class="control-label">@match?.Visitor?.Name</label>
             </div>
-            <div class="col-md-4">
-
-                <input asp-for="VisitorPoints" class="form-control" />
+            <div class="col-md-2">
+                <input asp-for="VisitorPoints" type="number" min="0" class="form-control" />
                 <span asp-validation-for="VisitorPoints" class="text-danger"></span>
             </div>
-
         </div>
-     
-
         <br /><br />
         <div class="row">
             <div class="col-md-2">
-
             </div>
             <div class="col-md-5">
-
-                <button type="submit" class="btn btn-primary"> Guardar y Procesar los Cambios</button>
+                <button type="submit" class="btn btn-primary">Guardar predicción</button>
+                @if (match != null)
+                {
+                    <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@match.GroupId">Cancelar</a>
+                }
             </div>
-
         </div>
     </div>
-
-
-
 </form>
-
-
-
-
-

@@ -1,9 +1,9 @@
 ﻿@model CompeTournament.Backend.Data.Entities.League
 @{
-    ViewData["Title"] = "Crear Liga";
+    ViewData["Title"] = "Agregar liga";
 }
 
-<h1>Registro de Nueva Liga participante dentro del torneo</h1>
+<h1>Agregar liga</h1>
 
 <form asp-action="CreateLeague">
     <input type="hidden" asp-for="GroupId" />
@@ -11,34 +11,21 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row">
             <div class="col-md-2">
-                <label asp-for="Name" class="control-label"> </label>
+                <label asp-for="Name" class="control-label">Nombre</label>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-4">
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-
         </div>
-
-
         <br /><br />
         <div class="row">
             <div class="col-md-2">
-
             </div>
             <div class="col-md-5">
-
-                <button type="submit" class="btn btn-primary"> Guardar y Procesar los Cambios</button>
+                <button type="submit" class="btn btn-primary">Agregar liga</button>
+                <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.GroupId">Cancelar</a>
             </div>
-
         </div>
     </div>
-
-
-
 </form>
-
-
-
-
-

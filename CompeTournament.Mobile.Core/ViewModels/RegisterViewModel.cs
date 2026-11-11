@@ -48,9 +48,22 @@ namespace CompeTournament.Mobile.Core.ViewModels
             ClearError();
             SuccessMessage = null;
 
+            if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName)
+                || string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
+            {
+                ShowError("Completa nombre, apellido, correo y contraseña.");
+                return;
+            }
+
+            if (Password.Length < 8 || !Password.Any(char.IsUpper) || !Password.Any(char.IsLower) || !Password.Any(char.IsDigit))
+            {
+                ShowError("La contraseña debe tener al menos 8 caracteres, con una mayúscula, una minúscula y un número.");
+                return;
+            }
+
             if (Password != Confirm)
             {
-                ShowError("Las contrasenas no coinciden.");
+                ShowError("Las contraseñas no coinciden.");
                 return;
             }
 
@@ -67,7 +80,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
                     Confirm = Confirm
                 });
 
-                SuccessMessage = "Cuenta creada. Ya puedes iniciar sesion.";
+                SuccessMessage = "Cuenta creada. Ya puedes iniciar sesión.";
                 await _navigation.GoBackAsync();
             }
             catch (Exception ex)

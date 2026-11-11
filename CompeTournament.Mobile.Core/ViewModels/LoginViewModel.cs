@@ -38,7 +38,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
 
             if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                ShowError("Ingresa tu correo y contrasena.");
+                ShowError("Ingresa tu correo y contraseña.");
                 return;
             }
 

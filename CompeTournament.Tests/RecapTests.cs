@@ -27,7 +27,7 @@ namespace CompeTournament.Tests
                 Leaderboard = new List<LeaderboardEntryDto>()
             });
 
-            Assert.Contains("Todavia no hay puntos", text);
+            Assert.Contains("Todavía no hay puntos", text);
         }
 
         [Fact]
@@ -55,12 +55,12 @@ namespace CompeTournament.Tests
         {
             var store = new InMemoryTokenStore();
             var api = new ApiClient(_factory.CreateClient(), store);
-            var token = await api.LoginAsync(new TokenRequest { Username = "sgrysoft@gmail.com", Password = "***SECRET-REMOVED***" });
+            var token = await api.LoginAsync(new TokenRequest { Username = "admin@example.com", Password = "Torneo2026" });
             await store.SetTokensAsync(token.Token, token.RefreshToken);
 
             var recap = await api.GetRecapAsync(1);
             Assert.Equal(1, recap.GroupId);
-            Assert.Contains("Starling Germosen", recap.Text);
+            Assert.Contains("Todavía no hay puntos", recap.Text);
         }
     }
 }

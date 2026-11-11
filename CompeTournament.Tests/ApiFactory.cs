@@ -3,6 +3,7 @@ using System.IO;
 using CompeTournament.Backend;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.Sqlite;
 
 namespace CompeTournament.Tests
 {
@@ -16,13 +17,14 @@ namespace CompeTournament.Tests
             builder.UseSetting("Database:Provider", "Sqlite");
             builder.UseSetting("ConnectionStrings:SqliteCnn", $"Data Source={_dbPath}");
             builder.UseSetting("Tokens:Key", "integration-test-signing-key-should-be-long-enough-0123456789");
-            builder.UseSetting("Seed:DefaultPassword", "***SECRET-REMOVED***");
+            builder.UseSetting("Seed:DefaultPassword", "Torneo2026");
             builder.UseSetting("Scheduler:Enabled", "false");
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+            SqliteConnection.ClearAllPools();
             if (File.Exists(_dbPath))
             {
                 File.Delete(_dbPath);

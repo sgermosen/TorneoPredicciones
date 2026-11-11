@@ -1,10 +1,30 @@
 ﻿@model CompeTournament.Backend.Data.Entities.Group
 @{
-    ViewData["Title"] = "Detalles del Grupo";
+    ViewData["Title"] = Model.Name;
+    ViewData["GroupId"] = Model.Id;
+    ViewData["IsMember"] = Model.GroupUsers.Any(gu => gu.ApplicationUser?.Email == User.Identity.Name && gu.IsAccepted && !gu.IsBlocked);
+    var isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Info y Detalles del Grupo</h1>
-  
+<p>
+    <a class="btn btn-outline-secondary" asp-action="Index">Volver a los torneos</a>
+</p>
+
+<h1>@Model.Name</h1>
+<p class="text-muted">@Model.TournamentType?.Name</p>
+@if (!string.IsNullOrWhiteSpace(Model.Requirements))
+{
+    <p>@Model.Requirements</p>
+}
+@if (isAdmin && !string.IsNullOrWhiteSpace(Model.InviteCode))
+{
+    <p>Código de invitación: <strong>@Model.InviteCode</strong></p>
+}
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
 <div id="tableHolder">
     <partial name="_LeaguesPartial" model="Model.Leagues" />
 </div>
@@ -16,4 +36,3 @@
 <div id="tableHolder">
     <partial name="_MembersPartial" model="Model.GroupUsers" />
 </div>
-

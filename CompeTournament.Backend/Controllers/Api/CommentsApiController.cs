@@ -27,6 +27,20 @@ namespace CompeTournament.Backend.Controllers.Api
         [HttpGet]
         public async Task<ActionResult<List<CommentDto>>> Get(int matchId)
         {
+            var userId = CurrentUserId;
+            var match = await _context.Matches.FirstOrDefaultAsync(m => m.Id == matchId);
+            if (match == null)
+            {
+                return NotFound();
+            }
+
+            var isMember = await _context.GroupUsers
+                .AnyAsync(gu => gu.GroupId == match.GroupId && gu.ApplicationUserId == userId && gu.IsAccepted && !gu.IsBlocked);
+            if (!isMember)
+            {
+                return Forbid();
+            }
+
             var comments = await _context.MatchComments
                 .Where(c => c.MatchId == matchId)
                 .Include(c => c.ApplicationUser)
@@ -37,7 +51,7 @@ namespace CompeTournament.Backend.Controllers.Api
                     MatchId = c.MatchId,
                     AuthorName = c.ApplicationUser != null ? c.ApplicationUser.FullName : null,
                     Body = c.Body,
-                    CreatedAt = c.CreatedAt
+                    CreatedAt = DateTime.SpecifyKind(c.CreatedAt, DateTimeKind.Utc)
                 })
                 .AsNoTracking()
                 .ToListAsync();

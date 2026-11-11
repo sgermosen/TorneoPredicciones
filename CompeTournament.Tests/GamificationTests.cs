@@ -26,7 +26,7 @@ namespace CompeTournament.Tests
             var store = new InMemoryTokenStore();
             var api = new ApiClient(http, store);
 
-            var login = await api.LoginAsync(new TokenRequest { Username = "sgrysoft@gmail.com", Password = "***SECRET-REMOVED***" });
+            var login = await api.LoginAsync(new TokenRequest { Username = "admin@example.com", Password = "Torneo2026" });
             await store.SetTokensAsync(login.Token, login.RefreshToken);
 
             var saved = await api.SavePredictionAsync(new PredictionRequest
@@ -64,7 +64,7 @@ namespace CompeTournament.Tests
             var store = new InMemoryTokenStore();
             var api = new ApiClient(http, store);
 
-            var login = await api.LoginAsync(new TokenRequest { Username = "sgrysoft@gmail.com", Password = "***SECRET-REMOVED***" });
+            var login = await api.LoginAsync(new TokenRequest { Username = "admin@example.com", Password = "Torneo2026" });
             await store.SetTokensAsync(login.Token, login.RefreshToken);
 
             await api.SavePredictionAsync(new PredictionRequest { MatchId = 1, LocalPoints = 1, VisitorPoints = 0, IsBanker = true });

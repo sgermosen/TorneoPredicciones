@@ -1,78 +1,55 @@
 ﻿@model IEnumerable<CompeTournament.Backend.Data.Entities.GroupUser>
+@using CompeTournament.Backend.Helpers
+@inject TimeZoneInfo TournamentZone
 @{
-    ViewData["Title"] = "Members";
+    var isAdmin = User.IsInRole("Admin");
 }
 
-<h1>Miembros</h1>
+<h2>Miembros</h2>
 
 @if (Model.Count() == 0)
 {
-    <div>
-        No tienes usuarios agregados al grupo, intenta invitar algunos amigos
-    </div>
+    <div>Este torneo todavía no tiene miembros. Comparte el código de invitación con tus amigos.</div>
 }
 else
 {
-    <table>
+    <table class="table">
         <thead>
             <tr>
-                <th>
-                    Nombre
-                </th>
-                <th>
-                    Desde
-                </th>
-                <th>
-                    Puntos
-                </th>
-                <th>
-
-                </th>
+                <th>Nombre</th>
+                <th>Desde</th>
+                <th>Puntos</th>
+                <th>Estado</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.OrderByDescending(m => m.Points))
             {
                 <tr>
+                    <td>@item.ApplicationUser?.FullName</td>
+                    <td>@(item.CreatedAt.HasValue ? item.CreatedAt.Value.ToTournamentTime(TournamentZone).ToString("dd/MM/yyyy") : string.Empty)</td>
+                    <td>@item.Points</td>
+                    <td>@(item.IsBlocked ? "Retirado" : item.IsAccepted ? "Miembro" : "Pendiente")</td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ApplicationUser.FullName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedAt)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Points)
-                    </td>
-                    <td></td>
-
-                    <td>
-                        @if (item.IsAccepted)
+                        @if (isAdmin && !item.IsBlocked && item.ApplicationUser?.Email != User.Identity.Name)
                         {
-                            if (item.IsBlocked)
+                            if (item.IsAccepted)
                             {
-                                <div> Este usuario fué expulsado del grupo</div>
+                                <form asp-action="FireFromGroup" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-danger btn-sm">Retirar del torneo</button>
+                                </form>
                             }
                             else
                             {
-                                <a class="btn btn-danger" asp-action="FireFromGroup" asp-route-id="@item.Id">
-                                    <span class="fa fa-plus"></span>
-                                    Expulsar del Grupo
-                                </a>
+                                <form asp-action="AcceptRequestJoin" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
+                                </form>
                             }
                         }
-                        else
-                        {
-                            <a class="btn btn-success" asp-action="AcceptRequestJoin" asp-route-id="@item.Id">
-                                <span class="fa fa-plus"></span>
-                                Aceptar Membrecia
-                            </a>
-                        }
-
                     </td>
                 </tr>
-
             }
         </tbody>
     </table>
 }
-

@@ -1,6 +1,7 @@
 namespace CompeTournament.Mobile.Core.ViewModels
 {
     using System.Collections.ObjectModel;
+    using System.Net;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using CompeTournament.Mobile.Core.Services;
@@ -27,6 +28,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
 
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CanPredict))]
+        [NotifyPropertyChangedFor(nameof(IsClosed))]
         private MatchDto? _match;
 
         [ObservableProperty]
@@ -42,6 +44,8 @@ namespace CompeTournament.Mobile.Core.ViewModels
         private string? _successMessage;
 
         public bool CanPredict => Match?.IsOpen == true;
+
+        public bool IsClosed => Match != null && !Match.IsOpen;
 
         public async Task InitializeAsync(int matchId)
         {
@@ -73,10 +77,16 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 }
 
                 Comments.Clear();
-                var comments = await _apiClient.GetCommentsAsync(MatchId);
-                foreach (var comment in comments)
+                try
                 {
-                    Comments.Add(comment);
+                    var comments = await _apiClient.GetCommentsAsync(MatchId);
+                    foreach (var comment in comments)
+                    {
+                        Comments.Add(comment);
+                    }
+                }
+                catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.Forbidden)
+                {
                 }
             }
             catch (Exception ex)
@@ -135,8 +145,12 @@ namespace CompeTournament.Mobile.Core.ViewModels
                     IsBanker = IsBanker
                 });
 
-                SuccessMessage = "Prediccion guardada.";
+                SuccessMessage = "Predicción guardada.";
                 await _navigation.GoBackAsync();
+            }
+            catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.Forbidden)
+            {
+                ShowError("Solo los miembros aprobados del grupo pueden predecir.");
             }
             catch (Exception ex)
             {

@@ -2,6 +2,6 @@
 {
     public interface IMailHelper
     {
-        void SendMail(string to, string subject, string body);
+        bool SendMail(string to, string subject, string body);
     }
 }

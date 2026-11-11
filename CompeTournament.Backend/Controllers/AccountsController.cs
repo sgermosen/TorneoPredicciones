@@ -4,33 +4,34 @@
     using CompeTournament.Backend.Data.Entities;
     using CompeTournament.Backend.Helpers;
     using CompeTournament.Backend.Models;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.IdentityModel.Tokens;
-    using System;
-    using System.IdentityModel.Tokens.Jwt;
     using System.Linq;
-    using System.Security.Claims;
-    using System.Text;
     using System.Threading.Tasks;
 
+    [AutoValidateAntiforgeryToken]
     public class AccountsController : Controller
     {
         private readonly IUserHelper _userHelper;
         private readonly IMailHelper _mailHelper;
         //private readonly ICountryRepository countryRepository;
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _context;
 
         public AccountsController(
             IUserHelper userHelper,
             IMailHelper mailHelper,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            ApplicationDbContext context)
         {
             this._userHelper = userHelper;
             this._mailHelper = mailHelper;
             //   this.countryRepository = countryRepository;
             this._configuration = configuration;
+            this._context = context;
         }
 
         public IActionResult Login()
@@ -51,12 +52,19 @@
                 var result = await this._userHelper.LoginAsync(model);
                 if (result.Succeeded)
                 {
-                    if (this.Request.Query.Keys.Contains("ReturnUrl"))
+                    var returnUrl = this.Request.Query["ReturnUrl"].FirstOrDefault();
+                    if (this.Url.IsLocalUrl(returnUrl))
                     {
-                        return this.Redirect(this.Request.Query["ReturnUrl"].First());
+                        return this.LocalRedirect(returnUrl);
                     }
 
                     return this.RedirectToAction("Index", "Home");
+                }
+
+                if (result.IsLockedOut)
+                {
+                    this.ModelState.AddModelError(string.Empty, "Tu cuenta quedó bloqueada por varios intentos fallidos. Intenta de nuevo en 15 minutos.");
+                    return this.View(model);
                 }
             }
 
@@ -90,7 +98,8 @@
                 if (user == null)
                 {
                     // var userType = await this.countryRepository.GetCityAsync(model.CityId);
-                    var userType = new UserType { Id = 1, Name = "Local" };
+                    var userType = await this._context.UserTypes.FirstOrDefaultAsync(ut => ut.Name == "Local")
+                        ?? await this._context.UserTypes.FirstOrDefaultAsync();
                     user = new ApplicationUser
                     {
                         Name = model.FirstName,
@@ -106,34 +115,44 @@
                     var result = await this._userHelper.AddUserAsync(user, model.Password);
                     if (result != IdentityResult.Success)
                     {
-                        this.ModelState.AddModelError(string.Empty, "Usuario no pudo ser creado");
+                        foreach (var error in result.Errors)
+                        {
+                            this.ModelState.AddModelError(string.Empty, error.Description);
+                        }
+
                         return this.View(model);
                     }
 
+                    await this._userHelper.AddUserToRoleAsync(user, "User");
+
                     var myToken = await this._userHelper.GenerateEmailConfirmationTokenAsync(user);
-                    var tokenLink = this.Url.Action("ConfirmEmail", "Account", new
+                    var tokenLink = this.Url.Action("ConfirmEmail", "Accounts", new
                     {
                         userid = user.Id,
                         token = myToken
                     }, protocol: HttpContext.Request.Scheme);
 
-                    this._mailHelper.SendMail(model.Username, "911 Reactions Email confirmation", $"<h1>911 Reactions Email confirmation</h1>" +
-                                                                                                 $"Para permitir el acceso a tu usuario, " +
-                                                                                                 $"porfavor, has click en este link:</br></br><a href = \"{tokenLink}\">Confirmar Correo</a>");
-                    this.ViewBag.Message = "Las instrucciones para permitir el acceso a tu usuario, han sido enviadas a tu correo.";
+                    var sent = this._mailHelper.SendMail(model.Username, "Copa Amistosa: confirma tu correo", $"<h1>Copa Amistosa</h1>" +
+                                                                                                 $"Para confirmar tu correo, " +
+                                                                                                 $"haz clic en este enlace:</br></br><a href = \"{tokenLink}\">Confirmar correo</a>");
+                    this.ViewBag.Message = sent
+                        ? "Tu cuenta quedó creada. Te enviamos un correo para confirmarla; ya puedes iniciar sesión."
+                        : "Tu cuenta quedó creada. Ya puedes iniciar sesión.";
                     return this.View(model);
                 }
 
-                this.ModelState.AddModelError(string.Empty, "El usuario ya esta registrado.");
+                this.ModelState.AddModelError(string.Empty, "El usuario ya está registrado.");
             }
 
             return this.View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> ChangeUser()
         {
             var user = await this._userHelper.GetUserByEmailAsync(this.User.Identity.Name);
             var model = new ChangeUserViewModel();
+            this.ViewBag.UserMessage = this.TempData["UserMessage"];
 
             if (user != null)
             {
@@ -160,6 +179,7 @@
             return this.View(model);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangeUser(ChangeUserViewModel model)
         {
@@ -179,7 +199,7 @@
                     var respose = await this._userHelper.UpdateUserAsync(user);
                     if (respose.Succeeded)
                     {
-                        this.ViewBag.UserMessage = "Usuario Actualizado!";
+                        this.ViewBag.UserMessage = "Tus datos quedaron guardados.";
                     }
                     else
                     {
@@ -195,11 +215,13 @@
             return this.View(model);
         }
 
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return this.View();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
@@ -211,6 +233,7 @@
                     var result = await this._userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
+                        this.TempData["UserMessage"] = "Tu contraseña quedó cambiada.";
                         return this.RedirectToAction("ChangeUser");
                     }
                     else
@@ -225,48 +248,6 @@
             }
 
             return this.View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
-        {
-            if (this.ModelState.IsValid)
-            {
-                var user = await this._userHelper.GetUserByEmailAsync(model.Username);
-                if (user != null)
-                {
-                    var result = await this._userHelper.ValidatePasswordAsync(
-                        user,
-                        model.Password);
-
-                    if (result.Succeeded)
-                    {
-                        var claims = new[]
-                        {
-                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                        };
-
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._configuration["Tokens:Key"]));
-                        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                        var token = new JwtSecurityToken(
-                            this._configuration["Tokens:Issuer"],
-                            this._configuration["Tokens:Audience"],
-                            claims,
-                            expires: DateTime.UtcNow.AddDays(15),
-                            signingCredentials: credentials);
-                        var results = new
-                        {
-                            token = new JwtSecurityTokenHandler().WriteToken(token),
-                            expiration = token.ValidTo
-                        };
-
-                        return this.Created(string.Empty, results);
-                    }
-                }
-            }
-
-            return this.BadRequest();
         }
 
         public IActionResult NotAuthorized()
@@ -313,19 +294,16 @@
             if (this.ModelState.IsValid)
             {
                 var user = await this._userHelper.GetUserByEmailAsync(model.Email);
-                if (user == null)
+                if (user != null)
                 {
-                    ModelState.AddModelError(string.Empty, "Este email no corresponde al usuario registrado.");
-                    return this.View(model);
+                    var myToken = await this._userHelper.GeneratePasswordResetTokenAsync(user);
+                    var link = this.Url.Action("ResetPassword", "Accounts", new { token = myToken }, protocol: HttpContext.Request.Scheme);
+                    this._mailHelper.SendMail(model.Email, "Copa Amistosa: recupera tu contraseña", $"<h1>Copa Amistosa</h1>" +
+                                                                                                  $"Para cambiar tu contraseña, haz clic en este enlace:</br></br>" +
+                                                                                                  $"<a href = \"{link}\">Cambiar contraseña</a>");
                 }
 
-                var myToken = await this._userHelper.GeneratePasswordResetTokenAsync(user);
-                var link = this.Url.Action("ResetPassword", "Account", new { token = myToken }, protocol: HttpContext.Request.Scheme);
-                var mailSender = new MailHelper(_configuration);
-                mailSender.SendMail(model.Email, "Reacciones 911 Recuperacion de Contraseña", $"<h1>Reacciones 911 Recuperacion de Contraseña</h1>" +
-                                                                                              $"Para resetear su contraseña, haga click en este link:</br></br>" +
-                                                                                              $"<a href = \"{link}\">Resetear Contraseña</a>");
-                this.ViewBag.Message = "Las instrucciones para recuperar tu contraseña, han sido enviadas a tu Correo";
+                this.ViewBag.Message = "Si el correo está registrado, te enviamos las instrucciones para recuperar tu contraseña.";
                 return this.View();
 
             }
@@ -341,21 +319,30 @@
         [HttpPost]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(model);
+            }
+
             var user = await this._userHelper.GetUserByEmailAsync(model.UserName);
             if (user != null)
             {
                 var result = await this._userHelper.ResetPasswordAsync(user, model.Token, model.Password);
                 if (result.Succeeded)
                 {
-                    this.ViewBag.Message = "Contraseña Reseteada Satisfactoriamente.";
+                    this.ViewBag.Message = "Tu contraseña quedó cambiada. Ya puedes iniciar sesión.";
                     return this.View();
                 }
 
-                this.ViewBag.Message = "Error mientras se intentaba resetear la contraseña.";
+                foreach (var error in result.Errors)
+                {
+                    this.ModelState.AddModelError(string.Empty, error.Description);
+                }
+
                 return View(model);
             }
 
-            this.ViewBag.Message = "Ususario no encontrado.";
+            this.ModelState.AddModelError(string.Empty, "No pudimos cambiar la contraseña. Revisa el correo y vuelve a pedir el enlace.");
             return View(model);
         }
 

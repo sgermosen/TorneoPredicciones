@@ -5,6 +5,7 @@ namespace CompeTournament.Mobile.Core.Services
     using System.Net;
     using System.Net.Http.Headers;
     using System.Net.Http.Json;
+    using System.Text.Json;
 
     public class ApiClient : IApiClient
     {
@@ -174,7 +175,7 @@ namespace CompeTournament.Mobile.Core.Services
             var value = await response.Content.ReadFromJsonAsync<T>();
             if (value == null)
             {
-                throw new ApiException(response.StatusCode, "Respuesta vacia del servidor.");
+                throw new ApiException(response.StatusCode, "Respuesta vacía del servidor.");
             }
 
             return value;
@@ -187,16 +188,57 @@ namespace CompeTournament.Mobile.Core.Services
                 return;
             }
 
+            var serverMessage = await ReadServerMessageAsync(response);
             var message = response.StatusCode switch
             {
-                HttpStatusCode.Unauthorized => "Credenciales invalidas o sesion expirada.",
-                HttpStatusCode.Forbidden => "No tienes permiso para esta accion.",
-                HttpStatusCode.Conflict => "El recurso ya existe.",
+                HttpStatusCode.Unauthorized => "Credenciales inválidas o sesión expirada.",
+                HttpStatusCode.Forbidden => "No tienes permiso para esta acción.",
                 HttpStatusCode.TooManyRequests => "Demasiados intentos, espera un momento.",
+                _ when !string.IsNullOrWhiteSpace(serverMessage) => serverMessage,
+                HttpStatusCode.Conflict => "El recurso ya existe.",
                 _ => $"Error del servidor ({(int)response.StatusCode})."
             };
 
             throw new ApiException(response.StatusCode, message);
+        }
+
+        private static async Task<string?> ReadServerMessageAsync(HttpResponseMessage response)
+        {
+            try
+            {
+                using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+                var root = document.RootElement;
+                if (root.ValueKind != JsonValueKind.Object)
+                {
+                    return null;
+                }
+
+                if (root.TryGetProperty("message", out var message) && message.ValueKind == JsonValueKind.String)
+                {
+                    return message.GetString();
+                }
+
+                if (root.TryGetProperty("errors", out var errors) && errors.ValueKind == JsonValueKind.Array)
+                {
+                    return string.Join(" ", errors.EnumerateArray()
+                        .Where(e => e.ValueKind == JsonValueKind.String)
+                        .Select(e => e.GetString()));
+                }
+
+                if (root.TryGetProperty("errors", out var fieldErrors) && fieldErrors.ValueKind == JsonValueKind.Object)
+                {
+                    return string.Join(" ", fieldErrors.EnumerateObject()
+                        .Where(f => f.Value.ValueKind == JsonValueKind.Array)
+                        .SelectMany(f => f.Value.EnumerateArray())
+                        .Where(e => e.ValueKind == JsonValueKind.String)
+                        .Select(e => e.GetString()));
+                }
+            }
+            catch (JsonException)
+            {
+            }
+
+            return null;
         }
     }
 }

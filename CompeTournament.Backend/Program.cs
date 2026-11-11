@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using System;
+using System.Globalization;
 using System.Text;
 using System.Threading.RateLimiting;
 using System.Threading.Tasks;
@@ -52,6 +54,7 @@ namespace CompeTournament.Backend
                 cfg.Lockout.AllowedForNewUsers = true;
             })
                 .AddDefaultTokenProviders()
+                .AddErrorDescriber<SpanishIdentityErrorDescriber>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddAuthentication()
@@ -108,12 +111,14 @@ namespace CompeTournament.Backend
             builder.Services.AddRateLimiter(options =>
             {
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
-                options.AddFixedWindowLimiter("auth", limiter =>
-                {
-                    limiter.Window = TimeSpan.FromMinutes(1);
-                    limiter.PermitLimit = 10;
-                    limiter.QueueLimit = 0;
-                });
+                options.AddPolicy("auth", context => RateLimitPartition.GetFixedWindowLimiter(
+                    context.Connection.RemoteIpAddress?.ToString() ?? "sin-ip",
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        Window = TimeSpan.FromMinutes(1),
+                        PermitLimit = 10,
+                        QueueLimit = 0
+                    }));
             });
 
             var provider = builder.Configuration["Database:Provider"] ?? "Sqlite";
@@ -128,6 +133,9 @@ namespace CompeTournament.Backend
                     options.UseSqlite(builder.Configuration.GetConnectionString("SqliteCnn"));
                 }
             });
+
+            var timeZoneId = builder.Configuration["Tournament:TimeZone"] ?? "America/Santo_Domingo";
+            builder.Services.AddSingleton(TimeZoneInfo.FindSystemTimeZoneById(timeZoneId));
 
             builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped<IUserHelper, UserHelper>();
@@ -204,6 +212,20 @@ namespace CompeTournament.Backend
                 await next();
             });
 
+            app.UseWhen(
+                context => !context.Request.Path.StartsWithSegments("/api")
+                    && !context.Request.Path.StartsWithSegments("/hubs")
+                    && !context.Request.Path.StartsWithSegments("/health"),
+                branch => branch.UseStatusCodePagesWithReExecute("/Home/Error", "?code={0}"));
+
+            var culture = new CultureInfo("es-DO");
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(culture),
+                SupportedCultures = new[] { culture },
+                SupportedUICultures = new[] { culture }
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
@@ -241,6 +263,12 @@ namespace CompeTournament.Backend
             {
                 throw new InvalidOperationException(
                     "Tokens:Key debe tener al menos 256 bits (32 bytes) en produccion.");
+            }
+            else if (!builder.Environment.IsDevelopment()
+                && (key.Contains("change-me", StringComparison.OrdinalIgnoreCase) || key.Contains("dev-only", StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new InvalidOperationException(
+                    "Tokens:Key es una clave de ejemplo. Genere una clave propia antes de ejecutar en produccion.");
             }
 
             return key;
