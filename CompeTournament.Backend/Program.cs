@@ -163,6 +163,22 @@ namespace CompeTournament.Backend
             });
 
             builder.Services.AddControllersWithViews();
+            builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var problemDetailsFactory = context.HttpContext.RequestServices
+                        .GetRequiredService<Microsoft.AspNetCore.Mvc.Infrastructure.ProblemDetailsFactory>();
+                    var problem = problemDetailsFactory.CreateValidationProblemDetails(
+                        context.HttpContext,
+                        context.ModelState,
+                        title: "Hay uno o más errores de validación.");
+                    return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(problem)
+                    {
+                        ContentTypes = { "application/problem+json" }
+                    };
+                };
+            });
             builder.Services.AddOpenApi();
 
             builder.Services.AddHealthChecks()
