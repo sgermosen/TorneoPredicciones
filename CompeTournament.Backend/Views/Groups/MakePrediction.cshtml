@@ -35,6 +35,15 @@
                 <span asp-validation-for="VisitorPoints" class="text-danger"></span>
             </div>
         </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <label asp-for="IsBanker" class="control-label">Banker</label>
+            </div>
+            <div class="col-md-5">
+                <input asp-for="IsBanker" /> <span class="text-muted">Dobla los puntos de este partido. Solo puedes tener un banker por torneo.</span>
+            </div>
+        </div>
         <br /><br />
         <div class="row">
             <div class="col-md-2">

@@ -120,6 +120,19 @@ namespace CompeTournament.Backend.Controllers
             {
                 existing.LocalPoints = model.LocalPoints;
                 existing.VisitorPoints = model.VisitorPoints;
+                existing.IsBanker = model.IsBanker;
+                await _context.SaveChangesAsync();
+            }
+
+            if (model.IsBanker)
+            {
+                var others = await _context.Predictions
+                    .Where(p => p.CreatedBy == userId && p.MatchId != model.MatchId && p.Match.GroupId == match.GroupId && p.Match.StatusId == 1 && p.IsBanker)
+                    .ToListAsync();
+                foreach (var other in others)
+                {
+                    other.IsBanker = false;
+                }
                 await _context.SaveChangesAsync();
             }
 
