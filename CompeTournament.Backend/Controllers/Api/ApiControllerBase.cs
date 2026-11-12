@@ -10,5 +10,9 @@ namespace CompeTournament.Backend.Controllers.Api
     public abstract class ApiControllerBase : ControllerBase
     {
         protected string CurrentUserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        protected bool CanManageOwnedBy(string ownerUserId) =>
+            User.IsInRole("Admin") ||
+            (!string.IsNullOrEmpty(ownerUserId) && ownerUserId == CurrentUserId);
     }
 }

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             xmlns:dto="clr-namespace:CompeTournament.Shared.Tournaments;assembly=CompeTournament.Shared"
+             x:Class="CompeTournament.Mobile.Views.GroupManagePage"
+             x:DataType="vm:GroupManageViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16,16,32" Spacing="18">
+
+            <VerticalStackLayout Spacing="6" Padding="8,0">
+                <Label Style="{StaticResource Eyebrow}" Text="Gestión del torneo" />
+                <Label Style="{StaticResource Headline}" Text="{Binding GroupName}" />
+                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="Start" />
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13"
+                       IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
+                <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource Win}" FontSize="13"
+                       IsVisible="{Binding SuccessMessage, Converter={StaticResource NotEmpty}}" />
+            </VerticalStackLayout>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Visibilidad" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                    <Label Grid.Column="0" Style="{StaticResource Body}" VerticalOptions="Center"
+                           Text="Este torneo es público: cualquiera lo ve y puede pedir unirse.">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding IsPublic}" Value="False">
+                                <Setter Property="Text" Value="Este torneo es privado: solo entra quien invites o tenga el código." />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Button Grid.Column="1" Text="Hacer privado"
+                            HeightRequest="38" Padding="16,0" FontSize="13"
+                            BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}" CornerRadius="12"
+                            Command="{Binding ToggleVisibilityCommand}" IsEnabled="{Binding IsNotBusy}">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsPublic}" Value="False">
+                                <Setter Property="Text" Value="Hacer público" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Miembros" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Members}">
+                    <BindableLayout.EmptyView>
+                        <Label Style="{StaticResource Muted}" Text="Nadie ha pedido unirse todavía." />
+                    </BindableLayout.EmptyView>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:LeaderboardEntryDto">
+                            <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="2">
+                                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource Body}" Text="{Binding FullName}" />
+                                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" Text="Miembro">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsAccepted}" Value="False">
+                                            <Setter Property="Text" Value="Pendiente" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsBlocked}" Value="True">
+                                            <Setter Property="Text" Value="Bloqueado" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                        Text="Aceptar"
+                                        HeightRequest="36" Padding="14,0" FontSize="13"
+                                        BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}" CornerRadius="12"
+                                        IsVisible="{Binding IsAccepted, Converter={StaticResource InvertBool}}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupManageViewModel}}, Path=AcceptMemberCommand}"
+                                        CommandParameter="{Binding .}">
+                                    <Button.Triggers>
+                                        <DataTrigger TargetType="Button" Binding="{Binding IsBlocked}" Value="True">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2"
+                                        Text="Bloquear"
+                                        HeightRequest="36" Padding="14,0" FontSize="13"
+                                        BackgroundColor="{StaticResource Loss}" TextColor="{StaticResource LightBase}" CornerRadius="12"
+                                        IsVisible="{Binding IsBlocked, Converter={StaticResource InvertBool}}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupManageViewModel}}, Path=BlockMemberCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Invitar" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Style="{StaticResource Muted}" Text="Agrega a alguien por su correo (debe tener cuenta)." />
+                    <Entry Style="{StaticResource Field}" Keyboard="Email" Placeholder="correo@ejemplo.com" Text="{Binding InviteEmail}" />
+                    <Button Style="{StaticResource GhostButton}" Text="Invitar"
+                            Command="{Binding InviteCommand}" IsEnabled="{Binding IsNotBusy}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Ligas" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <VerticalStackLayout Spacing="6" BindableLayout.ItemsSource="{Binding Leagues}">
+                        <BindableLayout.EmptyView>
+                            <Label Style="{StaticResource Muted}" Text="Crea la primera liga del torneo." />
+                        </BindableLayout.EmptyView>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="dto:LeagueDto">
+                                <Label Style="{StaticResource Body}" Text="{Binding Name}" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <Entry Style="{StaticResource Field}" Placeholder="Nombre de la liga" Text="{Binding NewLeagueName}" />
+                    <Button Style="{StaticResource GhostButton}" Text="Agregar liga"
+                            Command="{Binding CreateLeagueCommand}" IsEnabled="{Binding IsNotBusy}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Equipos" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <VerticalStackLayout Spacing="6" BindableLayout.ItemsSource="{Binding Teams}">
+                        <BindableLayout.EmptyView>
+                            <Label Style="{StaticResource Muted}" Text="Agrega equipos a una liga." />
+                        </BindableLayout.EmptyView>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="dto:StandingDto">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0" Style="{StaticResource Body}" Text="{Binding Name}" />
+                                    <Label Grid.Column="1" Style="{StaticResource Muted}" Text="{Binding Initials}" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <Picker Title="Liga"
+                            ItemsSource="{Binding Leagues}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedLeague}"
+                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}"
+                            TitleColor="{StaticResource TextMuted}" />
+                    <Entry Style="{StaticResource Field}" Placeholder="Nombre del equipo" Text="{Binding NewTeamName}" />
+                    <Button Style="{StaticResource GhostButton}" Text="Agregar equipo"
+                            Command="{Binding CreateTeamCommand}" IsEnabled="{Binding IsNotBusy}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Nuevo partido" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Style="{StaticResource Muted}" Text="Local" />
+                    <Picker Title="Equipo local"
+                            ItemsSource="{Binding Teams}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedLocal}"
+                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}"
+                            TitleColor="{StaticResource TextMuted}" />
+                    <Label Style="{StaticResource Muted}" Text="Visitante" />
+                    <Picker Title="Equipo visitante"
+                            ItemsSource="{Binding Teams}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedVisitor}"
+                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}"
+                            TitleColor="{StaticResource TextMuted}" />
+                    <Entry Style="{StaticResource Field}" Placeholder="Nombre del partido (opcional)" Text="{Binding NewMatchName}" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                        <DatePicker Grid.Column="0" Date="{Binding MatchDate}" Format="ddd dd MMM yyyy"
+                                    TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}" />
+                        <TimePicker Grid.Column="1" Time="{Binding MatchTime}" Format="HH:mm"
+                                    TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}" />
+                    </Grid>
+                    <Button Style="{StaticResource PrimaryButton}" Text="Crear partido"
+                            Command="{Binding CreateMatchCommand}" IsEnabled="{Binding IsNotBusy}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Cerrar partido" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding OpenMatches}">
+                        <BindableLayout.EmptyView>
+                            <Label Style="{StaticResource Muted}" Text="No hay partidos abiertos." />
+                        </BindableLayout.EmptyView>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="dto:MatchDto">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                        <HorizontalStackLayout Spacing="6">
+                                            <Label Style="{StaticResource Body}" Text="{Binding LocalInitials}" />
+                                            <Label Style="{StaticResource Muted}" Text="vs" />
+                                            <Label Style="{StaticResource Body}" Text="{Binding VisitorInitials}" />
+                                        </HorizontalStackLayout>
+                                        <Label Style="{StaticResource Muted}"
+                                               Text="{Binding DateTime, Converter={StaticResource ToLocalTime}, StringFormat='{0:dd MMM · HH:mm}'}" />
+                                    </VerticalStackLayout>
+                                    <Button Grid.Column="1" Text="Elegir"
+                                            HeightRequest="36" Padding="14,0" FontSize="13"
+                                            BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}" CornerRadius="12"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupManageViewModel}}, Path=SelectMatchToCloseCommand}"
+                                            CommandParameter="{Binding .}" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="10" IsVisible="{Binding HasMatchToClose}">
+                        <Label Style="{StaticResource SubHeadline}" Text="{Binding CloseTitle}" />
+                        <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
+                            <Entry Grid.Column="0" Style="{StaticResource Field}" Keyboard="Numeric"
+                                   Placeholder="Local" Text="{Binding CloseLocalPoints}" />
+                            <Label Grid.Column="1" Style="{StaticResource SubHeadline}" Text=":" VerticalOptions="Center" />
+                            <Entry Grid.Column="2" Style="{StaticResource Field}" Keyboard="Numeric"
+                                   Placeholder="Visitante" Text="{Binding CloseVisitorPoints}" />
+                        </Grid>
+                        <Button Style="{StaticResource PrimaryButton}" Text="Cerrar partido"
+                                Command="{Binding CloseMatchCommand}" IsEnabled="{Binding IsNotBusy}" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Style="{StaticResource GhostButton}" Text="Volver" Command="{Binding BackCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -5,7 +5,9 @@ namespace CompeTournament.Mobile.Core
         public const string Login = "login";
         public const string Register = "register";
         public const string Groups = "groups";
+        public const string CreateGroup = "creategroup";
         public const string GroupDetail = "groupdetail";
+        public const string GroupManage = "groupmanage";
         public const string MatchPrediction = "matchprediction";
         public const string Profile = "profile";
     }

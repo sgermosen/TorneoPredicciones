@@ -10,7 +10,9 @@ namespace CompeTournament.Mobile
             InitializeComponent();
 
             Routing.RegisterRoute(AppRoutes.Register, typeof(RegisterPage));
+            Routing.RegisterRoute(AppRoutes.CreateGroup, typeof(CreateGroupPage));
             Routing.RegisterRoute(AppRoutes.GroupDetail, typeof(GroupDetailPage));
+            Routing.RegisterRoute(AppRoutes.GroupManage, typeof(GroupManagePage));
             Routing.RegisterRoute(AppRoutes.MatchPrediction, typeof(MatchPredictionPage));
         }
     }

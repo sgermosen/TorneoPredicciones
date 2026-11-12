@@ -19,6 +19,28 @@ namespace CompeTournament.Mobile.Core.Services
 
         Task<List<GroupDto>> GetMyGroupsAsync();
 
+        Task<GroupDto> CreateGroupAsync(CreateGroupRequest request);
+
+        Task<List<TournamentTypeDto>> GetTournamentTypesAsync();
+
+        Task<List<LeaderboardEntryDto>> GetGroupMembersAsync(int id);
+
+        Task AcceptMemberAsync(int id, string userId);
+
+        Task BlockMemberAsync(int id, string userId);
+
+        Task<LeaderboardEntryDto> InviteMemberAsync(int id, InviteMemberRequest request);
+
+        Task SetGroupVisibilityAsync(int id, SetVisibilityRequest request);
+
+        Task<LeagueDto> CreateLeagueAsync(int groupId, CreateLeagueRequest request);
+
+        Task<List<LeagueDto>> GetGroupLeaguesAsync(int groupId);
+
+        Task<StandingDto> CreateTeamAsync(int groupId, CreateTeamRequest request);
+
+        Task<MatchDto> CreateMatchAsync(int groupId, CreateMatchRequest request);
+
         Task<GroupDetailDto> GetGroupAsync(int id);
 
         Task JoinGroupAsync(int id);
@@ -32,6 +54,8 @@ namespace CompeTournament.Mobile.Core.Services
         Task<RecapDto> GetRecapAsync(int id);
 
         Task<MatchDto> GetMatchAsync(int id);
+
+        Task CloseMatchAsync(int matchId, CloseMatchRequest request);
 
         Task<PredictionDto> SavePredictionAsync(PredictionRequest request);
 

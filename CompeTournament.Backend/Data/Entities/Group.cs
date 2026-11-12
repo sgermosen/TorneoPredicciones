@@ -9,6 +9,8 @@ namespace CompeTournament.Backend.Data.Entities
     {
         public string Requirements { get; set; }
 
+        public bool IsPublic { get; set; }
+
         [StringLength(12)]
         public string InviteCode { get; set; }
 

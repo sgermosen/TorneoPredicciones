@@ -52,14 +52,18 @@ namespace CompeTournament.Mobile
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<RegisterViewModel>();
             builder.Services.AddTransient<GroupsViewModel>();
+            builder.Services.AddTransient<CreateGroupViewModel>();
             builder.Services.AddTransient<GroupDetailViewModel>();
+            builder.Services.AddTransient<GroupManageViewModel>();
             builder.Services.AddTransient<MatchPredictionViewModel>();
             builder.Services.AddTransient<ProfileViewModel>();
 
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<RegisterPage>();
             builder.Services.AddTransient<GroupsPage>();
+            builder.Services.AddTransient<CreateGroupPage>();
             builder.Services.AddTransient<GroupDetailPage>();
+            builder.Services.AddTransient<GroupManagePage>();
             builder.Services.AddTransient<MatchPredictionPage>();
             builder.Services.AddTransient<ProfilePage>();
 

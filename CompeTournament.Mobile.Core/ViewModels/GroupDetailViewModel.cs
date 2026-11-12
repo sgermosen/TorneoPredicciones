@@ -29,6 +29,7 @@ namespace CompeTournament.Mobile.Core.ViewModels
         [NotifyPropertyChangedFor(nameof(Title))]
         [NotifyPropertyChangedFor(nameof(CanJoin))]
         [NotifyPropertyChangedFor(nameof(IsPending))]
+        [NotifyPropertyChangedFor(nameof(CanManage))]
         private GroupDetailDto? _group;
 
         [ObservableProperty]
@@ -45,6 +46,8 @@ namespace CompeTournament.Mobile.Core.ViewModels
         public bool CanJoin => Group != null && !Group.IsMember;
 
         public bool IsPending => Group != null && Group.IsMember && !Group.IsAccepted;
+
+        public bool CanManage => Group != null && Group.CanManage;
 
         public ObservableCollection<MatchDto> Matches { get; } = new();
 
@@ -184,6 +187,20 @@ namespace CompeTournament.Mobile.Core.ViewModels
             }
 
             await LoadAsync();
+        }
+
+        [RelayCommand]
+        private Task OpenManageAsync()
+        {
+            if (Group == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            return _navigation.GoToAsync(AppRoutes.GroupManage, new Dictionary<string, object>
+            {
+                ["groupId"] = GroupId
+            });
         }
 
         private static void Replace<T>(ObservableCollection<T> target, IEnumerable<T> items)

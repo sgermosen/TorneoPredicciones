@@ -109,6 +109,9 @@ namespace CompeTournament.Mobile.Core.ViewModels
         }
 
         [RelayCommand]
+        private Task OpenCreateAsync() => _navigation.GoToAsync(AppRoutes.CreateGroup);
+
+        [RelayCommand]
         private Task OpenGroupAsync(GroupDto group)
         {
             if (group == null)

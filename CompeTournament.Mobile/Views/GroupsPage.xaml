@@ -17,6 +17,9 @@
                 <Switch IsToggled="{Binding ShowOnlyMine}" OnColor="{StaticResource Accent}" />
                 <Label Style="{StaticResource Body}" Text="Solo mis grupos" VerticalOptions="Center" />
             </HorizontalStackLayout>
+            <Button Style="{StaticResource PrimaryButton}"
+                    Text="Crear torneo"
+                    Command="{Binding OpenCreateCommand}" />
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                 <Entry x:Name="InviteCodeEntry"
                        Grid.Column="0"

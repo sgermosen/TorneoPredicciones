@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             x:Class="CompeTournament.Mobile.Views.CreateGroupPage"
+             x:DataType="vm:CreateGroupViewModel"
+             Title="Crear torneo">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20">
+
+            <Label Style="{StaticResource Eyebrow}" Text="Nuevo torneo" />
+            <Label Style="{StaticResource Headline}" Text="Crea tu torneo" />
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="14">
+                    <Entry Style="{StaticResource Field}" Placeholder="Nombre del torneo" Text="{Binding Name}" />
+
+                    <Editor Placeholder="Requisitos (opcional)"
+                            Text="{Binding Requirements}"
+                            AutoSize="TextChanges"
+                            HeightRequest="90"
+                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}"
+                            PlaceholderColor="{StaticResource TextMuted}"
+                            BackgroundColor="Transparent" />
+
+                    <Label Style="{StaticResource Muted}" Text="Tipo de torneo" />
+                    <Picker Title="Elige un tipo"
+                            ItemsSource="{Binding TournamentTypes}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedType}"
+                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}"
+                            TitleColor="{StaticResource TextMuted}" />
+
+                    <HorizontalStackLayout Spacing="10">
+                        <Switch IsToggled="{Binding IsPublic}" OnColor="{StaticResource Accent}" />
+                        <Label Style="{StaticResource Body}" Text="Torneo público (lo ven todos)" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="{StaticResource Loss}"
+                           FontSize="13"
+                           IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
+
+                    <Button Style="{StaticResource PrimaryButton}"
+                            Text="Crear torneo"
+                            Command="{Binding CreateCommand}"
+                            IsEnabled="{Binding IsNotBusy}" />
+
+                    <Button Style="{StaticResource GhostButton}"
+                            Text="Cancelar"
+                            Command="{Binding CancelCommand}" />
+
+                    <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

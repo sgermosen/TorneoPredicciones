@@ -36,6 +36,11 @@
                         Margin="0,8,0,0"
                         Clicked="OnShareInviteClicked"
                         IsVisible="{Binding InviteCode, Converter={StaticResource NotEmpty}}" />
+                <Button Style="{StaticResource PrimaryButton}"
+                        Text="Gestionar torneo"
+                        Margin="0,8,0,0"
+                        IsVisible="{Binding CanManage}"
+                        Command="{Binding OpenManageCommand}" />
                 <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13" />
             </VerticalStackLayout>
 

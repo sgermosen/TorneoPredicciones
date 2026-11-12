@@ -18,6 +18,10 @@ namespace CompeTournament.Shared.Tournaments
 
         public bool IsAccepted { get; set; }
 
+        public bool CanManage { get; set; }
+
+        public bool IsPublic { get; set; }
+
         public List<MatchDto> Matches { get; set; } = new List<MatchDto>();
 
         public List<StandingDto> Standings { get; set; } = new List<StandingDto>();

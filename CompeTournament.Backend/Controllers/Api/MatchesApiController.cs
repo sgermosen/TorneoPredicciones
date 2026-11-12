@@ -3,7 +3,6 @@ namespace CompeTournament.Backend.Controllers.Api
     using CompeTournament.Backend.Data;
     using CompeTournament.Backend.Helpers;
     using CompeTournament.Shared.Tournaments;
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using System;
@@ -23,12 +22,20 @@ namespace CompeTournament.Backend.Controllers.Api
         }
 
         [HttpPost("{id:int}/close")]
-        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Close(int id, [FromBody] CloseMatchRequest request)
         {
-            if (!await _context.Matches.AnyAsync(m => m.Id == id))
+            var match = await _context.Matches
+                .Include(m => m.Group)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (match == null)
             {
                 return NotFound(new { message = "El partido no existe." });
+            }
+
+            if (!CanManageOwnedBy(match.Group?.CreatedBy))
+            {
+                return StatusCode(403, new { message = "No gestionas este torneo." });
             }
 
             var closed = await _matchClosingService.CloseMatchAsync(id, request.LocalPoints, request.VisitorPoints);

@@ -86,6 +86,7 @@
                 Requirements = "Reta a tus amigos a predecir los partidos de la copa.",
                 InviteCode = "COPA2026",
                 Active = true,
+                IsPublic = true,
                 TournamentTypeId = tournamentType.Id
             };
             _context.Groups.Add(group);

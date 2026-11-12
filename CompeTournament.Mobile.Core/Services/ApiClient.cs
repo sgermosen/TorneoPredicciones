@@ -54,6 +54,57 @@ namespace CompeTournament.Mobile.Core.Services
 
         public Task<GroupDetailDto> GetGroupAsync(int id) => SendAsync<GroupDetailDto>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{id}"));
 
+        public Task<GroupDto> CreateGroupAsync(CreateGroupRequest request) =>
+            SendAsync<GroupDto>(() => new HttpRequestMessage(HttpMethod.Post, "api/groups")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task<List<TournamentTypeDto>> GetTournamentTypesAsync() =>
+            SendAsync<List<TournamentTypeDto>>(() => new HttpRequestMessage(HttpMethod.Get, "api/tournament-types"));
+
+        public Task<List<LeaderboardEntryDto>> GetGroupMembersAsync(int id) =>
+            SendAsync<List<LeaderboardEntryDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{id}/members"));
+
+        public Task AcceptMemberAsync(int id, string userId) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{id}/members/{userId}/accept"));
+
+        public Task BlockMemberAsync(int id, string userId) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{id}/members/{userId}/block"));
+
+        public Task<LeaderboardEntryDto> InviteMemberAsync(int id, InviteMemberRequest request) =>
+            SendAsync<LeaderboardEntryDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{id}/members/invite")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task SetGroupVisibilityAsync(int id, SetVisibilityRequest request) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{id}/visibility")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task<LeagueDto> CreateLeagueAsync(int groupId, CreateLeagueRequest request) =>
+            SendAsync<LeagueDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/leagues")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task<List<LeagueDto>> GetGroupLeaguesAsync(int groupId) =>
+            SendAsync<List<LeagueDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{groupId}/leagues"));
+
+        public Task<StandingDto> CreateTeamAsync(int groupId, CreateTeamRequest request) =>
+            SendAsync<StandingDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/teams")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task<MatchDto> CreateMatchAsync(int groupId, CreateMatchRequest request) =>
+            SendAsync<MatchDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/matches")
+            {
+                Content = JsonContent.Create(request)
+            });
+
         public Task JoinGroupAsync(int id) => SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{id}/join"));
 
         public Task<GroupInviteDto> GetInviteAsync(int id) => SendAsync<GroupInviteDto>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{id}/invite"));
@@ -71,6 +122,12 @@ namespace CompeTournament.Mobile.Core.Services
             SendAsync<RecapDto>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{id}/recap"));
 
         public Task<MatchDto> GetMatchAsync(int id) => SendAsync<MatchDto>(() => new HttpRequestMessage(HttpMethod.Get, $"api/matches/{id}"));
+
+        public Task CloseMatchAsync(int matchId, CloseMatchRequest request) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/matches/{matchId}/close")
+            {
+                Content = JsonContent.Create(request)
+            });
 
         public Task<PredictionDto> SavePredictionAsync(PredictionRequest request) =>
             SendAsync<PredictionDto>(() => new HttpRequestMessage(HttpMethod.Post, "api/predictions")
