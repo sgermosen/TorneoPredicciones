@@ -13,5 +13,7 @@ namespace CompeTournament.Shared.Tournaments
         public int VisitorId { get; set; }
 
         public DateTime DateTime { get; set; }
+
+        public int? TournamentId { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CompeTournament.Backend.Helpers;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CompeTournament.Backend.Data.Entities
 {
@@ -11,9 +12,11 @@ namespace CompeTournament.Backend.Data.Entities
 
         [DataType(DataType.ImageUrl)]
         public string PictureUrl { get; set; }
-         
+
         public TournamentType TournamentType { get; set; }
 
+        public int GroupId { get; set; }
+        [ForeignKey("GroupId")]
         public Group Group { get; set; }
     }
 }

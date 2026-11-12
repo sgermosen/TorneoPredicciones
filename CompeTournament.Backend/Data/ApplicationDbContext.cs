@@ -55,7 +55,7 @@
         public DbSet<UserType> UserTypes { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<TournamentType> TournamentTypes { get; set; }
-       // public DbSet<Tournament> Tournaments { get; set; }
+        public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<League> Leagues { get; set; }
         public DbSet<GroupUser> GroupUsers { get; set; }

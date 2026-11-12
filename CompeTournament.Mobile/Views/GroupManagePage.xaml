@@ -152,6 +152,25 @@
                 </VerticalStackLayout>
             </Border>
 
+            <Label Style="{StaticResource Eyebrow}" Text="Torneos internos" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="12">
+                    <VerticalStackLayout Spacing="6" BindableLayout.ItemsSource="{Binding Tournaments}">
+                        <BindableLayout.EmptyView>
+                            <Label Style="{StaticResource Muted}" Text="Opcional: crea torneos para agrupar partidos dentro del grupo." />
+                        </BindableLayout.EmptyView>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="dto:TournamentDto">
+                                <Label Style="{StaticResource Body}" Text="{Binding Name}" />
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                    <Entry Style="{StaticResource Field}" Placeholder="Nombre del torneo interno" Text="{Binding NewTournamentName}" />
+                    <Button Style="{StaticResource GhostButton}" Text="Agregar torneo"
+                            Command="{Binding CreateTournamentCommand}" IsEnabled="{Binding IsNotBusy}" />
+                </VerticalStackLayout>
+            </Border>
+
             <Label Style="{StaticResource Eyebrow}" Text="Nuevo partido" Padding="8,0" />
             <Border Style="{StaticResource Card}">
                 <VerticalStackLayout Spacing="12">
@@ -170,6 +189,12 @@
                             TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}"
                             TitleColor="{StaticResource TextMuted}" />
                     <Entry Style="{StaticResource Field}" Placeholder="Nombre del partido (opcional)" Text="{Binding NewMatchName}" />
+                    <Picker Title="Torneo interno (opcional)"
+                            ItemsSource="{Binding Tournaments}"
+                            ItemDisplayBinding="{Binding Name}"
+                            SelectedItem="{Binding SelectedTournament}"
+                            TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}"
+                            TitleColor="{StaticResource TextMuted}" />
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
                         <DatePicker Grid.Column="0" Date="{Binding MatchDate}" Format="ddd dd MMM yyyy"
                                     TextColor="{AppThemeBinding Light={StaticResource LightTextPrimary}, Dark={StaticResource TextPrimary}}" />

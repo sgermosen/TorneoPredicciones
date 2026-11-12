@@ -10,6 +10,8 @@ namespace CompeTournament.Shared.Tournaments
 
         public int GroupId { get; set; }
 
+        public int? TournamentId { get; set; }
+
         public int LocalId { get; set; }
 
         public string LocalName { get; set; }

@@ -19,6 +19,8 @@
                         <Label Style="{StaticResource Muted}" Text="Puntos acumulados" />
                         <Label Style="{StaticResource Score}" HorizontalOptions="Start"
                                Text="{Binding CurrentUser.Points}" />
+                        <Label Style="{StaticResource Muted}" FontSize="11"
+                               Text="Suma de todos tus torneos. Cada torneo lleva sus propios puntos." />
                     </VerticalStackLayout>
                     <BoxView HeightRequest="1" Color="{StaticResource Line}" />
                     <VerticalStackLayout Spacing="4">

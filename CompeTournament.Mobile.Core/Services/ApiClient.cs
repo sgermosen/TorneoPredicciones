@@ -93,6 +93,15 @@ namespace CompeTournament.Mobile.Core.Services
         public Task<List<LeagueDto>> GetGroupLeaguesAsync(int groupId) =>
             SendAsync<List<LeagueDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{groupId}/leagues"));
 
+        public Task<TournamentDto> CreateTournamentAsync(int groupId, CreateTournamentRequest request) =>
+            SendAsync<TournamentDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/tournaments")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task<List<TournamentDto>> GetGroupTournamentsAsync(int groupId) =>
+            SendAsync<List<TournamentDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{groupId}/tournaments"));
+
         public Task<StandingDto> CreateTeamAsync(int groupId, CreateTeamRequest request) =>
             SendAsync<StandingDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/teams")
             {

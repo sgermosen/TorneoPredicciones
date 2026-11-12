@@ -42,6 +42,8 @@ namespace CompeTournament.Mobile.Core.ViewModels
 
         public ObservableCollection<LeagueDto> Leagues { get; } = new();
 
+        public ObservableCollection<TournamentDto> Tournaments { get; } = new();
+
         public ObservableCollection<StandingDto> Teams { get; } = new();
 
         public ObservableCollection<MatchDto> OpenMatches { get; } = new();
@@ -51,6 +53,12 @@ namespace CompeTournament.Mobile.Core.ViewModels
 
         [ObservableProperty]
         private LeagueDto? _selectedLeague;
+
+        [ObservableProperty]
+        private string _newTournamentName = string.Empty;
+
+        [ObservableProperty]
+        private TournamentDto? _selectedTournament;
 
         [ObservableProperty]
         private string _newTeamName = string.Empty;
@@ -119,6 +127,9 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 var leagues = await _apiClient.GetGroupLeaguesAsync(GroupId);
                 Replace(Leagues, leagues);
                 SelectedLeague ??= Leagues.FirstOrDefault();
+
+                var tournaments = await _apiClient.GetGroupTournamentsAsync(GroupId);
+                Replace(Tournaments, tournaments);
             }
             catch (Exception ex)
             {
@@ -169,6 +180,25 @@ namespace CompeTournament.Mobile.Core.ViewModels
             var name = NewLeagueName.Trim();
             await RunAsync(() => _apiClient.CreateLeagueAsync(GroupId, new CreateLeagueRequest { Name = name }), $"Liga {name} creada.");
             NewLeagueName = string.Empty;
+        }
+
+        [RelayCommand]
+        private async Task CreateTournamentAsync()
+        {
+            if (IsBusy)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewTournamentName))
+            {
+                ShowError("Escribe el nombre del torneo interno.");
+                return;
+            }
+
+            var name = NewTournamentName.Trim();
+            await RunAsync(() => _apiClient.CreateTournamentAsync(GroupId, new CreateTournamentRequest { Name = name }), $"Torneo {name} creado.");
+            NewTournamentName = string.Empty;
         }
 
         [RelayCommand]
@@ -223,7 +253,8 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 Name = string.IsNullOrWhiteSpace(NewMatchName) ? null : NewMatchName.Trim(),
                 LocalId = SelectedLocal.TeamId,
                 VisitorId = SelectedVisitor.TeamId,
-                DateTime = kickoff
+                DateTime = kickoff,
+                TournamentId = SelectedTournament?.Id
             };
 
             await RunAsync(() => _apiClient.CreateMatchAsync(GroupId, request), "Partido creado.");

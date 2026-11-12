@@ -19,5 +19,7 @@ namespace CompeTournament.Shared.Tournaments
         public bool IsAccepted { get; set; }
 
         public bool IsPublic { get; set; }
+
+        public int MyPoints { get; set; }
     }
 }

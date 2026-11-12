@@ -25,5 +25,7 @@ namespace CompeTournament.Shared.Tournaments
         public List<MatchDto> Matches { get; set; } = new List<MatchDto>();
 
         public List<StandingDto> Standings { get; set; } = new List<StandingDto>();
+
+        public List<TournamentDto> Tournaments { get; set; } = new List<TournamentDto>();
     }
 }

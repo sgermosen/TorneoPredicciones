@@ -137,6 +137,12 @@ namespace CompeTournament.Backend.Controllers.Api
                 .AsNoTracking()
                 .ToListAsync();
 
+            var tournaments = await _context.Tournaments
+                .Where(t => t.GroupId == id)
+                .OrderBy(t => t.Name)
+                .AsNoTracking()
+                .ToListAsync();
+
             var membership = group.GroupUsers.FirstOrDefault(gu => gu.ApplicationUserId == userId);
 
             var detail = new GroupDetailDto
@@ -151,7 +157,8 @@ namespace CompeTournament.Backend.Controllers.Api
                 CanManage = CanManageOwnedBy(group.CreatedBy),
                 IsPublic = group.IsPublic,
                 Matches = matches.Select(m => MapMatch(m, predictions.FirstOrDefault(p => p.MatchId == m.Id))).ToList(),
-                Standings = standings.Select(MapStanding).ToList()
+                Standings = standings.Select(MapStanding).ToList(),
+                Tournaments = tournaments.Select(t => new TournamentDto { Id = t.Id, Name = t.Name }).ToList()
             };
 
             return Ok(detail);
@@ -517,6 +524,61 @@ namespace CompeTournament.Backend.Controllers.Api
             return NoContent();
         }
 
+        [HttpGet("{id:int}/tournaments")]
+        public async Task<ActionResult<List<TournamentDto>>> Tournaments(int id)
+        {
+            var group = await _context.Groups.AsNoTracking().FirstOrDefaultAsync(g => g.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            if (!CanManageOwnedBy(group.CreatedBy))
+            {
+                return StatusCode(403, new { message = "No gestionas este torneo." });
+            }
+
+            var tournaments = await _context.Tournaments
+                .Where(t => t.GroupId == id)
+                .OrderBy(t => t.Name)
+                .Select(t => new TournamentDto { Id = t.Id, Name = t.Name })
+                .AsNoTracking()
+                .ToListAsync();
+
+            return Ok(tournaments);
+        }
+
+        [HttpPost("{id:int}/tournaments")]
+        public async Task<ActionResult<TournamentDto>> CreateTournament(int id, [FromBody] CreateTournamentRequest request)
+        {
+            var group = await _context.Groups.AsNoTracking().FirstOrDefaultAsync(g => g.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            if (!CanManageOwnedBy(group.CreatedBy))
+            {
+                return StatusCode(403, new { message = "No gestionas este torneo." });
+            }
+
+            if (string.IsNullOrWhiteSpace(request.Name))
+            {
+                return BadRequest(new { message = "Escribe el nombre del torneo interno." });
+            }
+
+            var tournament = new Tournament
+            {
+                GroupId = id,
+                Name = request.Name.Trim(),
+                Active = true
+            };
+            _context.Tournaments.Add(tournament);
+            await _context.SaveChangesAsync();
+
+            return Ok(new TournamentDto { Id = tournament.Id, Name = tournament.Name });
+        }
+
         [HttpGet("{id:int}/leagues")]
         public async Task<ActionResult<List<LeagueDto>>> Leagues(int id)
         {
@@ -652,9 +714,19 @@ namespace CompeTournament.Backend.Controllers.Api
                 return BadRequest(new { message = "La fecha y hora del partido deben ser futuras." });
             }
 
+            if (request.TournamentId.HasValue)
+            {
+                var tournamentInGroup = await _context.Tournaments.AnyAsync(t => t.Id == request.TournamentId.Value && t.GroupId == id);
+                if (!tournamentInGroup)
+                {
+                    return BadRequest(new { message = "Elige un torneo interno de este grupo." });
+                }
+            }
+
             var match = new Match
             {
                 GroupId = id,
+                TournamentId = request.TournamentId,
                 Name = string.IsNullOrWhiteSpace(request.Name) ? "Partido" : request.Name.Trim(),
                 LocalId = request.LocalId,
                 VisitorId = request.VisitorId,
@@ -688,7 +760,8 @@ namespace CompeTournament.Backend.Controllers.Api
                 MembersCount = group.GroupUsers?.Count(gu => gu.IsAccepted && !gu.IsBlocked) ?? 0,
                 IsMember = membership != null && !membership.IsBlocked,
                 IsAccepted = membership != null && membership.IsAccepted && !membership.IsBlocked,
-                IsPublic = group.IsPublic
+                IsPublic = group.IsPublic,
+                MyPoints = membership?.Points ?? 0
             };
         }
 
@@ -699,6 +772,7 @@ namespace CompeTournament.Backend.Controllers.Api
                 Id = match.Id,
                 DateTime = DateTime.SpecifyKind(match.DateTime, DateTimeKind.Utc),
                 GroupId = match.GroupId,
+                TournamentId = match.TournamentId,
                 LocalId = match.LocalId,
                 LocalName = match.Local?.Name,
                 LocalInitials = match.Local?.Initials,

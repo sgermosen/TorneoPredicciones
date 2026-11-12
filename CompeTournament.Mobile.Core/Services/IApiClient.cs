@@ -37,6 +37,10 @@ namespace CompeTournament.Mobile.Core.Services
 
         Task<List<LeagueDto>> GetGroupLeaguesAsync(int groupId);
 
+        Task<TournamentDto> CreateTournamentAsync(int groupId, CreateTournamentRequest request);
+
+        Task<List<TournamentDto>> GetGroupTournamentsAsync(int groupId);
+
         Task<StandingDto> CreateTeamAsync(int groupId, CreateTeamRequest request);
 
         Task<MatchDto> CreateMatchAsync(int groupId, CreateMatchRequest request);
