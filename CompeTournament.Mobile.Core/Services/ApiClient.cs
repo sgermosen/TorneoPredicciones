@@ -78,6 +78,12 @@ namespace CompeTournament.Mobile.Core.Services
                 Content = JsonContent.Create(request)
             });
 
+        public Task<LeaderboardEntryDto> AdjustCreditsAsync(int id, string userId, AdjustCreditsRequest request) =>
+            SendAsync<LeaderboardEntryDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{id}/members/{userId}/credits")
+            {
+                Content = JsonContent.Create(request)
+            });
+
         public Task SetGroupVisibilityAsync(int id, SetVisibilityRequest request) =>
             SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{id}/visibility")
             {

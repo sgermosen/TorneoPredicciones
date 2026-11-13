@@ -17,5 +17,7 @@ namespace CompeTournament.Backend.Data.Entities
         public bool IsBlocked { get; set; }
 
         public int Points { get; set; }
+
+        public int Credits { get; set; }
     }
 }

@@ -11,6 +11,10 @@ namespace CompeTournament.Backend.Data.Entities
 
         public bool IsPublic { get; set; }
 
+        public bool CreditsEnabled { get; set; }
+
+        public int InitialCredits { get; set; }
+
         [StringLength(12)]
         public string InviteCode { get; set; }
 

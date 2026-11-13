@@ -14,5 +14,9 @@ namespace CompeTournament.Shared.Tournaments
         public int TournamentTypeId { get; set; }
 
         public bool? IsPublic { get; set; }
+
+        public bool? CreditsEnabled { get; set; }
+
+        public int? InitialCredits { get; set; }
     }
 }

@@ -8,6 +8,8 @@ namespace CompeTournament.Shared.Tournaments
 
         public int Points { get; set; }
 
+        public int Credits { get; set; }
+
         public bool IsAccepted { get; set; }
 
         public bool IsBlocked { get; set; }

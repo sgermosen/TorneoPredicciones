@@ -22,6 +22,10 @@ namespace CompeTournament.Shared.Tournaments
 
         public bool IsPublic { get; set; }
 
+        public bool CreditsEnabled { get; set; }
+
+        public int MyCredits { get; set; }
+
         public List<MatchDto> Matches { get; set; } = new List<MatchDto>();
 
         public List<StandingDto> Standings { get; set; } = new List<StandingDto>();

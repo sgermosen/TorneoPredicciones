@@ -31,6 +31,8 @@ namespace CompeTournament.Mobile.Core.Services
 
         Task<LeaderboardEntryDto> InviteMemberAsync(int id, InviteMemberRequest request);
 
+        Task<LeaderboardEntryDto> AdjustCreditsAsync(int id, string userId, AdjustCreditsRequest request);
+
         Task SetGroupVisibilityAsync(int id, SetVisibilityRequest request);
 
         Task<LeagueDto> CreateLeagueAsync(int groupId, CreateLeagueRequest request);

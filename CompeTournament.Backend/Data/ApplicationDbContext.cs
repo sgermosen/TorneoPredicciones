@@ -61,6 +61,7 @@
         public DbSet<GroupUser> GroupUsers { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<Match> Matches { get; set; }
+        public DbSet<CreditTransaction> CreditTransactions { get; set; }
         public DbSet<Prediction> Predictions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<MatchComment> MatchComments { get; set; }

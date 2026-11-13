@@ -76,7 +76,9 @@ namespace CompeTournament.Backend.Controllers.Api
                 TournamentTypeId = request.TournamentTypeId,
                 InviteCode = InviteCodeGenerator.Generate(),
                 Active = true,
-                IsPublic = request.IsPublic ?? true
+                IsPublic = request.IsPublic ?? true,
+                CreditsEnabled = request.CreditsEnabled ?? false,
+                InitialCredits = Math.Max(0, request.InitialCredits ?? 0)
             };
             _context.Groups.Add(group);
             await _context.SaveChangesAsync();
@@ -90,6 +92,8 @@ namespace CompeTournament.Backend.Controllers.Api
                 Points = 0
             });
             await _context.SaveChangesAsync();
+
+            await GrantInitialCreditsIfNeededAsync(group.Id, userId);
 
             var created = await _context.Groups
                 .Include(g => g.TournamentType)
@@ -156,6 +160,8 @@ namespace CompeTournament.Backend.Controllers.Api
                 IsAccepted = membership != null && membership.IsAccepted && !membership.IsBlocked,
                 CanManage = CanManageOwnedBy(group.CreatedBy),
                 IsPublic = group.IsPublic,
+                CreditsEnabled = group.CreditsEnabled,
+                MyCredits = membership?.Credits ?? 0,
                 Matches = matches.Select(m => MapMatch(m, predictions.FirstOrDefault(p => p.MatchId == m.Id))).ToList(),
                 Standings = standings.Select(MapStanding).ToList(),
                 Tournaments = tournaments.Select(t => new TournamentDto { Id = t.Id, Name = t.Name }).ToList()
@@ -275,6 +281,8 @@ namespace CompeTournament.Backend.Controllers.Api
                 group.GroupUsers.Add(membership);
             }
 
+            await GrantInitialCreditsIfNeededAsync(group.Id, userId);
+
             return Ok(MapGroup(group, userId));
         }
 
@@ -378,6 +386,7 @@ namespace CompeTournament.Backend.Controllers.Api
                     UserId = gu.ApplicationUserId,
                     FullName = gu.ApplicationUser != null ? gu.ApplicationUser.FullName : null,
                     Points = gu.Points,
+                    Credits = gu.Credits,
                     IsAccepted = gu.IsAccepted,
                     IsBlocked = gu.IsBlocked
                 })
@@ -407,6 +416,8 @@ namespace CompeTournament.Backend.Controllers.Api
 
             member.IsAccepted = true;
             await _context.SaveChangesAsync();
+
+            await GrantInitialCreditsIfNeededAsync(id, userId);
 
             return NoContent();
         }
@@ -494,11 +505,14 @@ namespace CompeTournament.Backend.Controllers.Api
                 await _context.SaveChangesAsync();
             }
 
+            await GrantInitialCreditsIfNeededAsync(id, user.Id);
+
             return Ok(new LeaderboardEntryDto
             {
                 UserId = user.Id,
                 FullName = user.FullName,
                 Points = membership.Points,
+                Credits = membership.Credits,
                 IsAccepted = membership.IsAccepted,
                 IsBlocked = membership.IsBlocked
             });
@@ -745,6 +759,92 @@ namespace CompeTournament.Backend.Controllers.Api
                 .FirstAsync(m => m.Id == match.Id);
 
             return Ok(MapMatch(created, null));
+        }
+
+        [HttpPost("{id:int}/members/{userId}/credits")]
+        public async Task<ActionResult<LeaderboardEntryDto>> AdjustCredits(int id, string userId, [FromBody] AdjustCreditsRequest request)
+        {
+            var group = await _context.Groups.AsNoTracking().FirstOrDefaultAsync(g => g.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            if (!CanManageOwnedBy(group.CreatedBy))
+            {
+                return StatusCode(403, new { message = "No gestionas este torneo." });
+            }
+
+            if (!group.CreditsEnabled)
+            {
+                return BadRequest(new { message = "Este torneo no tiene fichas activadas." });
+            }
+
+            var member = await _context.GroupUsers
+                .Include(gu => gu.ApplicationUser)
+                .FirstOrDefaultAsync(gu => gu.GroupId == id && gu.ApplicationUserId == userId);
+            if (member == null)
+            {
+                return NotFound(new { message = "La persona no es miembro de este torneo." });
+            }
+
+            if (member.Credits + request.Amount < 0)
+            {
+                return BadRequest(new { message = "La persona no tiene suficientes fichas para ese ajuste." });
+            }
+
+            member.Credits += request.Amount;
+            _context.CreditTransactions.Add(new CreditTransaction
+            {
+                GroupUserId = member.Id,
+                Amount = request.Amount,
+                BalanceAfter = member.Credits,
+                Reason = "AdminAdjustment"
+            });
+            await _context.SaveChangesAsync();
+
+            return Ok(new LeaderboardEntryDto
+            {
+                UserId = member.ApplicationUserId,
+                FullName = member.ApplicationUser != null ? member.ApplicationUser.FullName : null,
+                Points = member.Points,
+                Credits = member.Credits,
+                IsAccepted = member.IsAccepted,
+                IsBlocked = member.IsBlocked
+            });
+        }
+
+        private async Task GrantInitialCreditsIfNeededAsync(int groupId, string userId)
+        {
+            var group = await _context.Groups.AsNoTracking().FirstOrDefaultAsync(g => g.Id == groupId);
+            if (group == null || !group.CreditsEnabled || group.InitialCredits <= 0)
+            {
+                return;
+            }
+
+            var member = await _context.GroupUsers
+                .FirstOrDefaultAsync(gu => gu.GroupId == groupId && gu.ApplicationUserId == userId);
+            if (member == null || !member.IsAccepted || member.IsBlocked)
+            {
+                return;
+            }
+
+            var alreadyGranted = await _context.CreditTransactions
+                .AnyAsync(ct => ct.GroupUserId == member.Id && ct.Reason == "InitialGrant");
+            if (alreadyGranted)
+            {
+                return;
+            }
+
+            member.Credits += group.InitialCredits;
+            _context.CreditTransactions.Add(new CreditTransaction
+            {
+                GroupUserId = member.Id,
+                Amount = group.InitialCredits,
+                BalanceAfter = member.Credits,
+                Reason = "InitialGrant"
+            });
+            await _context.SaveChangesAsync();
         }
 
         private static GroupDto MapGroup(Group group, string userId)
