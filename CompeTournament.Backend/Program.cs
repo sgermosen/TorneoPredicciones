@@ -148,6 +148,8 @@ namespace CompeTournament.Backend
             builder.Services.AddScoped<IMatchScheduler, MatchScheduler>();
             builder.Services.AddHostedService<MatchSchedulerHostedService>();
             builder.Services.AddScoped<INotificationService, DbNotificationService>();
+            builder.Services.AddHttpClient();
+            builder.Services.AddSingleton<IPushSender, FcmPushSender>();
             builder.Services.AddSignalR();
 
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();
