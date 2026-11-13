@@ -32,6 +32,15 @@ namespace CompeTournament.Mobile.Core.ViewModels
         [ObservableProperty]
         private bool _isPublic = true;
 
+        [ObservableProperty]
+        private bool _creditsEnabled;
+
+        [ObservableProperty]
+        private string _initialCredits = "0";
+
+        [ObservableProperty]
+        private string _predictionCost = "0";
+
         public async Task InitializeAsync()
         {
             if (IsBusy)
@@ -93,7 +102,10 @@ namespace CompeTournament.Mobile.Core.ViewModels
                     Name = Name.Trim(),
                     Requirements = string.IsNullOrWhiteSpace(Requirements) ? null : Requirements.Trim(),
                     TournamentTypeId = SelectedType.Id,
-                    IsPublic = IsPublic
+                    IsPublic = IsPublic,
+                    CreditsEnabled = CreditsEnabled,
+                    InitialCredits = int.TryParse(InitialCredits, out var initial) ? initial : 0,
+                    PredictionCost = int.TryParse(PredictionCost, out var cost) ? cost : 0
                 });
 
                 await _navigation.GoBackAsync();

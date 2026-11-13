@@ -44,6 +44,15 @@
                 <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13" />
             </VerticalStackLayout>
 
+            <Border Style="{StaticResource Card}" IsVisible="{Binding Group.CreditsEnabled}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Style="{StaticResource Muted}" Text="Tus fichas en este torneo" />
+                    <Label Style="{StaticResource Score}" HorizontalOptions="Start" Text="{Binding Group.MyCredits}" />
+                    <Label Style="{StaticResource Muted}" FontSize="11"
+                           Text="Las fichas no son dinero: no se cambian por efectivo, solo se canjean por premios." />
+                </VerticalStackLayout>
+            </Border>
+
             <Border Style="{StaticResource Card}" IsVisible="{Binding Recap, Converter={StaticResource NotEmpty}}">
                 <VerticalStackLayout Spacing="6">
                     <Label Style="{StaticResource Eyebrow}" Text="Resumen de la jornada" />

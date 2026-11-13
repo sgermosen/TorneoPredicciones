@@ -34,6 +34,12 @@ namespace CompeTournament.Mobile.Core.ViewModels
         private bool _isPublic;
 
         [ObservableProperty]
+        private bool _creditsEnabled;
+
+        [ObservableProperty]
+        private int _myCredits;
+
+        [ObservableProperty]
         private string _inviteEmail = string.Empty;
 
         public string Title => GroupName ?? "Gestionar";
@@ -118,6 +124,8 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 var group = await _apiClient.GetGroupAsync(GroupId);
                 GroupName = group.Name;
                 IsPublic = group.IsPublic;
+                CreditsEnabled = group.CreditsEnabled;
+                MyCredits = group.MyCredits;
                 Replace(Teams, group.Standings);
                 Replace(OpenMatches, group.Matches.Where(m => m.IsOpen));
 

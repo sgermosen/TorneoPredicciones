@@ -18,5 +18,7 @@ namespace CompeTournament.Shared.Tournaments
         public bool? CreditsEnabled { get; set; }
 
         public int? InitialCredits { get; set; }
+
+        public int? PredictionCost { get; set; }
     }
 }

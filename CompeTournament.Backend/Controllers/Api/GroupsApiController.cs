@@ -78,7 +78,8 @@ namespace CompeTournament.Backend.Controllers.Api
                 Active = true,
                 IsPublic = request.IsPublic ?? true,
                 CreditsEnabled = request.CreditsEnabled ?? false,
-                InitialCredits = Math.Max(0, request.InitialCredits ?? 0)
+                InitialCredits = Math.Max(0, request.InitialCredits ?? 0),
+                PredictionCost = Math.Max(0, request.PredictionCost ?? 0)
             };
             _context.Groups.Add(group);
             await _context.SaveChangesAsync();
@@ -162,6 +163,7 @@ namespace CompeTournament.Backend.Controllers.Api
                 IsPublic = group.IsPublic,
                 CreditsEnabled = group.CreditsEnabled,
                 MyCredits = membership?.Credits ?? 0,
+                PredictionCost = group.PredictionCost,
                 Matches = matches.Select(m => MapMatch(m, predictions.FirstOrDefault(p => p.MatchId == m.Id))).ToList(),
                 Standings = standings.Select(MapStanding).ToList(),
                 Tournaments = tournaments.Select(t => new TournamentDto { Id = t.Id, Name = t.Name }).ToList()

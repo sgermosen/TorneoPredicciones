@@ -1,6 +1,7 @@
 namespace CompeTournament.Backend.Helpers
 {
     using CompeTournament.Backend.Data;
+    using CompeTournament.Backend.Data.Entities;
     using CompeTournament.Backend.Realtime;
     using CompeTournament.Shared.Live;
     using CompeTournament.Shared.Scoring;
@@ -34,6 +35,8 @@ namespace CompeTournament.Backend.Helpers
             }
 
             using var transaction = await _context.Database.BeginTransactionAsync();
+
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == match.GroupId);
 
             match.LocalPoints = localPoints;
             match.VisitorPoints = visitorPoints;
@@ -131,6 +134,19 @@ namespace CompeTournament.Backend.Helpers
                     if (userGroup != null)
                     {
                         userGroup.Points += points;
+
+                        if (group != null && group.CreditsEnabled)
+                        {
+                            userGroup.Credits += points;
+                            _context.CreditTransactions.Add(new CreditTransaction
+                            {
+                                GroupUserId = userGroup.Id,
+                                Amount = points,
+                                BalanceAfter = userGroup.Credits,
+                                Reason = "Earned"
+                            });
+                        }
+
                         _context.Entry(userGroup).State = EntityState.Modified;
                     }
 

@@ -49,6 +49,15 @@
                 </Grid>
             </Border>
 
+            <Label Style="{StaticResource Eyebrow}" Text="Fichas" Padding="8,0" IsVisible="{Binding CreditsEnabled}" />
+            <Border Style="{StaticResource Card}" IsVisible="{Binding CreditsEnabled}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource Body}" Text="{Binding MyCredits, StringFormat='Tus fichas: {0}'}" />
+                    <Label Style="{StaticResource Muted}" FontSize="11"
+                           Text="Las fichas no son dinero: no se cambian por efectivo, solo se canjean por premios." />
+                </VerticalStackLayout>
+            </Border>
+
             <Label Style="{StaticResource Eyebrow}" Text="Miembros" Padding="8,0" />
             <Border Style="{StaticResource Card}">
                 <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Members}">

@@ -61,18 +61,37 @@ namespace CompeTournament.Backend.Controllers.Api
                 return BadRequest(new { message = "El partido no admite predicciones." });
             }
 
-            var isMember = await _context.GroupUsers
-                .AnyAsync(gu => gu.GroupId == match.GroupId && gu.ApplicationUserId == userId && gu.IsAccepted && !gu.IsBlocked);
-            if (!isMember)
+            var member = await _context.GroupUsers
+                .FirstOrDefaultAsync(gu => gu.GroupId == match.GroupId && gu.ApplicationUserId == userId && gu.IsAccepted && !gu.IsBlocked);
+            if (member == null)
             {
                 return Forbid();
             }
+
+            var group = await _context.Groups.AsNoTracking().FirstOrDefaultAsync(g => g.Id == match.GroupId);
 
             var prediction = await _context.Predictions
                 .FirstOrDefaultAsync(p => p.MatchId == request.MatchId && p.CreatedBy == userId);
 
             if (prediction == null)
             {
+                if (group != null && group.CreditsEnabled && group.PredictionCost > 0)
+                {
+                    if (member.Credits < group.PredictionCost)
+                    {
+                        return BadRequest(new { message = "No tienes suficientes fichas para predecir en este torneo." });
+                    }
+
+                    member.Credits -= group.PredictionCost;
+                    _context.CreditTransactions.Add(new CreditTransaction
+                    {
+                        GroupUserId = member.Id,
+                        Amount = -group.PredictionCost,
+                        BalanceAfter = member.Credits,
+                        Reason = "Spent"
+                    });
+                }
+
                 prediction = new Prediction
                 {
                     MatchId = request.MatchId,

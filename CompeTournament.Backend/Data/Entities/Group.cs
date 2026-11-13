@@ -15,6 +15,8 @@ namespace CompeTournament.Backend.Data.Entities
 
         public int InitialCredits { get; set; }
 
+        public int PredictionCost { get; set; }
+
         [StringLength(12)]
         public string InviteCode { get; set; }
 

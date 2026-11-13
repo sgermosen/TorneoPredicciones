@@ -42,6 +42,17 @@
                         <Label Style="{StaticResource Body}" Text="Torneo público (lo ven todos)" VerticalOptions="Center" />
                     </HorizontalStackLayout>
 
+                    <HorizontalStackLayout Spacing="10">
+                        <Switch IsToggled="{Binding CreditsEnabled}" OnColor="{StaticResource Accent}" />
+                        <Label Style="{StaticResource Body}" Text="Usar fichas" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                    <VerticalStackLayout Spacing="10" IsVisible="{Binding CreditsEnabled}">
+                        <Entry Style="{StaticResource Field}" Keyboard="Numeric" Placeholder="Fichas iniciales por miembro" Text="{Binding InitialCredits}" />
+                        <Entry Style="{StaticResource Field}" Keyboard="Numeric" Placeholder="Costo por predicción (0 = gratis)" Text="{Binding PredictionCost}" />
+                        <Label Style="{StaticResource Muted}" FontSize="11"
+                               Text="Las fichas no son dinero: no se cambian por efectivo, solo se canjean por premios." />
+                    </VerticalStackLayout>
+
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="{StaticResource Loss}"
                            FontSize="13"
