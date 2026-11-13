@@ -11,13 +11,15 @@ namespace CompeTournament.Mobile.Core.ViewModels
         private readonly ITokenStore _tokenStore;
         private readonly ISession _session;
         private readonly INavigationService _navigation;
+        private readonly IDeviceTokenRegistrar _deviceTokenRegistrar;
 
-        public LoginViewModel(IApiClient apiClient, ITokenStore tokenStore, ISession session, INavigationService navigation)
+        public LoginViewModel(IApiClient apiClient, ITokenStore tokenStore, ISession session, INavigationService navigation, IDeviceTokenRegistrar deviceTokenRegistrar = null)
         {
             _apiClient = apiClient;
             _tokenStore = tokenStore;
             _session = session;
             _navigation = navigation;
+            _deviceTokenRegistrar = deviceTokenRegistrar;
         }
 
         [ObservableProperty]
@@ -54,6 +56,17 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 await _tokenStore.SetTokensAsync(response.Token, response.RefreshToken);
                 _session.SetUser(response.User);
                 Password = string.Empty;
+
+                if (_deviceTokenRegistrar != null)
+                {
+                    try
+                    {
+                        await _deviceTokenRegistrar.RegisterAsync();
+                    }
+                    catch
+                    {
+                    }
+                }
 
                 await _navigation.GoToAsync($"//{AppRoutes.Groups}");
             }

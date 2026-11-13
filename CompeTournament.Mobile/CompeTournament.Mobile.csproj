@@ -38,6 +38,12 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.14" />
   </ItemGroup>
 
+  <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
+    <PackageReference Include="Xamarin.Firebase.Messaging" Version="125.1.3" />
+    <PackageReference Include="Xamarin.AndroidX.Fragment.Ktx" Version="1.9.0" />
+    <GoogleServicesJson Include="Platforms\Android\google-services.json" Condition="Exists('Platforms\Android\google-services.json')" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\CompeTournament.Shared\CompeTournament.Shared.csproj" />
     <ProjectReference Include="..\CompeTournament.Mobile.Core\CompeTournament.Mobile.Core.csproj" />

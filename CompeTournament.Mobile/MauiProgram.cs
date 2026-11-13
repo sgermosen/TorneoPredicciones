@@ -20,6 +20,11 @@ namespace CompeTournament.Mobile
             builder.Services.AddSingleton<ITokenStore, SecureStorageTokenStore>();
             builder.Services.AddSingleton<ISession, Session>();
             builder.Services.AddSingleton<INavigationService, ShellNavigationService>();
+#if ANDROID
+            builder.Services.AddSingleton<IDeviceTokenRegistrar, AndroidDeviceTokenRegistrar>();
+#else
+            builder.Services.AddSingleton<IDeviceTokenRegistrar, NoOpDeviceTokenRegistrar>();
+#endif
 
             var apiClient = builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
             {
