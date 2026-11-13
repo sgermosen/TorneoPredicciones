@@ -58,6 +58,107 @@
                 </VerticalStackLayout>
             </Border>
 
+            <Label Style="{StaticResource Eyebrow}" Text="Premios (canje)" Padding="8,0" IsVisible="{Binding CreditsEnabled}" />
+            <Border Style="{StaticResource Card}" IsVisible="{Binding CreditsEnabled}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Style="{StaticResource Muted}" Text="Los premios los pones y los financias tú. Las fichas no son dinero: solo se canjean por premios." />
+                    <VerticalStackLayout Spacing="8" BindableLayout.ItemsSource="{Binding RedemptionItems}">
+                        <BindableLayout.EmptyView>
+                            <Label Style="{StaticResource Muted}" Text="Crea el primer premio para canjear." />
+                        </BindableLayout.EmptyView>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="dto:RedemptionItemDto">
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8">
+                                    <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource Body}" Text="{Binding Name}" />
+                                    <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" FontSize="11"
+                                           Text="{Binding Stock, StringFormat='Inventario: {0}', TargetNullValue='Inventario: ilimitado'}" />
+                                    <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource Body}" FontAttributes="Bold"
+                                           TextColor="{StaticResource Accent}" Text="{Binding CostCredits, StringFormat='{0} fichas'}" />
+                                    <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Muted}" FontSize="11" HorizontalTextAlignment="End" Text="Físico">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsDigital}" Value="True">
+                                                <Setter Property="Text" Value="Digital" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+
+                    <Entry Style="{StaticResource Field}" Placeholder="Nombre del premio" Text="{Binding NewItemName}" />
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                        <Entry Grid.Column="0" Style="{StaticResource Field}" Keyboard="Numeric" Placeholder="Costo en fichas" Text="{Binding NewItemCost}" />
+                        <Entry Grid.Column="1" Style="{StaticResource Field}" Keyboard="Numeric" Placeholder="Inventario (opcional)" Text="{Binding NewItemStock}" />
+                    </Grid>
+                    <HorizontalStackLayout Spacing="10">
+                        <Switch IsToggled="{Binding NewItemIsDigital}" />
+                        <Label Style="{StaticResource Body}" VerticalOptions="Center" Text="Premio digital (código o enlace)" />
+                    </HorizontalStackLayout>
+                    <Button Style="{StaticResource GhostButton}" Text="Agregar premio"
+                            Command="{Binding CreateItemCommand}" IsEnabled="{Binding IsNotBusy}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Solicitudes de canje" Padding="8,0" IsVisible="{Binding CreditsEnabled}" />
+            <Border Style="{StaticResource Card}" IsVisible="{Binding CreditsEnabled}">
+                <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding Requests}">
+                    <BindableLayout.EmptyView>
+                        <Label Style="{StaticResource Muted}" Text="Nadie ha canjeado todavía." />
+                    </BindableLayout.EmptyView>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:RedemptionDto">
+                            <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="2">
+                                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource Body}" Text="{Binding ItemName}" />
+                                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" Text="{Binding UserFullName}" />
+                                <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource Muted}" FontSize="11"
+                                       Text="{Binding DeliveryInfo, StringFormat='Entrega: {0}'}"
+                                       IsVisible="{Binding DeliveryInfo, Converter={StaticResource NotEmpty}}" />
+                                <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource Muted}" HorizontalTextAlignment="End"
+                                       Text="{Binding CostCredits, StringFormat='{0} fichas'}" />
+                                <Label Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource Muted}" FontSize="11" HorizontalTextAlignment="End" Text="Solicitado">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Delivered">
+                                            <Setter Property="Text" Value="Entregado" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Rejected">
+                                            <Setter Property="Text" Value="Rechazado" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Cancelled">
+                                            <Setter Property="Text" Value="Cancelado" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Button Grid.Row="2" Grid.Column="1" Text="Entregar"
+                                        HeightRequest="34" Padding="12,0" FontSize="12"
+                                        BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}" CornerRadius="12"
+                                        IsVisible="False"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupManageViewModel}}, Path=DeliverCommand}"
+                                        CommandParameter="{Binding .}">
+                                    <Button.Triggers>
+                                        <DataTrigger TargetType="Button" Binding="{Binding Status}" Value="Requested">
+                                            <Setter Property="IsVisible" Value="True" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                                <Button Grid.Row="2" Grid.Column="2" Text="Rechazar"
+                                        HeightRequest="34" Padding="12,0" FontSize="12"
+                                        BackgroundColor="{StaticResource Loss}" TextColor="{StaticResource LightBase}" CornerRadius="12"
+                                        IsVisible="False"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:GroupManageViewModel}}, Path=RejectCommand}"
+                                        CommandParameter="{Binding .}">
+                                    <Button.Triggers>
+                                        <DataTrigger TargetType="Button" Binding="{Binding Status}" Value="Requested">
+                                            <Setter Property="IsVisible" Value="True" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
             <Label Style="{StaticResource Eyebrow}" Text="Miembros" Padding="8,0" />
             <Border Style="{StaticResource Card}">
                 <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Members}">

@@ -24,6 +24,7 @@ namespace CompeTournament.Mobile.Views
         {
             base.OnAppearing();
             await _viewModel.LoadAsync();
+            await _viewModel.TryJoinPendingAsync();
         }
 
         protected override void OnDisappearing()

@@ -1,6 +1,7 @@
 namespace CompeTournament.Mobile.Core.Services
 {
     using CompeTournament.Shared.Auth;
+    using CompeTournament.Shared.Notifications;
     using CompeTournament.Shared.Tournaments;
 
     public interface IApiClient
@@ -32,6 +33,42 @@ namespace CompeTournament.Mobile.Core.Services
         Task<LeaderboardEntryDto> InviteMemberAsync(int id, InviteMemberRequest request);
 
         Task<LeaderboardEntryDto> AdjustCreditsAsync(int id, string userId, AdjustCreditsRequest request);
+
+        Task<List<RedemptionItemDto>> GetRedemptionItemsAsync(int groupId);
+
+        Task<RedemptionItemDto> CreateRedemptionItemAsync(int groupId, CreateRedemptionItemRequest request);
+
+        Task SetRedemptionItemActiveAsync(int groupId, int itemId, SetItemActiveRequest request);
+
+        Task<RedemptionDto> RedeemAsync(int groupId, RedeemRequest request);
+
+        Task<List<RedemptionDto>> GetMyRedemptionsAsync(int groupId);
+
+        Task<List<RedemptionDto>> GetGroupRedemptionsAsync(int groupId);
+
+        Task DeliverRedemptionAsync(int groupId, int redemptionId, DeliverRedemptionRequest request);
+
+        Task RejectRedemptionAsync(int groupId, int redemptionId);
+
+        Task CancelRedemptionAsync(int groupId, int redemptionId);
+
+        Task<List<CreditTransactionDto>> GetCreditHistoryAsync(int groupId);
+
+        Task<DuelDto> CreateDuelAsync(int groupId, CreateDuelRequest request);
+
+        Task AcceptDuelAsync(int groupId, int duelId);
+
+        Task DeclineDuelAsync(int groupId, int duelId);
+
+        Task<List<DuelDto>> GetMyDuelsAsync(int groupId);
+
+        Task<List<NotificationDto>> GetNotificationsAsync();
+
+        Task<int> GetUnreadNotificationCountAsync();
+
+        Task MarkNotificationReadAsync(int id);
+
+        Task MarkAllNotificationsReadAsync();
 
         Task SetGroupVisibilityAsync(int id, SetVisibilityRequest request);
 

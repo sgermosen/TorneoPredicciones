@@ -32,7 +32,15 @@ namespace CompeTournament.Mobile.Core.ViewModels
         [ObservableProperty]
         private string? _successMessage;
 
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(NotificationsLabel))]
+        private int _unreadNotifications;
+
         public string Title => ShowOnlyMine ? "Mis grupos" : "Torneos";
+
+        public string NotificationsLabel => UnreadNotifications > 0
+            ? $"Notificaciones ({UnreadNotifications})"
+            : "Notificaciones";
 
         partial void OnShowOnlyMineChanged(bool value) => _ = LoadAsync();
 
@@ -57,6 +65,15 @@ namespace CompeTournament.Mobile.Core.ViewModels
                 foreach (var group in groups)
                 {
                     Groups.Add(group);
+                }
+
+                try
+                {
+                    UnreadNotifications = await _apiClient.GetUnreadNotificationCountAsync();
+                }
+                catch (Exception)
+                {
+                    UnreadNotifications = 0;
                 }
             }
             catch (Exception ex)
@@ -108,8 +125,43 @@ namespace CompeTournament.Mobile.Core.ViewModels
             SuccessMessage = $"Te uniste a {group.Name}.";
         }
 
+        public async Task TryJoinPendingAsync()
+        {
+            var code = AppLinkState.PendingInviteCode;
+            if (string.IsNullOrWhiteSpace(code) || IsBusy)
+            {
+                return;
+            }
+
+            AppLinkState.PendingInviteCode = null;
+            ClearError();
+            SuccessMessage = null;
+
+            GroupDto group;
+            try
+            {
+                IsBusy = true;
+                group = await _apiClient.JoinByCodeAsync(code.Trim());
+            }
+            catch (Exception ex)
+            {
+                ShowError(DescribeError(ex));
+                return;
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
+            await LoadAsync();
+            SuccessMessage = $"Te uniste a {group.Name}.";
+        }
+
         [RelayCommand]
         private Task OpenCreateAsync() => _navigation.GoToAsync(AppRoutes.CreateGroup);
+
+        [RelayCommand]
+        private Task OpenNotificationsAsync() => _navigation.GoToAsync(AppRoutes.Notifications);
 
         [RelayCommand]
         private Task OpenGroupAsync(GroupDto group)

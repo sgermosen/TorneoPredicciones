@@ -8,6 +8,10 @@ namespace CompeTournament.Mobile.Core
         public const string CreateGroup = "creategroup";
         public const string GroupDetail = "groupdetail";
         public const string GroupManage = "groupmanage";
+        public const string Redeem = "redeem";
+        public const string CreditHistory = "credithistory";
+        public const string Notifications = "notifications";
+        public const string Duels = "duels";
         public const string MatchPrediction = "matchprediction";
         public const string Profile = "profile";
     }

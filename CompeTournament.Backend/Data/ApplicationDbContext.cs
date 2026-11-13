@@ -62,6 +62,10 @@
         public DbSet<Team> Teams { get; set; }
         public DbSet<Match> Matches { get; set; }
         public DbSet<CreditTransaction> CreditTransactions { get; set; }
+        public DbSet<RedemptionItem> RedemptionItems { get; set; }
+        public DbSet<Redemption> Redemptions { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Duel> Duels { get; set; }
         public DbSet<Prediction> Predictions { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<MatchComment> MatchComments { get; set; }

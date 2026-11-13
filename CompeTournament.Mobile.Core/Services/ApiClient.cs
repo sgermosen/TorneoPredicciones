@@ -1,6 +1,7 @@
 namespace CompeTournament.Mobile.Core.Services
 {
     using CompeTournament.Shared.Auth;
+    using CompeTournament.Shared.Notifications;
     using CompeTournament.Shared.Tournaments;
     using System.Net;
     using System.Net.Http.Headers;
@@ -83,6 +84,75 @@ namespace CompeTournament.Mobile.Core.Services
             {
                 Content = JsonContent.Create(request)
             });
+
+        public Task<List<RedemptionItemDto>> GetRedemptionItemsAsync(int groupId) =>
+            SendAsync<List<RedemptionItemDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{groupId}/redemption-items"));
+
+        public Task<RedemptionItemDto> CreateRedemptionItemAsync(int groupId, CreateRedemptionItemRequest request) =>
+            SendAsync<RedemptionItemDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/redemption-items")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task SetRedemptionItemActiveAsync(int groupId, int itemId, SetItemActiveRequest request) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/redemption-items/{itemId}/active")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task<RedemptionDto> RedeemAsync(int groupId, RedeemRequest request) =>
+            SendAsync<RedemptionDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/redeem")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task<List<RedemptionDto>> GetMyRedemptionsAsync(int groupId) =>
+            SendAsync<List<RedemptionDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{groupId}/redemptions/mine"));
+
+        public Task<List<RedemptionDto>> GetGroupRedemptionsAsync(int groupId) =>
+            SendAsync<List<RedemptionDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{groupId}/redemptions"));
+
+        public Task DeliverRedemptionAsync(int groupId, int redemptionId, DeliverRedemptionRequest request) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/redemptions/{redemptionId}/deliver")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task RejectRedemptionAsync(int groupId, int redemptionId) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/redemptions/{redemptionId}/reject"));
+
+        public Task CancelRedemptionAsync(int groupId, int redemptionId) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/redemptions/{redemptionId}/cancel"));
+
+        public Task<List<CreditTransactionDto>> GetCreditHistoryAsync(int groupId) =>
+            SendAsync<List<CreditTransactionDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{groupId}/credits/history"));
+
+        public Task<DuelDto> CreateDuelAsync(int groupId, CreateDuelRequest request) =>
+            SendAsync<DuelDto>(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/duels")
+            {
+                Content = JsonContent.Create(request)
+            });
+
+        public Task AcceptDuelAsync(int groupId, int duelId) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/duels/{duelId}/accept"));
+
+        public Task DeclineDuelAsync(int groupId, int duelId) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{groupId}/duels/{duelId}/decline"));
+
+        public Task<List<DuelDto>> GetMyDuelsAsync(int groupId) =>
+            SendAsync<List<DuelDto>>(() => new HttpRequestMessage(HttpMethod.Get, $"api/groups/{groupId}/duels/mine"));
+
+        public Task<List<NotificationDto>> GetNotificationsAsync() =>
+            SendAsync<List<NotificationDto>>(() => new HttpRequestMessage(HttpMethod.Get, "api/notifications"));
+
+        public Task<int> GetUnreadNotificationCountAsync() =>
+            SendAsync<int>(() => new HttpRequestMessage(HttpMethod.Get, "api/notifications/unread-count"));
+
+        public Task MarkNotificationReadAsync(int id) =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/notifications/{id}/read"));
+
+        public Task MarkAllNotificationsReadAsync() =>
+            SendAsync(() => new HttpRequestMessage(HttpMethod.Post, "api/notifications/read-all"));
 
         public Task SetGroupVisibilityAsync(int id, SetVisibilityRequest request) =>
             SendAsync(() => new HttpRequestMessage(HttpMethod.Post, $"api/groups/{id}/visibility")

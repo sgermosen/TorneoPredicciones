@@ -1,5 +1,7 @@
 namespace CompeTournament.Mobile.Core.ViewModels
 {
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using CompeTournament.Mobile.Core.Services;
@@ -25,6 +27,58 @@ namespace CompeTournament.Mobile.Core.ViewModels
 
         [ObservableProperty]
         private InsightsDto? _insights;
+
+        public ObservableCollection<Badge> Badges { get; } = new();
+
+        partial void OnInsightsChanged(InsightsDto? value)
+        {
+            Badges.Clear();
+            foreach (var badge in BuildBadges(value))
+            {
+                Badges.Add(badge);
+            }
+        }
+
+        public static IReadOnlyList<Badge> BuildBadges(InsightsDto? insights)
+        {
+            var badges = new List<Badge>();
+            if (insights == null)
+            {
+                return badges;
+            }
+
+            if (insights.ExactHits + insights.OutcomeHits >= 1)
+            {
+                badges.Add(new Badge { Name = "Primer acierto", Description = "Acertaste tu primera predicción." });
+            }
+
+            if (insights.ExactHits >= 5)
+            {
+                badges.Add(new Badge { Name = "Francotirador", Description = "5 marcadores exactos." });
+            }
+
+            if (insights.CurrentStreak >= 3)
+            {
+                badges.Add(new Badge { Name = "En racha", Description = "3 aciertos seguidos." });
+            }
+
+            if (insights.BestStreak >= 5)
+            {
+                badges.Add(new Badge { Name = "Imparable", Description = "Mejor racha de 5 o más." });
+            }
+
+            if (insights.TotalPoints >= 100)
+            {
+                badges.Add(new Badge { Name = "Centenario", Description = "100 puntos acumulados." });
+            }
+
+            if (insights.TotalResolved >= 10 && insights.Accuracy >= 0.7)
+            {
+                badges.Add(new Badge { Name = "Experto", Description = "70% de acierto con 10 o más predicciones." });
+            }
+
+            return badges;
+        }
 
         [RelayCommand]
         private async Task RefreshAsync()

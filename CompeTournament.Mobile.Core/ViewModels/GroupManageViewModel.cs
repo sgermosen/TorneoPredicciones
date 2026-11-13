@@ -42,6 +42,18 @@ namespace CompeTournament.Mobile.Core.ViewModels
         [ObservableProperty]
         private string _inviteEmail = string.Empty;
 
+        [ObservableProperty]
+        private string _newItemName = string.Empty;
+
+        [ObservableProperty]
+        private string _newItemCost = string.Empty;
+
+        [ObservableProperty]
+        private string _newItemStock = string.Empty;
+
+        [ObservableProperty]
+        private bool _newItemIsDigital;
+
         public string Title => GroupName ?? "Gestionar";
 
         public ObservableCollection<LeaderboardEntryDto> Members { get; } = new();
@@ -49,6 +61,10 @@ namespace CompeTournament.Mobile.Core.ViewModels
         public ObservableCollection<LeagueDto> Leagues { get; } = new();
 
         public ObservableCollection<TournamentDto> Tournaments { get; } = new();
+
+        public ObservableCollection<RedemptionItemDto> RedemptionItems { get; } = new();
+
+        public ObservableCollection<RedemptionDto> Requests { get; } = new();
 
         public ObservableCollection<StandingDto> Teams { get; } = new();
 
@@ -138,6 +154,20 @@ namespace CompeTournament.Mobile.Core.ViewModels
 
                 var tournaments = await _apiClient.GetGroupTournamentsAsync(GroupId);
                 Replace(Tournaments, tournaments);
+
+                if (CreditsEnabled)
+                {
+                    var items = await _apiClient.GetRedemptionItemsAsync(GroupId);
+                    Replace(RedemptionItems, items);
+
+                    var requests = await _apiClient.GetGroupRedemptionsAsync(GroupId);
+                    Replace(Requests, requests);
+                }
+                else
+                {
+                    RedemptionItems.Clear();
+                    Requests.Clear();
+                }
             }
             catch (Exception ex)
             {
@@ -338,6 +368,71 @@ namespace CompeTournament.Mobile.Core.ViewModels
             await RunAsync(
                 () => _apiClient.SetGroupVisibilityAsync(GroupId, new SetVisibilityRequest { IsPublic = target }),
                 target ? "El torneo ahora es público." : "El torneo ahora es privado.");
+        }
+
+        [RelayCommand]
+        private async Task CreateItemAsync()
+        {
+            if (IsBusy)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewItemName))
+            {
+                ShowError("Escribe el nombre del premio.");
+                return;
+            }
+
+            if (!int.TryParse(NewItemCost, out var cost) || cost <= 0)
+            {
+                ShowError("Escribe un costo en fichas mayor que cero.");
+                return;
+            }
+
+            int? stock = null;
+            if (!string.IsNullOrWhiteSpace(NewItemStock))
+            {
+                if (!int.TryParse(NewItemStock, out var parsedStock) || parsedStock < 0)
+                {
+                    ShowError("El inventario debe ser un número de 0 o más, o déjalo vacío para ilimitado.");
+                    return;
+                }
+
+                stock = parsedStock;
+            }
+
+            var name = NewItemName.Trim();
+            var isDigital = NewItemIsDigital;
+            await RunAsync(
+                () => _apiClient.CreateRedemptionItemAsync(GroupId, new CreateRedemptionItemRequest { Name = name, CostCredits = cost, Stock = stock, IsDigital = isDigital }),
+                $"Premio {name} creado.");
+            NewItemName = string.Empty;
+            NewItemCost = string.Empty;
+            NewItemStock = string.Empty;
+            NewItemIsDigital = false;
+        }
+
+        [RelayCommand]
+        private async Task DeliverAsync(RedemptionDto redemption)
+        {
+            if (redemption == null || IsBusy)
+            {
+                return;
+            }
+
+            await RunAsync(() => _apiClient.DeliverRedemptionAsync(GroupId, redemption.Id, new DeliverRedemptionRequest()), "Canje entregado.");
+        }
+
+        [RelayCommand]
+        private async Task RejectAsync(RedemptionDto redemption)
+        {
+            if (redemption == null || IsBusy)
+            {
+                return;
+            }
+
+            await RunAsync(() => _apiClient.RejectRedemptionAsync(GroupId, redemption.Id), "Canje rechazado y fichas devueltas.");
         }
 
         [RelayCommand]

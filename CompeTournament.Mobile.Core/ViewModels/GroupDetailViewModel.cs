@@ -1,6 +1,8 @@
 namespace CompeTournament.Mobile.Core.ViewModels
 {
     using System.Collections.ObjectModel;
+    using System.Linq;
+    using System.Text;
     using CommunityToolkit.Mvvm.ComponentModel;
     using CommunityToolkit.Mvvm.Input;
     using CompeTournament.Mobile.Core.Services;
@@ -30,6 +32,9 @@ namespace CompeTournament.Mobile.Core.ViewModels
         [NotifyPropertyChangedFor(nameof(CanJoin))]
         [NotifyPropertyChangedFor(nameof(IsPending))]
         [NotifyPropertyChangedFor(nameof(CanManage))]
+        [NotifyPropertyChangedFor(nameof(CanRedeem))]
+        [NotifyPropertyChangedFor(nameof(VisibilityText))]
+        [NotifyPropertyChangedFor(nameof(PredictionCostText))]
         private GroupDetailDto? _group;
 
         [ObservableProperty]
@@ -48,6 +53,20 @@ namespace CompeTournament.Mobile.Core.ViewModels
         public bool IsPending => Group != null && Group.IsMember && !Group.IsAccepted;
 
         public bool CanManage => Group != null && Group.CanManage;
+
+        public bool CanRedeem => Group != null && Group.CreditsEnabled && Group.IsAccepted;
+
+        public string? VisibilityText => Group == null
+            ? null
+            : Group.IsPublic
+                ? "Torneo público: cualquiera puede unirse."
+                : "Torneo privado: solo por invitación.";
+
+        public string? PredictionCostText => Group == null || !Group.CreditsEnabled
+            ? null
+            : Group.PredictionCost > 0
+                ? $"Cada predicción cuesta {Group.PredictionCost} fichas."
+                : "Predecir es gratis.";
 
         public ObservableCollection<MatchDto> Matches { get; } = new();
 
@@ -201,6 +220,81 @@ namespace CompeTournament.Mobile.Core.ViewModels
             {
                 ["groupId"] = GroupId
             });
+        }
+
+        [RelayCommand]
+        private Task OpenRedeemAsync()
+        {
+            if (Group == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            return _navigation.GoToAsync(AppRoutes.Redeem, new Dictionary<string, object>
+            {
+                ["groupId"] = GroupId
+            });
+        }
+
+        [RelayCommand]
+        private Task OpenCreditHistoryAsync()
+        {
+            if (Group == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            return _navigation.GoToAsync(AppRoutes.CreditHistory, new Dictionary<string, object>
+            {
+                ["groupId"] = GroupId
+            });
+        }
+
+        [RelayCommand]
+        private Task OpenDuelsAsync()
+        {
+            if (Group == null)
+            {
+                return Task.CompletedTask;
+            }
+
+            return _navigation.GoToAsync(AppRoutes.Duels, new Dictionary<string, object>
+            {
+                ["groupId"] = GroupId
+            });
+        }
+
+        public string BuildShareText()
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine($"{Group?.Name} - Copa Amistosa");
+
+            if (Leaderboard.Count > 0)
+            {
+                builder.AppendLine();
+                builder.AppendLine("Ranking:");
+                var position = 1;
+                foreach (var entry in Leaderboard.Take(3))
+                {
+                    builder.AppendLine($"{position}. {entry.FullName} - {entry.Points} pts");
+                    position++;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(Recap))
+            {
+                builder.AppendLine();
+                builder.AppendLine(Recap);
+            }
+
+            if (!string.IsNullOrWhiteSpace(InviteCode))
+            {
+                builder.AppendLine();
+                builder.AppendLine($"Únete con el código {InviteCode}");
+                builder.AppendLine($"copaamistosa://join?code={InviteCode}");
+            }
+
+            return builder.ToString().TrimEnd();
         }
 
         private static void Replace<T>(ObservableCollection<T> target, IEnumerable<T> items)

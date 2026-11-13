@@ -55,6 +55,10 @@ namespace CompeTournament.Mobile
             builder.Services.AddTransient<CreateGroupViewModel>();
             builder.Services.AddTransient<GroupDetailViewModel>();
             builder.Services.AddTransient<GroupManageViewModel>();
+            builder.Services.AddTransient<RedeemViewModel>();
+            builder.Services.AddTransient<CreditHistoryViewModel>();
+            builder.Services.AddTransient<NotificationsViewModel>();
+            builder.Services.AddTransient<DuelsViewModel>();
             builder.Services.AddTransient<MatchPredictionViewModel>();
             builder.Services.AddTransient<ProfileViewModel>();
 
@@ -64,6 +68,10 @@ namespace CompeTournament.Mobile
             builder.Services.AddTransient<CreateGroupPage>();
             builder.Services.AddTransient<GroupDetailPage>();
             builder.Services.AddTransient<GroupManagePage>();
+            builder.Services.AddTransient<RedeemPage>();
+            builder.Services.AddTransient<CreditHistoryPage>();
+            builder.Services.AddTransient<NotificationsPage>();
+            builder.Services.AddTransient<DuelsPage>();
             builder.Services.AddTransient<MatchPredictionPage>();
             builder.Services.AddTransient<ProfilePage>();
 

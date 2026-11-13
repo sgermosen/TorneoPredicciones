@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             xmlns:dto="clr-namespace:CompeTournament.Shared.Tournaments;assembly=CompeTournament.Shared"
+             x:Class="CompeTournament.Mobile.Views.RedeemPage"
+             x:DataType="vm:RedeemViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16,16,32" Spacing="18">
+
+            <VerticalStackLayout Spacing="6" Padding="8,0">
+                <Label Style="{StaticResource Eyebrow}" Text="Canje de premios" />
+                <Label Style="{StaticResource Headline}" Text="{Binding GroupName}" />
+                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="Start" />
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13"
+                       IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
+                <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource Win}" FontSize="13"
+                       IsVisible="{Binding SuccessMessage, Converter={StaticResource NotEmpty}}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Style="{StaticResource Muted}" Text="Tus fichas" />
+                    <Label Style="{StaticResource Score}" HorizontalOptions="Start" Text="{Binding MyCredits}" />
+                    <Label Style="{StaticResource Muted}" FontSize="11"
+                           Text="Las fichas no son dinero: no se cambian por efectivo, solo se canjean por premios." />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="8">
+                    <Label Style="{StaticResource Muted}" Text="Datos de entrega (opcional): dirección o cómo contactarte." />
+                    <Entry Style="{StaticResource Field}" Placeholder="Ej.: Calle 1 #2, o @usuario" Text="{Binding DeliveryInfo}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Premios disponibles" Padding="8,0" />
+            <VerticalStackLayout Spacing="12" BindableLayout.ItemsSource="{Binding Items}">
+                <BindableLayout.EmptyView>
+                    <Label Style="{StaticResource Muted}" Padding="8,0" Text="Todavía no hay premios en este torneo." />
+                </BindableLayout.EmptyView>
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="dto:RedemptionItemDto">
+                        <Border Style="{StaticResource Card}">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="2">
+                                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SubHeadline}" Text="{Binding Name}" />
+                                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" Text="{Binding Description}"
+                                       IsVisible="{Binding Description, Converter={StaticResource NotEmpty}}" />
+                                <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource Muted}" Text="Premio físico">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsDigital}" Value="True">
+                                            <Setter Property="Text" Value="Premio digital" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource Body}" FontAttributes="Bold"
+                                       TextColor="{StaticResource Accent}" Text="{Binding CostCredits, StringFormat='{0} fichas'}" />
+                                <Button Grid.Row="2" Grid.Column="1" Text="Canjear"
+                                        HeightRequest="36" Padding="16,0" FontSize="13"
+                                        BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}" CornerRadius="12"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RedeemViewModel}}, Path=RedeemCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Mis canjes" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding MyRedemptions}">
+                    <BindableLayout.EmptyView>
+                        <Label Style="{StaticResource Muted}" Text="Aún no has canjeado nada." />
+                    </BindableLayout.EmptyView>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:RedemptionDto">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="2">
+                                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource Body}" Text="{Binding ItemName}" />
+                                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" Text="Solicitado">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Delivered">
+                                            <Setter Property="Text" Value="Entregado" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Rejected">
+                                            <Setter Property="Text" Value="Rechazado (fichas devueltas)" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Status}" Value="Cancelled">
+                                            <Setter Property="Text" Value="Cancelado (fichas devueltas)" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource Muted}" FontSize="11"
+                                       Text="{Binding DeliveryReference, StringFormat='Entrega: {0}'}"
+                                       IsVisible="{Binding DeliveryReference, Converter={StaticResource NotEmpty}}" />
+                                <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource Muted}"
+                                       Text="{Binding CostCredits, StringFormat='{0} fichas'}" />
+                                <Button Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Text="Cancelar"
+                                        HeightRequest="34" Padding="14,0" FontSize="12"
+                                        BackgroundColor="{StaticResource Loss}" TextColor="{StaticResource LightBase}" CornerRadius="12"
+                                        IsVisible="False"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RedeemViewModel}}, Path=CancelCommand}"
+                                        CommandParameter="{Binding .}">
+                                    <Button.Triggers>
+                                        <DataTrigger TargetType="Button" Binding="{Binding Status}" Value="Requested">
+                                            <Setter Property="IsVisible" Value="True" />
+                                        </DataTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Style="{StaticResource GhostButton}" Text="Volver" Command="{Binding BackCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

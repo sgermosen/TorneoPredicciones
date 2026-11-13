@@ -147,7 +147,7 @@ namespace CompeTournament.Backend
             builder.Services.AddScoped<IJornadaRecapGenerator, TemplateRecapGenerator>();
             builder.Services.AddScoped<IMatchScheduler, MatchScheduler>();
             builder.Services.AddHostedService<MatchSchedulerHostedService>();
-            builder.Services.AddScoped<INotificationService, LoggerNotificationService>();
+            builder.Services.AddScoped<INotificationService, DbNotificationService>();
             builder.Services.AddSignalR();
 
             builder.Services.AddScoped<IGroupRepository, GroupRepository>();

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             xmlns:dto="clr-namespace:CompeTournament.Shared.Tournaments;assembly=CompeTournament.Shared"
+             x:Class="CompeTournament.Mobile.Views.DuelsPage"
+             x:DataType="vm:DuelsViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16,16,32" Spacing="18">
+
+            <VerticalStackLayout Spacing="6" Padding="8,0">
+                <Label Style="{StaticResource Eyebrow}" Text="Duelos 1 vs 1" />
+                <Label Style="{StaticResource Headline}" Text="{Binding GroupName}" />
+                <Label Style="{StaticResource Muted}" Text="Reta a un amigo en un partido: gana quien saque más puntos con su predicción." />
+                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="Start" />
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13"
+                       IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
+                <Label Text="{Binding SuccessMessage}" TextColor="{StaticResource Win}" FontSize="13"
+                       IsVisible="{Binding SuccessMessage, Converter={StaticResource NotEmpty}}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Style="{StaticResource Eyebrow}" Text="Retar a alguien" />
+                    <Picker Title="Rival" ItemsSource="{Binding Opponents}" SelectedItem="{Binding SelectedOpponent}"
+                            ItemDisplayBinding="{Binding FullName}" TextColor="{StaticResource TextPrimary}" />
+                    <Picker Title="Partido" ItemsSource="{Binding Matches}" SelectedItem="{Binding SelectedMatch}"
+                            ItemDisplayBinding="{Binding Label}" TextColor="{StaticResource TextPrimary}" />
+                    <Button Text="Retar" Style="{StaticResource PrimaryButton}" Command="{Binding CreateCommand}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Mis duelos" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding Duels}">
+                    <BindableLayout.EmptyView>
+                        <Label Style="{StaticResource Muted}" Text="Aún no tienes duelos." />
+                    </BindableLayout.EmptyView>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:DuelDto">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="8" RowSpacing="2">
+                                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource SubHeadline}" Text="{Binding MatchLabel}" />
+                                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}"
+                                       Text="{Binding ChallengerName, StringFormat='{0} reta'}" />
+                                <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Muted}" HorizontalOptions="End"
+                                       Text="{Binding OpponentName}" />
+                                <Label Grid.Row="2" Grid.Column="0" Style="{StaticResource Body}" FontAttributes="Bold"
+                                       TextColor="{StaticResource Accent}" Text="{Binding StatusLabel}" />
+                                <HorizontalStackLayout Grid.Row="2" Grid.Column="1" Spacing="6" HorizontalOptions="End"
+                                                       IsVisible="{Binding CanRespond}">
+                                    <Button Text="Aceptar" HeightRequest="32" Padding="12,0" FontSize="12"
+                                            BackgroundColor="{StaticResource Accent}" TextColor="{StaticResource Ink}" CornerRadius="10"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DuelsViewModel}}, Path=AcceptCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    <Button Text="Rechazar" HeightRequest="32" Padding="12,0" FontSize="12"
+                                            BackgroundColor="{StaticResource Loss}" TextColor="{StaticResource LightBase}" CornerRadius="10"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:DuelsViewModel}}, Path=DeclineCommand}"
+                                            CommandParameter="{Binding .}" />
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Style="{StaticResource GhostButton}" Text="Volver" Command="{Binding BackCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

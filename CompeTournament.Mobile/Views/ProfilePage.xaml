@@ -56,6 +56,30 @@
                 </VerticalStackLayout>
             </Border>
 
+            <Border Style="{StaticResource Card}" IsVisible="{Binding Insights, Converter={StaticResource NotNull}}">
+                <VerticalStackLayout Spacing="12">
+                    <Label Style="{StaticResource Eyebrow}" Text="Insignias" />
+                    <VerticalStackLayout Spacing="10" BindableLayout.ItemsSource="{Binding Badges}">
+                        <BindableLayout.EmptyView>
+                            <Label Style="{StaticResource Muted}" Text="Haz predicciones y acierta para ganar insignias." />
+                        </BindableLayout.EmptyView>
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate x:DataType="vm:Badge">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <Border Grid.Column="0" BackgroundColor="{StaticResource Accent}" Stroke="Transparent"
+                                            StrokeShape="RoundRectangle 10" Padding="10,4" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}" TextColor="{StaticResource Ink}"
+                                               FontSize="12" FontAttributes="Bold" />
+                                    </Border>
+                                    <Label Grid.Column="1" Style="{StaticResource Muted}" VerticalOptions="Center"
+                                           Text="{Binding Description}" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
             <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13" />
 
             <Button Style="{StaticResource GhostButton}"

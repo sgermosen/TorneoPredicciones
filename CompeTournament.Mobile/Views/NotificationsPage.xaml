@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             xmlns:ndto="clr-namespace:CompeTournament.Shared.Notifications;assembly=CompeTournament.Shared"
+             x:Class="CompeTournament.Mobile.Views.NotificationsPage"
+             x:DataType="vm:NotificationsViewModel"
+             Title="Notificaciones">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16,16,32" Spacing="18">
+
+            <VerticalStackLayout Spacing="6" Padding="8,0">
+                <Label Style="{StaticResource Eyebrow}" Text="Tu actividad" />
+                <Label Style="{StaticResource Headline}" Text="Notificaciones" />
+                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="Start" />
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13"
+                       IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
+            </VerticalStackLayout>
+
+            <Button Style="{StaticResource GhostButton}" Text="Marcar todo como leído"
+                    Command="{Binding MarkAllReadCommand}" />
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding Notifications}">
+                    <BindableLayout.EmptyView>
+                        <Label Style="{StaticResource Muted}" Text="No tienes notificaciones todavía." />
+                    </BindableLayout.EmptyView>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="ndto:NotificationDto">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" RowDefinitions="Auto,Auto" RowSpacing="2">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationsViewModel}}, Path=MarkReadCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Grid.GestureRecognizers>
+                                <Ellipse Grid.Row="0" Grid.Column="0" WidthRequest="9" HeightRequest="9"
+                                         VerticalOptions="Center" Fill="{StaticResource Accent}">
+                                    <Ellipse.Triggers>
+                                        <DataTrigger TargetType="Ellipse" Binding="{Binding IsRead}" Value="True">
+                                            <Setter Property="Opacity" Value="0" />
+                                        </DataTrigger>
+                                    </Ellipse.Triggers>
+                                </Ellipse>
+                                <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource Body}" Text="{Binding Body}" Opacity="1">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsRead}" Value="True">
+                                            <Setter Property="Opacity" Value="0.55" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Muted}" FontSize="11"
+                                       Text="{Binding CreatedAt, StringFormat='{0:dd/MM/yyyy HH:mm}'}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Style="{StaticResource GhostButton}" Text="Volver" Command="{Binding BackCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

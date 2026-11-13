@@ -32,7 +32,7 @@
                        Text="Tu solicitud para unirte está pendiente de aprobación."
                        IsVisible="{Binding IsPending}" />
                 <Button Style="{StaticResource GhostButton}"
-                        Text="Compartir invitación"
+                        Text="Compartir resumen"
                         Margin="0,8,0,0"
                         Clicked="OnShareInviteClicked"
                         IsVisible="{Binding InviteCode, Converter={StaticResource NotEmpty}}" />
@@ -41,8 +41,27 @@
                         Margin="0,8,0,0"
                         IsVisible="{Binding CanManage}"
                         Command="{Binding OpenManageCommand}" />
+                <Button Style="{StaticResource GhostButton}"
+                        Text="Duelos 1 vs 1"
+                        Margin="0,8,0,0"
+                        IsVisible="{Binding Group.IsAccepted}"
+                        Command="{Binding OpenDuelsCommand}" />
                 <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13" />
             </VerticalStackLayout>
+
+            <Border Style="{StaticResource Card}" IsVisible="{Binding Group, Converter={StaticResource NotNull}}">
+                <VerticalStackLayout Spacing="6">
+                    <Label Style="{StaticResource Eyebrow}" Text="Reglas del torneo" />
+                    <Label Style="{StaticResource Muted}"
+                           Text="Puntuación: 3 puntos por el marcador exacto, 1 por acertar solo el ganador." />
+                    <Label Style="{StaticResource Muted}" Text="{Binding VisibilityText}"
+                           IsVisible="{Binding VisibilityText, Converter={StaticResource NotEmpty}}" />
+                    <Label Style="{StaticResource Muted}" Text="{Binding PredictionCostText}"
+                           IsVisible="{Binding PredictionCostText, Converter={StaticResource NotEmpty}}" />
+                    <Label Style="{StaticResource Muted}" Text="Las fichas no son dinero: solo se canjean por premios."
+                           IsVisible="{Binding Group.CreditsEnabled}" />
+                </VerticalStackLayout>
+            </Border>
 
             <Border Style="{StaticResource Card}" IsVisible="{Binding Group.CreditsEnabled}">
                 <VerticalStackLayout Spacing="4">
@@ -50,6 +69,10 @@
                     <Label Style="{StaticResource Score}" HorizontalOptions="Start" Text="{Binding Group.MyCredits}" />
                     <Label Style="{StaticResource Muted}" FontSize="11"
                            Text="Las fichas no son dinero: no se cambian por efectivo, solo se canjean por premios." />
+                    <Button Style="{StaticResource PrimaryButton}" Text="Canjear premios" Margin="0,8,0,0"
+                            IsVisible="{Binding CanRedeem}" Command="{Binding OpenRedeemCommand}" />
+                    <Button Style="{StaticResource GhostButton}" Text="Historial de fichas" Margin="0,8,0,0"
+                            IsVisible="{Binding CanRedeem}" Command="{Binding OpenCreditHistoryCommand}" />
                 </VerticalStackLayout>
             </Border>
 

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:vm="clr-namespace:CompeTournament.Mobile.Core.ViewModels;assembly=CompeTournament.Mobile.Core"
+             xmlns:dto="clr-namespace:CompeTournament.Shared.Tournaments;assembly=CompeTournament.Shared"
+             x:Class="CompeTournament.Mobile.Views.CreditHistoryPage"
+             x:DataType="vm:CreditHistoryViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <toolkit:IsStringNotNullOrEmptyConverter x:Key="NotEmpty" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16,16,16,32" Spacing="18">
+
+            <VerticalStackLayout Spacing="6" Padding="8,0">
+                <Label Style="{StaticResource Eyebrow}" Text="Historial de fichas" />
+                <Label Style="{StaticResource Headline}" Text="{Binding GroupName}" />
+                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="Start" />
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource Loss}" FontSize="13"
+                       IsVisible="{Binding ErrorMessage, Converter={StaticResource NotEmpty}}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="4">
+                    <Label Style="{StaticResource Muted}" Text="Saldo actual" />
+                    <Label Style="{StaticResource Score}" HorizontalOptions="Start" Text="{Binding MyCredits}" />
+                    <Label Style="{StaticResource Muted}" FontSize="11"
+                           Text="Las fichas no son dinero: no se cambian por efectivo, solo se canjean por premios." />
+                </VerticalStackLayout>
+            </Border>
+
+            <Label Style="{StaticResource Eyebrow}" Text="Movimientos" Padding="8,0" />
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="14" BindableLayout.ItemsSource="{Binding History}">
+                    <BindableLayout.EmptyView>
+                        <Label Style="{StaticResource Muted}" Text="Aún no tienes movimientos de fichas." />
+                    </BindableLayout.EmptyView>
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="dto:CreditTransactionDto">
+                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="8" RowSpacing="2">
+                                <Label Grid.Row="0" Grid.Column="0" Style="{StaticResource Body}" Text="{Binding Reason}">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Reason}" Value="InitialGrant">
+                                            <Setter Property="Text" Value="Saldo inicial" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Reason}" Value="Earned">
+                                            <Setter Property="Text" Value="Ganaste por acertar" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Reason}" Value="Spent">
+                                            <Setter Property="Text" Value="Predicción" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Reason}" Value="AdminAdjustment">
+                                            <Setter Property="Text" Value="Ajuste del organizador" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Reason}" Value="Redeemed">
+                                            <Setter Property="Text" Value="Canje de premio" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding Reason}" Value="Refund">
+                                            <Setter Property="Text" Value="Devolución" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                                <Label Grid.Row="1" Grid.Column="0" Style="{StaticResource Muted}" FontSize="11"
+                                       Text="{Binding CreatedAt, StringFormat='{0:dd/MM/yyyy HH:mm}'}" />
+                                <Label Grid.Row="0" Grid.Column="1" Style="{StaticResource Body}" FontAttributes="Bold"
+                                       HorizontalTextAlignment="End" TextColor="{StaticResource Accent}"
+                                       Text="{Binding Amount, StringFormat='{0:+#;-#;0} fichas'}" />
+                                <Label Grid.Row="1" Grid.Column="1" Style="{StaticResource Muted}" FontSize="11"
+                                       HorizontalTextAlignment="End"
+                                       Text="{Binding BalanceAfter, StringFormat='Saldo: {0}'}" />
+                            </Grid>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </Border>
+
+            <Button Style="{StaticResource GhostButton}" Text="Volver" Command="{Binding BackCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -6,6 +6,7 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -69,6 +70,7 @@
             await _context.SaveChangesAsync();
 
             await SeedDemoTournamentAsync(admin);
+            await SeedCreditsDemoAsync(admin);
         }
 
         private async Task SeedDemoTournamentAsync(ApplicationUser owner)
@@ -119,6 +121,125 @@
                 IsBlocked = false,
                 Points = 0
             });
+            await _context.SaveChangesAsync();
+        }
+
+        private async Task SeedCreditsDemoAsync(ApplicationUser owner)
+        {
+            if (_context.Groups.Any(g => g.InviteCode == "FICHAS2026"))
+            {
+                return;
+            }
+
+            var tournamentType = _context.TournamentTypes.First();
+
+            var group = new Group
+            {
+                Name = "Peña Demo (fichas)",
+                Requirements = "Prueba las fichas: predice, gana fichas y canjéalas por premios. Las fichas no son dinero.",
+                InviteCode = "FICHAS2026",
+                Active = true,
+                IsPublic = true,
+                CreditsEnabled = true,
+                InitialCredits = 100,
+                PredictionCost = 1,
+                TournamentTypeId = tournamentType.Id
+            };
+            _context.Groups.Add(group);
+            await _context.SaveChangesAsync();
+
+            var league = new League
+            {
+                Name = "Liga Demo",
+                Active = true,
+                GroupId = group.Id
+            };
+            _context.Leagues.Add(league);
+            await _context.SaveChangesAsync();
+
+            var dragones = AddTeam("Dragones", "DRA", league.Id);
+            var halcones = AddTeam("Halcones", "HAL", league.Id);
+            await _context.SaveChangesAsync();
+
+            AddMatch(group.Id, dragones.Id, halcones.Id, 3);
+            AddMatch(group.Id, dragones.Id, halcones.Id, 4);
+            AddMatch(group.Id, dragones.Id, halcones.Id, 5);
+            await _context.SaveChangesAsync();
+
+            _context.RedemptionItems.Add(new RedemptionItem
+            {
+                Name = "Camiseta de la peña",
+                Description = "Camiseta oficial para el campeón de la jornada.",
+                CostCredits = 60,
+                Stock = 5,
+                IsDigital = false,
+                Active = true,
+                GroupId = group.Id
+            });
+            _context.RedemptionItems.Add(new RedemptionItem
+            {
+                Name = "Fondo de pantalla exclusivo",
+                Description = "Arte digital descargable de la peña.",
+                CostCredits = 20,
+                Stock = null,
+                IsDigital = true,
+                Active = true,
+                GroupId = group.Id
+            });
+            await _context.SaveChangesAsync();
+
+            var members = new List<GroupUser>
+            {
+                new GroupUser
+                {
+                    GroupId = group.Id,
+                    ApplicationUserId = owner.Id,
+                    IsAccepted = true,
+                    IsBlocked = false,
+                    Points = 0,
+                    Credits = group.InitialCredits
+                }
+            };
+
+            foreach (var email in new[] { "jugador1@example.com", "jugador2@example.com" })
+            {
+                var player = await _userHelper.GetUserByEmailAsync(email);
+                if (player != null)
+                {
+                    members.Add(new GroupUser
+                    {
+                        GroupId = group.Id,
+                        ApplicationUserId = player.Id,
+                        IsAccepted = true,
+                        IsBlocked = false,
+                        Points = 0,
+                        Credits = group.InitialCredits
+                    });
+                }
+            }
+            _context.GroupUsers.AddRange(members);
+            await _context.SaveChangesAsync();
+
+            foreach (var member in members)
+            {
+                _context.CreditTransactions.Add(new CreditTransaction
+                {
+                    GroupUserId = member.Id,
+                    Amount = group.InitialCredits,
+                    BalanceAfter = group.InitialCredits,
+                    Reason = "InitialGrant"
+                });
+            }
+            await _context.SaveChangesAsync();
+
+            foreach (var member in members)
+            {
+                _context.Notifications.Add(new Notification
+                {
+                    ApplicationUserId = member.ApplicationUserId,
+                    Body = "Bienvenido a la peña demo. Predice los partidos, gana fichas y canjéalas por premios."
+                });
+            }
             await _context.SaveChangesAsync();
         }
 

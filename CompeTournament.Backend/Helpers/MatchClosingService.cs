@@ -155,11 +155,12 @@ namespace CompeTournament.Backend.Helpers
             }
 
             await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
 
             await NotifyAsync(threePoints, "Has ganado 3 puntos, felicidades!");
             await NotifyAsync(onePoint, "Has ganado 1 punto, felicidades!");
             await NotifyAsync(noPoints, "El partido termino, esta vez no sumaste puntos.");
+
+            await transaction.CommitAsync();
 
             await BroadcastAsync(match.GroupId, match.Id, localPoints, visitorPoints);
             return true;

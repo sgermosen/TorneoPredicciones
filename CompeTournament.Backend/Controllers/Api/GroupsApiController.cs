@@ -816,6 +816,46 @@ namespace CompeTournament.Backend.Controllers.Api
             });
         }
 
+        [HttpGet("{id:int}/credits/history")]
+        public async Task<ActionResult<IEnumerable<CreditTransactionDto>>> CreditHistory(int id)
+        {
+            var userId = CurrentUserId;
+
+            var group = await _context.Groups.AsNoTracking().FirstOrDefaultAsync(g => g.Id == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            if (!group.CreditsEnabled)
+            {
+                return BadRequest(new { message = "Este torneo no tiene fichas activadas." });
+            }
+
+            var member = await _context.GroupUsers.AsNoTracking()
+                .FirstOrDefaultAsync(gu => gu.GroupId == id && gu.ApplicationUserId == userId);
+            if (member == null)
+            {
+                return NotFound(new { message = "No eres miembro de este torneo." });
+            }
+
+            var history = await _context.CreditTransactions.AsNoTracking()
+                .Where(ct => ct.GroupUserId == member.Id)
+                .OrderByDescending(ct => ct.CreatedAt)
+                .ThenByDescending(ct => ct.Id)
+                .Select(ct => new CreditTransactionDto
+                {
+                    Id = ct.Id,
+                    Amount = ct.Amount,
+                    BalanceAfter = ct.BalanceAfter,
+                    Reason = ct.Reason,
+                    CreatedAt = ct.CreatedAt
+                })
+                .ToListAsync();
+
+            return Ok(history);
+        }
+
         private async Task GrantInitialCreditsIfNeededAsync(int groupId, string userId)
         {
             var group = await _context.Groups.AsNoTracking().FirstOrDefaultAsync(g => g.Id == groupId);

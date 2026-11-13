@@ -31,13 +31,13 @@ namespace CompeTournament.Mobile.Views
 
         private async void OnShareInviteClicked(object sender, EventArgs e)
         {
-            var code = _viewModel.InviteCode;
-            if (!string.IsNullOrWhiteSpace(code))
+            var text = _viewModel.BuildShareText();
+            if (!string.IsNullOrWhiteSpace(text))
             {
                 await Share.Default.RequestAsync(new ShareTextRequest
                 {
-                    Title = "Únete a mi grupo",
-                    Text = $"Únete a mi grupo en Copa Amistosa con el código {code}"
+                    Title = $"Mira cómo va {_viewModel.Group?.Name}",
+                    Text = text
                 });
             }
         }
